@@ -254,6 +254,48 @@ namespace WpfScriptViz
         }
         #endregion
 
+        private void containerCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // update canvas size
+            canvasScriptViz.Width = e.NewSize.Width;
+            canvasScriptViz.Height = e.NewSize.Height;
+
+            // update boxes
+            if (_boxes != null)
+                UpdateBoxPositions(sender, e);
+        }
+
+        private void menuitemRemoveBVI_Click(object sender, RoutedEventArgs e)
+        {
+            // Create yes/no dialogue
+
+            // if yes, replace
+            /*
+                tmpfile = open(file=file, mode='r+')
+                tmpfile_contents = tmpfile.read()
+                result = re.sub(r"(\"TickEnd\": \d+,)"
+                                r"\s+\"BACVERint1\": 0,"
+                                r"\s+\"BACVERint2\": 0,"
+                                r"\s+\"BACVERint3\": 0,"
+                                r"\s+\"BACVERint4\": 0,",
+                                r"\1",
+                                tmpfile_contents)
+                tmpfile.seek(0)
+                tmpfile.truncate()
+                tmpfile.write(result)
+                tmpfile.close()
+             */
+            String text = tbScriptBox.Text;
+            Regex regex = new Regex(
+@"(\""TickEnd\"": \d+,)
+\s+\""BACVERint1\"": 0,
+\s+\""BACVERint2\"": 0,
+\s+\""BACVERint3\"": 0,
+\s+\""BACVERint4\"": 0,");
+
+            tbScriptBox.Text = regex.Replace(text, "$1");
+        }
+
         #endregion
 
         private void DrawBoxes()
@@ -408,17 +450,6 @@ namespace WpfScriptViz
             return _item;
         }
 
-        private void containerCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            // update canvas size
-            canvasScriptViz.Width = e.NewSize.Width;
-            canvasScriptViz.Height = e.NewSize.Height;
-
-            // update boxes
-            if (_boxes != null)
-                UpdateBoxPositions(sender, e);
-        }
-
         private void UndoMoveBoxes()
         {
             if (_flagDragging)
@@ -429,6 +460,18 @@ namespace WpfScriptViz
                 containerCanvas.ReleaseMouseCapture();
             }
         }
+
+        #region Exit Handling
+        private void menuitemExit_Click(object sender, RoutedEventArgs e)
+        {
+            Exit();
+        }
+
+        void Exit()
+        {
+            Close();
+        }
+        #endregion
 
         private Label MakeDataBoxLabel(string property, SolidColorBrush color)
         {

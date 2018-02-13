@@ -4,93 +4,232 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfScriptViz"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WpfScriptViz.MainWindow"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="WpfScriptViz.MainWindow"
         mc:Ignorable="d"
         Title="Script Visualizer" Width="700" Height="680" Deactivated="Window_Deactivated">
 
     <Window.Resources>
         <System:String x:Key="SliderLabelText">0 / 0</System:String>
+        <ControlTemplate x:Key="DarkSubMenuItemControlTemplate" TargetType="{x:Type MenuItem}">
+            <Grid SnapsToDevicePixels="True">
+                <Rectangle x:Name="Bg" Fill="#FF3F3F46" RadiusY="2" RadiusX="2" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1"/>
+                <Rectangle x:Name="InnerBorder" Margin="1" RadiusY="2" RadiusX="2"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="24" SharedSizeGroup="MenuItemIconColumnGroup" Width="Auto"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="37"/>
+                        <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
+                        <ColumnDefinition Width="17"/>
+                    </Grid.ColumnDefinitions>
+                    <ContentPresenter x:Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" Margin="1" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                    <Border x:Name="GlyphPanel" BorderBrush="#FFCDD3E6" BorderThickness="1" Background="#FFE6EFF4" CornerRadius="3" Height="22" Margin="1" Visibility="Hidden" Width="22">
+                        <Path x:Name="Glyph" Data="M0,5.1L1.7,5.2 3.4,7.1 8,0.4 9.2,0 3.3,10.8z" Fill="#FF0C12A1" FlowDirection="LeftToRight" Height="11" Width="9"/>
+                    </Border>
+                    <ContentPresenter ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" 
+                                      Grid.Column="2" ContentStringFormat="{TemplateBinding HeaderStringFormat}" 
+                                      ContentSource="Header" Margin="{TemplateBinding Padding}" 
+                                      RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                      TextBlock.Foreground="#FFF1F1F1"/>
+                    <TextBlock Grid.Column="4" Margin="{TemplateBinding Padding}" Text="{TemplateBinding InputGestureText}"/>
+                </Grid>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="Icon" Value="{x:Null}">
+                    <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
+                    <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                </Trigger>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Fill" TargetName="Bg">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#3481D8FF" Offset="0"/>
+                                <GradientStop Color="#34C5EBFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke" TargetName="Bg" Value="#8071CBF1"/>
+                    <Setter Property="Stroke" TargetName="InnerBorder" Value="#40FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#FF9A9A9A"/>
+                    <Setter Property="Background" TargetName="GlyphPanel" Value="#FFEEE9E9"/>
+                    <Setter Property="BorderBrush" TargetName="GlyphPanel" Value="#FFDBD6D6"/>
+                    <Setter Property="Fill" TargetName="Glyph" Value="#FF848589"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="DarkMenuItemControlTemplate" TargetType="{x:Type MenuItem}">
+            <Grid x:Name="Grid" SnapsToDevicePixels="True">
+                <Rectangle x:Name="OuterBorder" RadiusY="2" RadiusX="2" Fill="#FF3F3F46"/>
+                <Rectangle x:Name="Bg" Fill="{TemplateBinding Background}" Margin="1" RadiusY="1" RadiusX="1" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1"/>
+                <Rectangle x:Name="InnerBorder" Margin="2"/>
+                <DockPanel x:Name="DockPanel">
+                    <ContentPresenter x:Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" Margin="4,0,6,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                    <Path x:Name="GlyphPanel" Data="M0,5.1L1.7,5.2 3.4,7.1 8,0.4 9.2,0 3.3,10.8z" Fill="{TemplateBinding Foreground}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
+                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                </DockPanel>
+                <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False" HorizontalOffset="1" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" Placement="Bottom" VerticalOffset="-1">
+                    <Themes:SystemDropShadowChrome x:Name="Shdw" Color="Transparent">
+                        <Border x:Name="SubMenuBorder" BorderBrush="#FF343434" BorderThickness="1" Background="#FF3F3F46" >
+                            <ScrollViewer x:Name="SubMenuScrollViewer" Margin="1,0" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                                <Grid x:Name="Grid1" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="Canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0"/>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="True" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.TabNavigation="Cycle"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </Themes:SystemDropShadowChrome>
+                </Popup>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsSuspendingPopupAnimation" Value="True">
+                    <Setter Property="PopupAnimation" TargetName="PART_Popup" Value="None"/>
+                </Trigger>
+                <Trigger Property="Icon" Value="{x:Null}">
+                    <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
+                    <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                </Trigger>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="True">
+                    <Setter Property="Margin" TargetName="Shdw" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="Shdw" Value="#71000000"/>
+                </Trigger>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Stroke" TargetName="Bg" Value="#90717070"/>
+                    <Setter Property="Stroke" TargetName="OuterBorder" Value="#50FFFFFF"/>
+                    <Setter Property="Stroke" TargetName="InnerBorder" Value="#50FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Stroke" TargetName="Bg" Value="#E0717070"/>
+                    <Setter Property="Fill" TargetName="Bg">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#28717070" Offset="0"/>
+                                <GradientStop Color="#50717070" Offset="0.75"/>
+                                <GradientStop Color="#90717070" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke" TargetName="InnerBorder" Value="#50747272"/>
+                </Trigger>
+                <Trigger Property="IsSubmenuOpen" Value="True">
+                    <Setter Property="Stroke" TargetName="Bg" Value="#E0717070"/>
+                    <Setter Property="Fill" TargetName="Bg">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#28717070" Offset="0"/>
+                                <GradientStop Color="#50717070" Offset="0.75"/>
+                                <GradientStop Color="#90717070" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke" TargetName="InnerBorder" Value="#50747272"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#FF9A9A9A"/>
+                    <Setter Property="Fill" TargetName="GlyphPanel" Value="#FF848589"/>
+                </Trigger>
+                <Trigger Property="CanContentScroll" SourceName="SubMenuScrollViewer" Value="False"/>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
     </Window.Resources>
+    <DockPanel>
+        <Menu x:Name="menuMain" DockPanel.Dock="Top" Background="#FF3F3F46" >
+            <MenuItem Header="_File" Foreground="#FFF1F1F1" Template="{DynamicResource DarkMenuItemControlTemplate}" >
+                <MenuItem x:Name="menuitemExit" Header="E_xit" Template="{DynamicResource DarkSubMenuItemControlTemplate}" Click="menuitemExit_Click"/>
 
-    <Grid Background="#FF3F3F46" x:Name="dpContent">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <Grid x:Name="gridDisplay" Grid.Row="0">
+            </MenuItem>
+            <MenuItem Header="_Tools" Foreground="#FFF1F1F1" Template="{DynamicResource DarkMenuItemControlTemplate}" >
+                <MenuItem Header="_removeBACVerInt" Template="{DynamicResource DarkSubMenuItemControlTemplate}" Click="menuitemRemoveBVI_Click"/>
+            </MenuItem>
+        </Menu>
+        <Grid Background="#FF3F3F46" x:Name="dpContent" DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
 
-            <Border BorderThickness="1"
-                    Background="#FF3F3F46" BorderBrush="#FF343434" 
-                    Margin="5,10,0,10" CornerRadius="3" 
-                    Grid.RowSpan="2">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel x:Name="spDisplayContainer"/>
-                </ScrollViewer>
-            </Border>
-            <Canvas x:Name="containerCanvas" 
-                    Margin="10" 
-                    Background="#FF252526" Grid.Column="1" 
-                    SizeChanged="containerCanvas_SizeChanged"
-                    MouseLeftButtonDown="containerCanvas_MouseLeftButtonDown" MouseLeftButtonUp="containerCanvas_MouseLeftButtonUp" 
-                    MouseMove="containerCanvas_MouseMove" 
-                    MouseRightButtonDown="containerCanvas_MouseRightButtonDown" ClipToBounds="True" >
-                <Canvas.Effect>
-                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
-                </Canvas.Effect>
-                
-                <Canvas x:Name="canvasScriptViz" 
-                        Width="{Binding ActualWidth, BindsDirectlyToSource=True, ElementName=containerCanvas, Mode=OneWay}" 
-                        Height="{Binding ActualHeight, BindsDirectlyToSource=True, ElementName=containerCanvas, Mode=OneWay}" 
-                        Canvas.Left="0" Canvas.Bottom="0"/>
-            
-            </Canvas>
-            <DockPanel Grid.Column="1" Grid.Row="1" 
-                       Margin="10,0">
-                <Button x:Name="btnPrevFrame" Content="&lt;" 
-                        HorizontalAlignment="Left" VerticalAlignment="Top" 
-                        DockPanel.Dock="Left" Padding="5,1" TabIndex="95" Click="btnPrevFrame_Click"/>
-                <Button x:Name="btnNextFrame" Content="&gt;" 
-                        HorizontalAlignment="Left" VerticalAlignment="Top" 
-                        DockPanel.Dock="Right" Padding="5,1" TabIndex="97" Click="btnNextFrame_Click"/>
-                <Slider x:Name="sliderCurrentFrame" 
-                        LargeChange="10" SmallChange="1" Maximum="100" IsSnapToTickEnabled="True"
-                        Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
-                        Margin="10,0" VerticalAlignment="Top" 
-                        ValueChanged="sliderCurrentFrame_ValueChanged" IsMoveToPointEnabled="True"/>
-                <Label x:Name="lblCurrentFrame"
-                       HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
-                       Foreground="#FF7B7B7D" Content="{DynamicResource SliderLabelText}"/>
+            <Grid x:Name="gridDisplay" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border BorderThickness="1"
+                        Background="#FF3F3F46" BorderBrush="#FF343434" 
+                        Margin="5,10,0,10" CornerRadius="3" 
+                        Grid.RowSpan="2">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="spDisplayContainer"/>
+                    </ScrollViewer>
+                </Border>
+                <Canvas x:Name="containerCanvas" 
+                        Margin="10" 
+                        Background="#FF252526" Grid.Column="1" 
+                        SizeChanged="containerCanvas_SizeChanged"
+                        MouseLeftButtonDown="containerCanvas_MouseLeftButtonDown" MouseLeftButtonUp="containerCanvas_MouseLeftButtonUp" 
+                        MouseMove="containerCanvas_MouseMove" 
+                        MouseRightButtonDown="containerCanvas_MouseRightButtonDown" ClipToBounds="True" >
+                    <Canvas.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
+                    </Canvas.Effect>
+
+                    <Canvas x:Name="canvasScriptViz" 
+                            Width="{Binding ActualWidth, BindsDirectlyToSource=True, ElementName=containerCanvas, Mode=OneWay}" 
+                            Height="{Binding ActualHeight, BindsDirectlyToSource=True, ElementName=containerCanvas, Mode=OneWay}" 
+                            Canvas.Left="0" Canvas.Bottom="0"/>
+
+                </Canvas>
+                <DockPanel Grid.Column="1" Grid.Row="1" 
+                           Margin="10,0">
+                    <Button x:Name="btnPrevFrame" Content="&lt;" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            DockPanel.Dock="Left" Padding="5,1" TabIndex="95" Click="btnPrevFrame_Click"/>
+                    <Button x:Name="btnNextFrame" Content="&gt;" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            DockPanel.Dock="Right" Padding="5,1" TabIndex="97" Click="btnNextFrame_Click"/>
+                    <Slider x:Name="sliderCurrentFrame" 
+                            LargeChange="10" SmallChange="1" Maximum="100" IsSnapToTickEnabled="True"
+                            Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
+                            Margin="10,0" VerticalAlignment="Top" 
+                            ValueChanged="sliderCurrentFrame_ValueChanged" IsMoveToPointEnabled="True"/>
+                    <Label x:Name="lblCurrentFrame"
+                           HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
+                           Foreground="#FF7B7B7D" Content="{DynamicResource SliderLabelText}"/>
+                </DockPanel>
+
+            </Grid>
+
+            <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" Grid.Row="1">
+                <Label x:Name="lblScriptBox" Content="Script Box" Foreground="#FF7B7B7D" 
+                       DockPanel.Dock="Top" Padding="5,0" HorizontalAlignment="Left"/>
+                <Button x:Name="btnUpdate" Width="80" Height="28" 
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                        Margin="0,0,5,5" 
+                        DockPanel.Dock="Bottom" 
+                        Content="{DynamicResource res_btnText_update}" Click="btnUpdate_Click" TabIndex="99" />
+                <TextBox x:Name="tbScriptBox"
+                         TextWrapping="Wrap" FontFamily="Courier New" 
+                         Background="#FF1E1E1E" Foreground="#FFE6E6E6" 
+                         SelectionBrush="#FF4D7093" BorderBrush="#FF5D85CE"
+                         Margin="5" Padding="10" 
+                         ToolTip="Script Box" Text="{DynamicResource ScriptBoxDefaultText}" 
+                         AcceptsReturn="True" 
+                         VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top" TabIndex="98"/>
+
             </DockPanel>
-
         </Grid>
-
-        <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" Grid.Row="1">
-            <Label x:Name="lblScriptBox" Content="Script Box" Foreground="#FF7B7B7D" 
-                   DockPanel.Dock="Top" Padding="5,0" HorizontalAlignment="Left"/>
-            <Button x:Name="btnUpdate" Width="80" Height="28" 
-                    VerticalAlignment="Bottom" HorizontalAlignment="Right" 
-                    Margin="0,0,5,5" 
-                    DockPanel.Dock="Bottom" 
-                    Content="{DynamicResource res_btnText_update}" Click="btnUpdate_Click" TabIndex="99" />
-            <TextBox x:Name="tbScriptBox"
-                     TextWrapping="Wrap" FontFamily="Courier New" 
-                     Background="#FF1E1E1E" Foreground="#FFE6E6E6" 
-                     SelectionBrush="#FF4D7093" BorderBrush="#FF5D85CE"
-                     Margin="5" Padding="10" 
-                     ToolTip="Script Box" Text="{DynamicResource ScriptBoxDefaultText}" 
-                     AcceptsReturn="True" 
-                     VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top" TabIndex="98"/>
-
-        </DockPanel>
-    </Grid>
+    </DockPanel>
 
 </Window>
