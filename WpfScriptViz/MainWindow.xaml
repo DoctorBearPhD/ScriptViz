@@ -147,7 +147,7 @@
 
             </MenuItem>
             <MenuItem Header="_Tools" Foreground="#FFF1F1F1" Template="{DynamicResource DarkMenuItemControlTemplate}" >
-                <MenuItem Header="_removeBACVerInt" Template="{DynamicResource DarkSubMenuItemControlTemplate}" Click="menuitemRemoveBVI_Click"/>
+                <MenuItem Header="_Remove BACVERint" Template="{DynamicResource DarkSubMenuItemControlTemplate}" Click="menuitemRemoveBVI_Click"/>
             </MenuItem>
         </Menu>
         <Grid Background="#FF3F3F46" x:Name="dpContent" DockPanel.Dock="Bottom">
