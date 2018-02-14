@@ -14,7 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>E:\Users\Ian\Documents\Programming\ScriptViz\</PublishUrl>
+    <PublishUrl>E:\Users\Public\Documents\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -158,4 +158,10 @@
     <Resource Include="TextTemplate.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <FilesToCopy Include="$(ProjectDir)$(OutDir)ScriptViz.exe;$(ProjectDir)$(OutDir)ScriptViz.exe.manifest;$(ProjectDir)$(OutDir)Newtonsoft.Json.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)ScriptViz" />
+  </Target>
 </Project>

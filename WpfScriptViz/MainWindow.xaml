@@ -193,12 +193,12 @@
                 </Canvas>
                 <DockPanel Grid.Column="1" Grid.Row="1" 
                            Margin="10,0">
-                    <Button x:Name="btnPrevFrame" Content="&lt;" 
+                    <RepeatButton x:Name="btnPrevFrame" Content="&lt;" 
                             HorizontalAlignment="Left" VerticalAlignment="Top" 
-                            DockPanel.Dock="Left" Padding="5,1" TabIndex="95" Click="btnPrevFrame_Click"/>
-                    <Button x:Name="btnNextFrame" Content="&gt;" 
+                            DockPanel.Dock="Left" Padding="5,1" TabIndex="95" Click="btnPrevFrame_Click" Delay="250" Interval="10"/>
+                    <RepeatButton x:Name="btnNextFrame" Content="&gt;" 
                             HorizontalAlignment="Left" VerticalAlignment="Top" 
-                            DockPanel.Dock="Right" Padding="5,1" TabIndex="97" Click="btnNextFrame_Click"/>
+                            DockPanel.Dock="Right" Padding="5,1" TabIndex="97" Click="btnNextFrame_Click" Delay="250" Interval="10"/>
                     <Slider x:Name="sliderCurrentFrame" 
                             LargeChange="10" SmallChange="1" Maximum="100" IsSnapToTickEnabled="True"
                             Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
