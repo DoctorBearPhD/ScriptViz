@@ -157,6 +157,12 @@
   <ItemGroup>
     <Resource Include="TextTemplate.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ScriptClasses\ScriptLib.csproj">
+      <Project>{6d055d9d-1ae8-406a-815c-71f1da4e72aa}</Project>
+      <Name>ScriptLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

@@ -15,9 +15,11 @@ using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.IO;
+using ScriptLib;
 
 
-namespace WpfScriptViz
+namespace ScriptViz
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -37,7 +39,7 @@ namespace WpfScriptViz
         public const float BOX_SCALAR = 100;
         public const float CANVAS_PADDING = 15;
 
-        const int POSITION_X_FLAG = 32768, 
+        const int POSITION_X_FLAG = 32768,
                   POSITION_Y_FLAG = 65536;
 
         const bool DEBUG = true;
@@ -47,8 +49,8 @@ namespace WpfScriptViz
               newMousePos,
               originalCanvasPos;
 
-        private Color _hurtboxFillColor, _hurtboxStrokeColor, 
-                      _hitboxFillColor,  _hitboxStrokeColor,
+        private Color _hurtboxFillColor, _hurtboxStrokeColor,
+                      _hitboxFillColor, _hitboxStrokeColor,
                       _physboxFillColor, _physboxStrokeColor,
                       _proxboxFillColor, _proxboxStrokeColor;
 
@@ -65,7 +67,7 @@ namespace WpfScriptViz
 
             _hitboxFillColor = Colors.Red;
             _hitboxFillColor.A = 124;
-             
+
             _hitboxStrokeColor = Colors.Salmon;
             _hitboxStrokeColor.A = 124;
 
@@ -84,7 +86,7 @@ namespace WpfScriptViz
 
             if (DEBUG)
                 LoadDefaultScript();
-            
+
         }
 
         #region Event Responses
@@ -115,7 +117,7 @@ namespace WpfScriptViz
             _flagDragging = true;
             e.Handled = true; // Sets the mouse-down event as having been handled.
         }
-        
+
         // drag - User moves mouse (anywhere) while holding left mouse button
         private void containerCanvas_MouseMove(object sender, MouseEventArgs e)
         {
@@ -162,8 +164,34 @@ namespace WpfScriptViz
             if (_boxes != null)
                 UpdateBoxPositions();
         }
-        
+
         #region Menu Item Events
+
+        private void menuitemOpen_Click(object sender, RoutedEventArgs e)
+        {
+            // Create Open File dialogue
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                DefaultExt = ".json",
+                Filter = "JSON Files (*.json)|*.json"
+            };
+
+            bool? result = openFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                // read the file in
+                string fileName = openFileDialog.FileName;
+
+                StreamReader file = new StreamReader(fileName);
+                // TEMP
+                tbScriptBox.Text = file.ReadToEnd();
+                file.Close();
+                // Reset Display
+                // TODO
+            }
+        }
+
         private void menuitemExit_Click(object sender, RoutedEventArgs e)
         {
             Exit();
@@ -177,7 +205,15 @@ namespace WpfScriptViz
             String text = tbScriptBox.Text;
             Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,\s+");
 
-            tbScriptBox.Text = regex.Replace(text, "");
+            // replace AND count the number of replacements
+            int count = 0;
+            tbScriptBox.Text = regex.Replace(text, 
+                m => {                   // function is called on each match
+                    count++;
+                    return m.Result(""); // replace the match with "" (delete the text)
+                });
+
+            MessageBox.Show(String.Format("Removed {0} lines!", count));
         }
         #endregion
 
@@ -206,6 +242,17 @@ namespace WpfScriptViz
                 DrawBoxes();
             #endregion
         }
+        
+        private void menuitemCleanScript_Click(object sender, RoutedEventArgs e)
+        {
+            CleanScript();
+        }
+
+        private void menuitemShowScriptBox_Click(object sender, RoutedEventArgs e)
+        {
+            ShowScriptBox();
+        }
+
         #endregion
 
         #endregion
@@ -237,12 +284,7 @@ namespace WpfScriptViz
             // Try to parse as a JObject
             if (scriptboxText.TrimStart().StartsWith("{"))
             {
-                #region Try to Clean JSON
-                Regex regex = new Regex(@",\s*}");
-                regex.Replace(scriptboxText, "}");
-                regex = new Regex(@",\s*]");
-                regex.Replace(scriptboxText, "]");
-                #endregion
+                CleanScript();
 
 
                 // Convert the JSON String to a C# object.
@@ -340,7 +382,7 @@ namespace WpfScriptViz
         {
             canvasScriptViz.Children.Clear();
             _rectangles = new List<Rectangle>();
-            
+
             // Update the list of boxes that are active in the current frame.
             UpdateCurrFrameBoxes();
             UpdateCurrFramePositions();
@@ -349,7 +391,7 @@ namespace WpfScriptViz
             {
                 SolidColorBrush fill = new SolidColorBrush();
                 SolidColorBrush stroke = new SolidColorBrush();
-                
+
                 #region Determine Fill/Stroke Color
                 switch (box.BoxType)
                 {
@@ -477,6 +519,33 @@ namespace WpfScriptViz
             return _item;
         }
 
+        private void CleanScript()
+        {
+            string scriptboxText = tbScriptBox.Text;
+
+            #region Try to Clean JSON
+            int countCurly = 0;
+            int countSquare = 0;
+
+            Regex regex = new Regex(@",(\s*)}");
+            tbScriptBox.Text = regex.Replace(scriptboxText, m =>
+                {
+                    countCurly++;
+                    return m.Result(@"\1\}");
+                });
+
+            regex = new Regex(@",(\s*)]");
+            tbScriptBox.Text = regex.Replace(scriptboxText, m =>
+            {
+                countCurly++;
+                return m.Result(@"\1\]");
+            });
+
+            string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
+            MessageBox.Show(msg);
+            #endregion
+        }
+
         private void UndoMoveBoxes()
         {
             if (_flagDragging)
@@ -487,7 +556,7 @@ namespace WpfScriptViz
                 containerCanvas.ReleaseMouseCapture();
             }
         }
-        
+
         private Label MakeDataBoxLabel(string property, SolidColorBrush color)
         {
             return new Label()
@@ -508,8 +577,8 @@ namespace WpfScriptViz
 
         private void SetCanvasPosition(Point position, bool useOriginalPosition = true)
         {
-            Canvas.SetLeft(canvasScriptViz, useOriginalPosition? (originalCanvasPos.X + position.X) : position.X);
-            Canvas.SetBottom(canvasScriptViz, useOriginalPosition? (originalCanvasPos.Y + position.Y) : position.Y);
+            Canvas.SetLeft(canvasScriptViz, useOriginalPosition ? (originalCanvasPos.X + position.X) : position.X);
+            Canvas.SetBottom(canvasScriptViz, useOriginalPosition ? (originalCanvasPos.Y + position.Y) : position.Y);
         }
 
         private void UpdateSliderLabel()
@@ -525,7 +594,7 @@ namespace WpfScriptViz
                 {
                     int index = _rectangles.IndexOf(rectangle);
                     Box box = _currFrameBoxes[index];
-                    
+
                     // Determine position of box based on Positions
                     Point boxOrigin = new Point(canvasScriptViz.ActualWidth / 2 + box.X * BOX_SCALAR,
                                                 CANVAS_PADDING + box.Y * BOX_SCALAR + box.Height);
@@ -546,6 +615,13 @@ namespace WpfScriptViz
                 }
             }
         }
+
+        private void ShowScriptBox()
+        {
+            dpScriptBoxGroup.Visibility = menuitemShowScriptBox.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            gridContent.RowDefinitions[1].Height = new GridLength(menuitemShowScriptBox.IsChecked ? 1 : 0, GridUnitType.Star);
+        }
+
 
         /// <summary>
         /// Updates the list of all boxes that are active on the current frame.
@@ -1433,12 +1509,13 @@ namespace WpfScriptViz
         public float HitType, HitboxEffectIndex;
     }
 
-    public struct Position
-    {
-        public int TickStart, TickEnd;
-        public float Movement;
-        public int Flag;
-    }
+    //public struct Position
+    //{
+    //    public int TickStart, TickEnd;
+    //    public float Movement;
+    //    public int Flag;
+    //}
+
 }
 
 public static class Util

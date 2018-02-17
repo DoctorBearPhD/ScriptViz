@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptViz", "WpfScriptViz\ScriptViz.csproj", "{BB8FCB00-FAC0-439D-A281-9FE4D9423A0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptLib", "ScriptClasses\ScriptLib.csproj", "{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BB8FCB00-FAC0-439D-A281-9FE4D9423A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB8FCB00-FAC0-439D-A281-9FE4D9423A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB8FCB00-FAC0-439D-A281-9FE4D9423A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
