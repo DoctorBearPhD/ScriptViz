@@ -1,0 +1,141 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="ScriptViz.View.MainWindow"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+        Title="Script Visualizer" 
+        Width="700" Height="680" 
+        Background="{DynamicResource MainBGBrush}"
+        Deactivated="Window_Deactivated">
+
+    <Window.Resources>
+        <vm:MainWindowViewModel x:Key="viewModel" />
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Mode="OneWay" Source="{StaticResource viewModel}"/>
+    </Window.DataContext>
+
+    <DockPanel>
+        <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{StaticResource DarkMenuStyle}">
+
+            <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
+                <MenuItem Header="_Open" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding OpenCommand, Mode=OneWay}"/>
+                
+                <Separator Style="{DynamicResource DarkSeparatorStyle}" />
+                
+                <MenuItem Header="E_xit" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding ExitCommand, Mode=OneWay}"/>
+            </MenuItem>
+
+            <MenuItem Header="_View" Template="{DynamicResource DarkMenuItemControlTemplate}">
+                <MenuItem Header="_Show Script" 
+                          Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Style="{StaticResource DarkMenuItemStyle}"
+                          IsCheckable="True" 
+                          Command="{Binding ShowScriptCommand, Mode=OneWay}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
+            </MenuItem>
+
+            <MenuItem Header="_Tools" Template="{DynamicResource DarkMenuItemControlTemplate}" >
+                <MenuItem Header="_Clean Script" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding CleanScriptCommand}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
+                
+                <MenuItem Header="_Remove BACVERint" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding RemoveBviCommand}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
+            </MenuItem>
+        </Menu>
+        <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="ScriptDisplayContainer" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border BorderThickness="1"
+                        BorderBrush="#FF343434" 
+                        Margin="5,10,0,10" CornerRadius="3" 
+                        Grid.RowSpan="2">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="spDisplayContainer"/> <!-- TODO: Replace with Tabs -->
+                    </ScrollViewer>
+                </Border>
+                <Canvas x:Name="canvasContainer"
+                        Margin="10" 
+                        Background="#FF252526" Grid.Column="1"
+                        MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
+                        MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
+                        MouseMove="canvasContainer_MouseMove" 
+                        MouseRightButtonDown="canvasContainer_MouseRightButtonDown" 
+                        ClipToBounds="True" >
+                    <Canvas.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
+                    </Canvas.Effect>
+
+                    <Canvas x:Name="canvasScriptViz" Canvas.Bottom="15" Canvas.Left="{Binding CanvasHorizontalPosition}">
+                        <Canvas.RenderTransform>
+                            <TransformGroup>
+                                <TranslateTransform X="{Binding Path=ActualWidth, ElementName=canvasContainer}"/>
+                                <ScaleTransform ScaleX="0.5" />
+                            </TransformGroup>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+
+                </Canvas>
+                <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
+                    <RepeatButton x:Name="BtnPrevFrame" DockPanel.Dock="Left"
+                                  Content="&lt;" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,1" TabIndex="95" 
+                                  Click="btnPrevFrame_Click"
+                                  Delay="{DynamicResource RepeatButtonDelay}" 
+                                  Interval="{DynamicResource RepeatButtonInterval}"/>
+                    <RepeatButton x:Name="BtnNextFrame" Content="&gt;"
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                                  DockPanel.Dock="Right" 
+                                  Padding="5,1" TabIndex="97" 
+                                  Click="btnNextFrame_Click"
+                                  Delay="{DynamicResource RepeatButtonDelay}" 
+                                  Interval="{DynamicResource RepeatButtonInterval}"/>
+                    <Slider x:Name="SliderCurrentFrame" 
+                            LargeChange="10" SmallChange="1" IsSnapToTickEnabled="True"
+                            Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
+                            Margin="10,0" VerticalAlignment="Top" 
+                            Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}"
+                            ValueChanged="sliderCurrentFrame_ValueChanged" IsMoveToPointEnabled="True"/>
+                    <Label x:Name="lblCurrentFrame"
+                           HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
+                           Foreground="{StaticResource FadedTextBrush}">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} / {1}">
+                                        <Binding Path="CurrentFrame" />
+                                        <Binding Path="MaxFrame" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label> 
+                </DockPanel>
+
+            </Grid>
+
+            <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" Grid.Row="1"/>
+        </Grid>
+    </DockPanel>
+
+</Window>
