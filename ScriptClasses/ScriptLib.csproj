@@ -7,8 +7,8 @@
     <ProjectGuid>{6D055D9D-1AE8-406A-815C-71F1DA4E72AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScriptClasses</RootNamespace>
-    <AssemblyName>ScriptClasses</AssemblyName>
+    <RootNamespace>ScriptLib</RootNamespace>
+    <AssemblyName>ScriptLib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
