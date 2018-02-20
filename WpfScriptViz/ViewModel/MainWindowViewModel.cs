@@ -109,10 +109,11 @@ namespace ScriptViz.ViewModel
 
         #region ICommands
 
-        public ICommand ShowScriptCommand => new RelayCommand(ShowScript);
-        public ICommand  RemoveBviCommand => new RelayCommand(RemoveBACVERint);
-        public ICommand       OpenCommand => new RelayCommand(OpenFile);
-        public ICommand       ExitCommand => new RelayCommand(Exit);
+        public ICommand CleanScriptCommand => new RelayCommand(CleanScript);
+        public ICommand  ShowScriptCommand => new RelayCommand(ShowScript);
+        public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
+        public ICommand        OpenCommand => new RelayCommand(OpenFile);
+        public ICommand        ExitCommand => new RelayCommand(Exit);
 
         public Action CloseAction { get; set; } // Action for calling Close() on a Window
 
@@ -532,49 +533,12 @@ namespace ScriptViz.ViewModel
             CloseAction();
         }
         #endregion
-        
-        #region Remove BACVERint
-        public void RemoveBACVERint()
-        {
-            // TODO: Create yes/no dialogue
-
-
-            // if yes, replace // TODO: Replace with Script property.
-            Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,\s+");
-
-            // replace AND count the number of replacements
-            int count = 0;
-            _script = regex.Replace(_script,
-                m => {                   // function is called on each match
-                    count++;
-                    return m.Result(""); // replace the match with "" (delete the text)
-                });
-
-            MessageBox.Show(String.Format("Removed {0} lines!", count), "RemoveBACVERint Results");
-        }
-        #endregion
-
-        #endregion // MenuItem Click Handlers
-
-        #region Frame Change
-        public void GoToPreviousFrame()
-        {
-            if (CurrentFrame > 0) CurrentFrame--;
-        }
-
-        public void GoToNextFrame()
-        {
-            if (CurrentFrame < _maxFrame) CurrentFrame++;
-        }
-        #endregion
-
-        #endregion // Event Handling
 
         #region Script Operations
 
+        #region Try to Clean JSON
         public void CleanScript()
         {
-            #region Try to Clean JSON
             int countCurly = 0;
             int countSquare = 0;
 
@@ -594,10 +558,49 @@ namespace ScriptViz.ViewModel
 
             string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
             MessageBox.Show(msg);
-            #endregion
+        }
+        #endregion
+
+        #region Remove BACVERint
+        public void RemoveBACVERint()
+        {
+            // TODO: Create yes/no dialogue
+
+
+            // if yes, replace // TODO: Replace with Script property.
+            Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,\s+");
+
+            // replace AND count the number of replacements
+            int count = 0;
+            _script = regex.Replace(_script,
+                m => {                   // function is called on each match
+                    count++;
+                    return m.Result(""); // replace the match with "" (delete the text)
+                });
+
+            MessageBox.Show(String.Format("Removed {0} lines!", count), "RemoveBACVERint Results");
+        }
+        #endregion // Remove BACVERint
+
+        #endregion // Script Operations
+
+        #endregion // MenuItem Click Handlers
+
+        #region Frame Change
+        public void GoToPreviousFrame()
+        {
+            if (CurrentFrame > 0) CurrentFrame--;
         }
 
+        public void GoToNextFrame()
+        {
+            if (CurrentFrame < _maxFrame) CurrentFrame++;
+        }
         #endregion
+
+        #endregion // Event Handling
+
+        
 
         #region Control Operations
 

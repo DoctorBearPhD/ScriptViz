@@ -134,16 +134,6 @@ namespace ScriptViz.View
             //    DrawBoxes();
             #endregion
         }
-        
-        private void menuitemCleanScript_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.CleanScript();
-        }
-
-        private void menuitemShowScriptBox_Click(object sender, RoutedEventArgs e)
-        {
-            //ShowScriptBox();
-        }
 
         #endregion // Slider Events
 
