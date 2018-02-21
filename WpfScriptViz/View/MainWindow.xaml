@@ -101,7 +101,8 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding Fill}">
+                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" 
+                                               Fill="{Binding Fill}" Stroke="{Binding Stroke}">
                                         <Rectangle.RenderTransform>
                                             <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
                                         </Rectangle.RenderTransform>
