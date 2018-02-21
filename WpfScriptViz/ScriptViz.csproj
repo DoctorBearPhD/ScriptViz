@@ -189,7 +189,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
-      <FilesToCopy Include="$(ProjectDir)$(OutDir)ScriptViz.exe;$(ProjectDir)$(OutDir)ScriptViz.exe.manifest;$(ProjectDir)$(OutDir)Newtonsoft.Json.dll" />
+      <FilesToCopy Include="$(ProjectDir)$(OutDir)ScriptViz.exe;$(ProjectDir)$(OutDir)ScriptViz.exe.manifest;$(ProjectDir)$(OutDir)Newtonsoft.Json.dll;$(ProjectDir)$(OutDir)ICSharpCode.AvalonEdit.dll;$(ProjectDir)$(OutDir)ScriptLib.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)ScriptViz" />
   </Target>

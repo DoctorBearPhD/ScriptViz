@@ -114,7 +114,7 @@ namespace ScriptViz.ViewModel
 
         const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
 
-        GridLength _scriptBoxColumnSize;
+        GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
         public GridLength ScriptBoxColumnSize {
             get => _scriptBoxColumnSize;
             set  { _scriptBoxColumnSize = value; RaisePropertyChanged("ScriptBoxColumnSize"); }
