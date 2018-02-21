@@ -108,7 +108,7 @@
         public int[] Ints { get; set; }
     }
 
-    public class Hitbox
+    public class Box
     {
         public int TickStart { get; set; }
         public int TickEnd { get; set; }
@@ -117,6 +117,10 @@
         public float Z { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+    }
+
+    public class Hitbox : Box
+    {
         public int Unknown1 { get; set; }
         public int Unknown2 { get; set; }
         public int Unknown3 { get; set; }
@@ -135,15 +139,8 @@
         public int Unknown11 { get; set; }
     }
 
-    public class Hurtbox
+    public class Hurtbox : Box
     {
-        public int TickStart { get; set; }
-        public int TickEnd { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
         public int Unknown1 { get; set; }
         public int Unknown2 { get; set; }
         public int Unknown3 { get; set; }
@@ -163,15 +160,8 @@
         public float Unknown12 { get; set; }
     }
 
-    public class PhysicsBox
+    public class PhysicsBox : Box
     {
-        public int TickStart { get; set; }
-        public int TickEnd { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
         public int Unknown1 { get; set; }
         public int Unknown2 { get; set; }
         public int Unknown3 { get; set; }

@@ -50,6 +50,7 @@
                           IsEnabled="{Binding IsScriptLoaded}" />
             </MenuItem>
         </Menu>
+        
         <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -85,29 +86,52 @@
                     <Canvas.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
                     </Canvas.Effect>
-
-                    <Canvas x:Name="canvasScriptViz" Canvas.Bottom="15" Canvas.Left="{Binding CanvasHorizontalPosition}">
-                        <Canvas.RenderTransform>
-                            <TransformGroup>
-                                <TranslateTransform X="{Binding Path=ActualWidth, ElementName=canvasContainer}"/>
-                                <ScaleTransform ScaleX="0.5" />
-                            </TransformGroup>
-                        </Canvas.RenderTransform>
-                    </Canvas>
+                    <Grid x:Name="containerCanvasRectangles"
+                          Canvas.Left="{Binding CanvasPosition.X}" Canvas.Bottom="{Binding CanvasPosition.Y}" 
+                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}"
+                          >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl ItemsSource="{Binding Rectangles}"
+                                      Grid.Column="1">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas x:Name="canvasRectangles">
+                                        <Canvas.RenderTransform>
+                                            <ScaleTransform ScaleY="-1"/>
+                                        </Canvas.RenderTransform>
+                                    </Canvas>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding Fill}">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                    
+                    
 
                 </Canvas>
                 <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
-                    <RepeatButton x:Name="BtnPrevFrame" DockPanel.Dock="Left"
+                    <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
                                   Content="&lt;" 
                                   HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,1" TabIndex="95" 
-                                  Click="btnPrevFrame_Click"
+                                  Command="{Binding PreviousFrameCommand}"
                                   Delay="{DynamicResource RepeatButtonDelay}" 
                                   Interval="{DynamicResource RepeatButtonInterval}"/>
                     <RepeatButton x:Name="BtnNextFrame" Content="&gt;"
                                   HorizontalAlignment="Left" VerticalAlignment="Top" 
                                   DockPanel.Dock="Right" 
                                   Padding="5,1" TabIndex="97" 
-                                  Click="btnNextFrame_Click"
+                                  Command="{Binding NextFrameCommand}"
                                   Delay="{DynamicResource RepeatButtonDelay}" 
                                   Interval="{DynamicResource RepeatButtonInterval}"/>
                     <Slider x:Name="SliderCurrentFrame" 
@@ -124,7 +148,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0} / {1}">
                                         <Binding Path="CurrentFrame" />
-                                        <Binding Path="MaxFrame" />
+                                        <Binding Path="MaxFrame" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>

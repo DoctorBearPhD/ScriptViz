@@ -26,9 +26,6 @@ namespace ScriptViz.ViewModel
 
         public ObservableCollection<Box> CurrFrameBoxes;
 
-        ObservableCollection<Box> _boxes;
-        ObservableCollection<Rectangle> _rectangles;
-
         List<Position>  _positions;
         List<Position>  _currFramePositions;
         #endregion
@@ -84,36 +81,51 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        public ObservableCollection<Rectangle> Rectangles
+        #region Rectangles
+        ObservableCollection<Rect> _rectangles;
+
+        public ObservableCollection<Rect> Rectangles
         {
             get => _rectangles;
             set { _rectangles = value; RaisePropertyChanged("Rectangles"); }
         }
+        #endregion
+
+        #region Boxes
+        ObservableCollection<Box> _boxes;
+
         public ObservableCollection<Box> Boxes
         {
             get => _boxes;
             set { _boxes = value; RaisePropertyChanged("Boxes"); }
         }
+        #endregion
 
         string _script;
+        JObject _selectedScript;
 
         #region View Properties
 
-        double _canvasHorizontalPosition;
+        Point _canvasPosition;
 
-        public double CanvasHorizontalPosition
+        public Point CanvasPosition
         {
-            get { return _canvasHorizontalPosition; }
-            set { _canvasHorizontalPosition = value; RaisePropertyChanged("CanvasHorizontalPosition"); }
+            get { return _canvasPosition; }
+            set { _canvasPosition = value; RaisePropertyChanged("CanvasPosition"); }
         }
 
         #region ICommands
 
+        #region Menu Commands
         public ICommand CleanScriptCommand => new RelayCommand(CleanScript);
         public ICommand  ShowScriptCommand => new RelayCommand(ShowScript);
         public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
         public ICommand        OpenCommand => new RelayCommand(OpenFile);
         public ICommand        ExitCommand => new RelayCommand(Exit);
+        #endregion
+
+        public ICommand PreviousFrameCommand => new RelayCommand(GoToPreviousFrame);
+        public ICommand     NextFrameCommand => new RelayCommand(GoToNextFrame);
 
         public Action CloseAction { get; set; } // Action for calling Close() on a Window
 
@@ -165,14 +177,12 @@ namespace ScriptViz.ViewModel
             #region Reset Display
             //SetCanvasPosition(new Point(), false);
 
-            _boxes = new ObservableCollection<Box>();
+            Boxes = new ObservableCollection<Box>();
             _positions = new List<Position>();
-            _currentFrame = 0;
-            _maxFrame = 0;
             #endregion
 
-            #region Get Script
-            
+            #region Show Loading
+            // TODO
             #endregion
 
             #region Parse JSON
@@ -181,77 +191,71 @@ namespace ScriptViz.ViewModel
             if (_script.TrimStart().StartsWith("{"))
             {
                 CleanScript();
-
+                RemoveBACVERint();
 
                 // Convert the JSON String to a C# object.
-                var jobj = JsonConvert.DeserializeObject<dynamic>(_script,
+                var bacFile = JsonConvert.DeserializeObject<BACFile>(_script,
                     new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                _maxFrame = jobj.TotalTicks - 1;
+                // TEMP
+                var jobj = bacFile.MoveLists[0].Moves[602];
+                // ----
+
+                MaxFrame = jobj.TotalTicks - 1;
 
                 #region Check for Boxes
-                if ((jobj as JObject)["Hurtboxes"] != null && jobj.Hurtboxes.HasValues)
+
+                if (jobj.Hurtboxes != null && jobj.Hurtboxes.Length > 0)
                 {
-                    foreach (JToken hurtbox in (jobj.Hurtboxes as JArray))
+                    foreach (var hurtbox in jobj.Hurtboxes)
                     {
                         //Console.WriteLine(hurtbox);
-                        Box box = hurtbox.ToObject<Box>();
-                        box.BoxType = "Hurtbox";
-
-                        _boxes.Add(box);
+                        Boxes.Add(hurtbox);
                     }
                 }
-                if ((jobj as JObject)["Hitboxes"] != null && jobj.Hitboxes.HasValues)
+                if (jobj.Hitboxes != null && jobj.Hitboxes.Length > 0)
                 {
                     Console.WriteLine((jobj.Hitboxes));
-                    foreach (JToken hitbox in (jobj.Hitboxes as JArray))
+                    foreach (var hitbox in jobj.Hitboxes)
                     {
                         //Console.WriteLine(hurtbox);
-                        Box box = hitbox.ToObject<Box>();
-                        box.BoxType = (box.HitboxEffectIndex == -1 || box.HitType == 4) ? "ProxBox" : "Hitbox";
-
-                        _boxes.Add(box);
+                        Boxes.Add(hitbox);
                     }
                 }
-                if ((jobj as JObject)["PhysicsBoxes"] != null && jobj.PhysicsBoxes.HasValues)
+                if (jobj.PhysicsBoxes != null && jobj.PhysicsBoxes.Length > 0)
                 {
-                    foreach (JToken physbox in (jobj.PhysicsBoxes as JArray))
+                    foreach (var physbox in jobj.PhysicsBoxes)
                     {
                         //Console.WriteLine(hurtbox);
-                        Box box = physbox.ToObject<Box>();
-                        box.BoxType = "PhysicsBox";
-
-                        _boxes.Add(box);
+                        Boxes.Add(physbox);
                     }
                 }
                 #endregion
 
                 #region Check for Positions
-                if ((jobj as JObject)["Positions"] != null && jobj.Positions.HasValues)
+                if (jobj.Positions != null && jobj.Positions.Length > 0)
                 {
-                    foreach (JToken position in (jobj.Positions as JArray))
+                    foreach (var position in jobj.Positions)
                     {
-                        Position pos = position.ToObject<Position>();
-
-                        _positions.Add(pos);
+                        _positions.Add(position);
                     }
                 }
                 #endregion
 
                 #region No Candidates Found
-                if (_boxes.Count == 0)
+                if (Boxes.Count == 0)
                 {
                     Console.WriteLine("Candidates not found.");
                     return;
                 }
                 #endregion
-
+                
                 #region Populate TreeView
-                foreach (Box box in _boxes)
+                foreach (Box box in Boxes)
                 {
                     Expander expanderBoxData = new Expander
                     {
-                        Header = String.Format("{0} ({1}, {2})", box.BoxType, box.TickStart, box.TickEnd),
+                        Header = String.Format("{0} ({1}, {2})", box.GetType(), box.TickStart, box.TickEnd),
                         Content = GenerateBoxData(box),
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(LABEL_TEXT_COLOR))
                     };
@@ -266,11 +270,11 @@ namespace ScriptViz.ViewModel
             }
             #endregion
         }
-
+        
         private void DrawBoxes()
         {
             // Clear the canvas
-            Rectangles = new ObservableCollection<Rectangle>();
+            Rectangles = new ObservableCollection<Rect>();
 
             // Update the list of boxes that are active in the current frame.
             UpdateCurrFrameBoxes();
@@ -283,24 +287,33 @@ namespace ScriptViz.ViewModel
                 SolidColorBrush stroke = new SolidColorBrush();
                 
                 #region Determine Fill/Stroke Color
-                switch (box.BoxType)
+                switch (box.GetType().Name)
                 {
                     case "Hurtbox":
                         fill.Color = _hurtboxFillColor;
                         stroke.Color = _hurtboxStrokeColor;
                         break;
+
                     case "Hitbox":
-                        fill.Color = _hitboxFillColor;
-                        stroke.Color = _hitboxStrokeColor;
-                        break;
+                        if ((box as Hitbox).HitboxEffectIndex == -1 ||
+                            (box as Hitbox).HitType == 4)
+                        {
+                            fill.Color = _proxboxFillColor;
+                            stroke.Color = _proxboxStrokeColor;
+                            break;
+                        }
+                        else
+                        {
+                            fill.Color = _hitboxFillColor;
+                            stroke.Color = _hitboxStrokeColor;
+                            break;
+                        }
+
                     case "PhysicsBox":
                         fill.Color = _physboxFillColor;
                         stroke.Color = _physboxStrokeColor;
                         break;
-                    case "ProxBox":
-                        fill.Color = _proxboxFillColor;
-                        stroke.Color = _proxboxStrokeColor;
-                        break;
+
                     default:
                         fill.Color = Colors.Gray;
                         stroke.Color = Colors.LightGray;
@@ -309,7 +322,7 @@ namespace ScriptViz.ViewModel
                 #endregion
 
                 // TODO: If enabledBoxTypes contains box.BoxType, draw box. For enabling/disabling visibility of Boxes.
-                var rectangle = new Rectangle()
+                var rectangle = new Rect()
                 {
                     Width = box.Width * BOX_SCALAR,
                     Height = box.Height * BOX_SCALAR,
@@ -329,14 +342,14 @@ namespace ScriptViz.ViewModel
             {
                 for (int i = 0; i < Rectangles.Count; i++)
                 {
-                    Rectangle rectangle = Rectangles[i];
-                    Box box = CurrFrameBoxes[i];
+                    Rect rectangle = Rectangles[i];
+                    Box  box       = CurrFrameBoxes[i];
 
                     // Modify position of box, based on Positions
                     Point boxScaledLocation = new Point(box.X * BOX_SCALAR, 
-                                                        box.Y * BOX_SCALAR + box.Height);
+                                                        box.Y * BOX_SCALAR);
                     Point boxOrigin = new Point(boxScaledLocation.X,
-                                                CANVAS_PADDING + boxScaledLocation.Y);
+                                                boxScaledLocation.Y);
 
                     Point location = boxOrigin;
 
@@ -348,8 +361,8 @@ namespace ScriptViz.ViewModel
                             location.Y += pos.Movement * BOX_SCALAR;
                     }
 
-                    Canvas.SetLeft(rectangle, location.X);
-                    Canvas.SetBottom(rectangle, location.Y);
+                    rectangle.X = (float)location.X;
+                    rectangle.Y = (float)location.Y;
                 }
             }
         }
@@ -518,8 +531,10 @@ namespace ScriptViz.ViewModel
                 IsScriptLoaded = true;
 
                 file.Close();
+                
                 // Reset Display
-                // TODO?
+                ResetCanvasPosition();
+                UpdateVisualizer();
             }
         }
         #endregion
@@ -546,15 +561,17 @@ namespace ScriptViz.ViewModel
             _script = regex.Replace(_script, m =>
             {
                 countCurly++;
-                return m.Result(@"\1\}");
+                return m.Result(@"$1}");
             });
 
             regex = new Regex(@",(\s*)]");
             _script = regex.Replace(_script, m =>
             {
                 countCurly++;
-                return m.Result(@"\1\]");
+                return m.Result(@"$1]");
             });
+
+            File.CreateText("temp.json").Write(_script);
 
             string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
             MessageBox.Show(msg);
@@ -596,19 +613,31 @@ namespace ScriptViz.ViewModel
         {
             if (CurrentFrame < _maxFrame) CurrentFrame++;
         }
+
+        public void FrameChanged()
+        {
+            if (Boxes != null)
+                DrawBoxes();
+        }
         #endregion
 
         #endregion // Event Handling
 
-        
+
 
         #region Control Operations
 
+        //TODO: Implement!
         private void ShowScript()
         {
             MessageBox.Show("Show Script button clicked!");
             //dpScriptBoxGroup.Visibility = menuitemShowScriptBox.IsChecked ? Visibility.Visible : Visibility.Collapsed;
             //gridContent.RowDefinitions[1].Height = new GridLength(menuitemShowScriptBox.IsChecked ? 1 : 0, GridUnitType.Star);
+        }
+
+        private void ResetCanvasPosition()
+        {
+            CanvasPosition = new Point(0, CANVAS_PADDING);
         }
 
         #endregion
@@ -627,21 +656,32 @@ namespace ScriptViz.ViewModel
     /// <summary>
     /// A logical representation of a script-based Box
     /// </summary>
-    public struct Box
-    {
-        public int TickStart, TickEnd;
-        public float X, Y;
-        public float Width, Height;
-        public string BoxType;
-        public float HitType, HitboxEffectIndex;
-    }
+    //public struct Box
+    //{
+    //    public int TickStart, TickEnd;
+    //    public float X, Y;
+    //    public float Width, Height;
+    //    public string BoxType;
+    //    public float HitType, HitboxEffectIndex;
+    //}
 
     /// <summary>
     /// A logical representation of a System.Windows.Shapes.Rectangle
     /// </summary>
-    public struct Rect
+    public class Rect : INotifyPropertyChanged
     {
-        public float X, Y;
-        public float Width, Height;
+        public double X      { get; set; }
+        public double Y      { get; set; }
+        public double Width  { get; set; }
+        public double Height { get; set; }
+        public Brush  Fill   { get; set; }
+        public Brush  Stroke { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

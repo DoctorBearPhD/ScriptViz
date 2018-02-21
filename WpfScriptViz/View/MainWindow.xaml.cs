@@ -1,22 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using System.IO;
-using ScriptLib;
 using ScriptViz.ViewModel;
 
 namespace ScriptViz.View
@@ -54,7 +39,7 @@ namespace ScriptViz.View
         //{
         //    originalMousePos = e.GetPosition(null);
         //    Console.WriteLine(originalMousePos.ToString());
-        //    originalCanvasPos = new Point(Canvas.GetLeft(canvasScriptViz), Canvas.GetBottom(canvasScriptViz));
+        //    originalCanvasPos = new Point(Canvas.GetLeft(containerCanvasRectangles), Canvas.GetBottom(containerCanvasRectangles));
         //}
 
         public void canvasContainer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -64,7 +49,7 @@ namespace ScriptViz.View
             originalMousePos = e.GetPosition(null);
 
             // store mouse position and original canvas position
-            originalCanvasPos = new Point(Canvas.GetLeft(canvasScriptViz), Canvas.GetBottom(canvasScriptViz));
+            originalCanvasPos = new Point(Canvas.GetLeft(containerCanvasRectangles), Canvas.GetBottom(containerCanvasRectangles));
 
             _flagDragging = true;
             e.Handled = true; // Sets the mouse-down event as having been handled.
@@ -106,38 +91,14 @@ namespace ScriptViz.View
         }
         #endregion
         
-        #region Menu Item Events
-
-        #region Remove BACVERint
-        private void menuitemRemoveBVI_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.RemoveBACVERint();
-        }
-        #endregion
-
         #region Slider Events
-        private void btnPrevFrame_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.GoToPreviousFrame();
-        }
-
-        private void btnNextFrame_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.GoToNextFrame();
-        }
-
+        
         private void sliderCurrentFrame_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // TODO: Bind to ValueChanged event
-            #region Update Displayed Hitboxes
-            //if (_boxes != null)
-            //    DrawBoxes();
-            #endregion
+            _vm.FrameChanged();
         }
 
         #endregion // Slider Events
-
-        #endregion // MenuItem Events
 
         #endregion // Event Handling
         
@@ -154,8 +115,10 @@ namespace ScriptViz.View
         
         private void SetCanvasPosition(Point position, bool useOriginalPosition = true)
         {
-            Canvas.SetLeft(canvasScriptViz, useOriginalPosition ? (originalCanvasPos.X + position.X) : position.X);
-            Canvas.SetBottom(canvasScriptViz, useOriginalPosition ? (originalCanvasPos.Y + position.Y) : position.Y);
+            if (useOriginalPosition)
+                _vm.CanvasPosition = new Point(originalCanvasPos.X + position.X, originalCanvasPos.Y + position.Y);
+            else
+                _vm.CanvasPosition = new Point(position.X, position.Y);
         }
         
     }
