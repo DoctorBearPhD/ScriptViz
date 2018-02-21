@@ -121,14 +121,8 @@ namespace ScriptViz.View
                 _vm.CanvasPosition = new Point(position.X, position.Y);
         }
         
-    }
 
-    //public struct Position
-    //{
-    //    public int TickStart, TickEnd;
-    //    public float Movement;
-    //    public int Flag;
-    //}
+    }
 
 }
 

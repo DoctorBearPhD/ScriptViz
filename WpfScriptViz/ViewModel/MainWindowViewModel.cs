@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ICSharpCode.AvalonEdit.Document;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScriptLib;
 using ScriptViz.Command;
@@ -20,6 +21,7 @@ namespace ScriptViz.ViewModel
 {
     public class MainWindowViewModel : VMBase
     {
+        #region Variables
         MainWindowModel model;
 
         #region Lists
@@ -31,6 +33,16 @@ namespace ScriptViz.ViewModel
         #endregion
 
         StreamReader file;
+
+        TextDocument _scriptFile = new TextDocument();
+        public TextDocument ScriptFile
+        {
+            get => _scriptFile;
+            set
+            {
+                _scriptFile = value; RaisePropertyChanged("ScriptFile");
+            }
+        }
 
         double _currentFrame;
         double _maxFrame;
@@ -69,6 +81,16 @@ namespace ScriptViz.ViewModel
                       _physboxFillColor, _physboxStrokeColor,
                       _proxboxFillColor, _proxboxStrokeColor;
 
+        #region Script
+
+        string _script = "Load a script, or paste a script here...";
+
+        public string Script
+        {
+            get => ScriptFile.Text;
+            set { ScriptFile.Text = value; RaisePropertyChanged("ScriptFile"); }
+        }
+
         bool _isScriptLoaded;
 
         public bool IsScriptLoaded
@@ -80,6 +102,26 @@ namespace ScriptViz.ViewModel
                 RaisePropertyChanged("IsScriptLoaded");
             }
         }
+
+        JObject _selectedScript;
+
+        bool _isScriptBoxVisible = true;
+        public bool IsScriptBoxVisible
+        {
+            get => _isScriptBoxVisible;
+            set  { _isScriptBoxVisible = value; RaisePropertyChanged("IsScriptBoxVisible"); }
+        }
+
+        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
+
+        GridLength _scriptBoxColumnSize;
+        public GridLength ScriptBoxColumnSize {
+            get => _scriptBoxColumnSize;
+            set  { _scriptBoxColumnSize = value; RaisePropertyChanged("ScriptBoxColumnSize"); }
+        }
+
+
+        #endregion // Script
 
         #region Rectangles
         ObservableCollection<Rect> _rectangles;
@@ -100,10 +142,7 @@ namespace ScriptViz.ViewModel
             set { _boxes = value; RaisePropertyChanged("Boxes"); }
         }
         #endregion
-
-        string _script;
-        JObject _selectedScript;
-
+        
         #region View Properties
 
         Point _canvasPosition;
@@ -132,6 +171,9 @@ namespace ScriptViz.ViewModel
         #endregion // ICommands
 
         #endregion // View Properties
+
+        #endregion // Variables
+
 
         public MainWindowViewModel()
         {
@@ -168,6 +210,8 @@ namespace ScriptViz.ViewModel
 
             // instantiate the Model
             model = new MainWindowModel();
+            // Set initial text for script box
+            ScriptFile.Text = _script;
         }
 
         #region Box Updates
@@ -188,13 +232,13 @@ namespace ScriptViz.ViewModel
             #region Parse JSON
             // Try to parse JSON out of the text
             // Try to parse as a JObject
-            if (_script.TrimStart().StartsWith("{"))
+            if (Script.TrimStart().StartsWith("{"))
             {
                 CleanScript();
                 RemoveBACVERint();
 
                 // Convert the JSON String to a C# object.
-                var bacFile = JsonConvert.DeserializeObject<BACFile>(_script,
+                var bacFile = JsonConvert.DeserializeObject<BACFile>(Script,
                     new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
                 // TEMP
@@ -520,14 +564,14 @@ namespace ScriptViz.ViewModel
 
             if (result == true)
             {
-                if (file != null) file.Close(); // close the old file
+                //if (file != null) file.Close(); // close the old file
 
                 // read the file in
                 string fileName = openFileDialog.FileName;
 
                 file = new StreamReader(fileName);
                 
-                _script = file.ReadToEnd();
+                Script = file.ReadToEnd();
                 IsScriptLoaded = true;
 
                 file.Close();
@@ -551,6 +595,19 @@ namespace ScriptViz.ViewModel
 
         #region Script Operations
 
+        #region Show Script
+        //TODO: Implement!
+        private void ShowScript()
+        {
+            if (IsScriptBoxVisible)
+            {
+                ScriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
+            }
+            else
+                ScriptBoxColumnSize = new GridLength(0);
+        }
+        #endregion // Show Script
+
         #region Try to Clean JSON
         public void CleanScript()
         {
@@ -558,20 +615,20 @@ namespace ScriptViz.ViewModel
             int countSquare = 0;
 
             Regex regex = new Regex(@",(\s*)}");
-            _script = regex.Replace(_script, m =>
+            Script = regex.Replace(Script, m =>
             {
                 countCurly++;
                 return m.Result(@"$1}");
             });
 
             regex = new Regex(@",(\s*)]");
-            _script = regex.Replace(_script, m =>
+            Script = regex.Replace(Script, m =>
             {
                 countCurly++;
                 return m.Result(@"$1]");
             });
 
-            File.CreateText("temp.json").Write(_script);
+            File.CreateText("temp.json").Write(Script);
 
             string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
             MessageBox.Show(msg);
@@ -589,7 +646,7 @@ namespace ScriptViz.ViewModel
 
             // replace AND count the number of replacements
             int count = 0;
-            _script = regex.Replace(_script,
+            Script = regex.Replace(Script,
                 m => {                   // function is called on each match
                     count++;
                     return m.Result(""); // replace the match with "" (delete the text)
@@ -622,18 +679,8 @@ namespace ScriptViz.ViewModel
         #endregion
 
         #endregion // Event Handling
-
-
-
+        
         #region Control Operations
-
-        //TODO: Implement!
-        private void ShowScript()
-        {
-            MessageBox.Show("Show Script button clicked!");
-            //dpScriptBoxGroup.Visibility = menuitemShowScriptBox.IsChecked ? Visibility.Visible : Visibility.Collapsed;
-            //gridContent.RowDefinitions[1].Height = new GridLength(menuitemShowScriptBox.IsChecked ? 1 : 0, GridUnitType.Star);
-        }
 
         private void ResetCanvasPosition()
         {

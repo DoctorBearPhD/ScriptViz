@@ -3,26 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ScriptViz"
+        xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         mc:Ignorable="d"
         Title="Script" Height="600" Width="600">
+    <Window.Resources>
+        <vm:MainWindowViewModel x:Key="viewModel"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Mode="OneWay" Source="{StaticResource viewModel}"/>
+    </Window.DataContext>
+
     <DockPanel x:Name="dpScriptWindowContent" Background="{StaticResource MainBGBrush}">
         <Button x:Name="btnUpdate" Width="80" Height="28" Margin="0,0,5,5" 
                 VerticalAlignment="Bottom" HorizontalAlignment="Right" 
                 DockPanel.Dock="Bottom" 
                 TabIndex="99"
-                Command="{Binding Path=BtnUpdateCommand}"
                 Content="{DynamicResource ScriptUpdateButtonText}" 
                 Foreground="{StaticResource MainTextBrush}" 
                 Background="{DynamicResource ButtonBgBrush}" />
-        <TextBox x:Name="tbScriptBox" DockPanel.Dock="Top"
+        <TextBlock x:Name="tbScriptBox" DockPanel.Dock="Top"
                  TextWrapping="Wrap" FontFamily="Courier New" 
-                 Background="{DynamicResource ScriptBoxBgBrush}" Foreground="#FFE6E6E6" BorderBrush="{x:Null}"
-                 SelectionBrush="#FF4D7093"
+                 Background="{DynamicResource ScriptBoxBgBrush}" Foreground="#FFE6E6E6" 
                  Margin="5" Padding="10" 
                  ToolTip="Script Box" 
-                 Text="{DynamicResource ScriptBoxDefaultText}" 
-                 AcceptsReturn="True" 
-                 VerticalScrollBarVisibility="Auto" TabIndex="98" />
+                 Text="{Binding Script}" />
     </DockPanel>
 </Window>

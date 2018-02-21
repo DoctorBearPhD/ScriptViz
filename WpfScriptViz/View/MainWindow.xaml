@@ -3,15 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
-        xmlns:vm="clr-namespace:ScriptViz.ViewModel"
-        Title="Script Visualizer" 
-        Width="700" Height="680" 
+        Title="Mysterious Tool" 
+        Width="800" Height="680" 
         Background="{DynamicResource MainBGBrush}"
         Deactivated="Window_Deactivated">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <vm:MainWindowViewModel x:Key="viewModel" />
     </Window.Resources>
     <Window.DataContext>
@@ -37,7 +39,7 @@
                           Style="{StaticResource DarkMenuItemStyle}"
                           IsCheckable="True" 
                           Command="{Binding ShowScriptCommand, Mode=OneWay}"
-                          IsEnabled="{Binding IsScriptLoaded}" />
+                          IsChecked="{Binding IsScriptBoxVisible}"/>
             </MenuItem>
 
             <MenuItem Header="_Tools" Template="{DynamicResource DarkMenuItemControlTemplate}" >
@@ -56,25 +58,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="{Binding ScriptBoxColumnSize}"/>
+            </Grid.ColumnDefinitions>
 
-            <Grid x:Name="ScriptDisplayContainer" Grid.Row="0">
+            <Grid x:Name="ScriptVisualizerContainer" Grid.Row="0" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-
-                <Border BorderThickness="1"
-                        BorderBrush="#FF343434" 
-                        Margin="5,10,0,10" CornerRadius="3" 
-                        Grid.RowSpan="2">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="spDisplayContainer"/> <!-- TODO: Replace with Tabs -->
-                    </ScrollViewer>
-                </Border>
+                
                 <Canvas x:Name="canvasContainer"
                         Margin="10" 
                         Background="#FF252526" Grid.Column="1"
@@ -83,9 +77,9 @@
                         MouseMove="canvasContainer_MouseMove" 
                         MouseRightButtonDown="canvasContainer_MouseRightButtonDown" 
                         ClipToBounds="True" >
-                    <Canvas.Effect>
+                    <!--<Canvas.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
-                    </Canvas.Effect>
+                    </Canvas.Effect>-->
                     <Grid x:Name="containerCanvasRectangles"
                           Canvas.Left="{Binding CanvasPosition.X}" Canvas.Bottom="{Binding CanvasPosition.Y}" 
                           Width="{Binding ElementName=canvasContainer, Path=ActualWidth}"
@@ -117,8 +111,6 @@
                         </ItemsControl>
                     </Grid>
                     
-                    
-
                 </Canvas>
                 <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
                     <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
@@ -157,8 +149,40 @@
                 </DockPanel>
 
             </Grid>
-
-            <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" Grid.Row="1"/>
+            
+            <Border BorderThickness="1"
+                        BorderBrush="#FF343434" 
+                        Margin="10,0,10,10" CornerRadius="3" 
+                        Grid.Row="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="spDisplayContainer"/>
+                    <!-- TODO: Replace with Tabs -->
+                </ScrollViewer>
+            </Border>
+            
+            <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" 
+                       Grid.Row="0" Grid.Column="1" 
+                       Grid.RowSpan="2"
+                       Visibility="{Binding IsScriptBoxVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <DockPanel x:Name="dpScriptWindowContent" Background="{StaticResource MainBGBrush}">
+                    <!--<Button x:Name="btnUpdate" Width="80" Height="28" Margin="0,0,5,5" 
+                            VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                            DockPanel.Dock="Bottom" 
+                            TabIndex="99"
+                            Content="{DynamicResource ScriptUpdateButtonText}" 
+                            Foreground="{StaticResource MainTextBrush}" 
+                            Background="{DynamicResource ButtonBgBrush}" />-->
+                    <ic:TextEditor x:Name="teScriptBox" DockPanel.Dock="Top" 
+                                   Document="{Binding ScriptFile}"
+                                   Background="{DynamicResource ScriptBoxBgBrush}" Foreground="#FFE6E6E6"
+                                   ShowLineNumbers="True"
+                                   LineNumbersForeground="{StaticResource FadedTextBrush}"
+                                   FontFamily="Courier New"
+                                   Padding="5" />
+                    
+                </DockPanel>
+                
+            </DockPanel>
         </Grid>
     </DockPanel>
 
