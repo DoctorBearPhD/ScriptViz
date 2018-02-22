@@ -25,8 +25,15 @@ namespace ScriptViz.ViewModel
         MainWindowModel model;
 
         #region Lists
-
         public ObservableCollection<Box> CurrFrameBoxes;
+
+        ObservableCollection<object> _moveLists;
+
+        public ObservableCollection<object> MoveLists
+        {
+            get => _moveLists;
+            set { _moveLists = value; RaisePropertyChanged("MoveLists"); }
+        }
 
         List<Position>  _positions;
         List<Position>  _currFramePositions;
@@ -235,15 +242,21 @@ namespace ScriptViz.ViewModel
             if (Script.TrimStart().StartsWith("{"))
             {
                 CleanScript();
-                RemoveBACVERint();
 
                 // Convert the JSON String to a C# object.
                 var bacFile = JsonConvert.DeserializeObject<BACFile>(Script,
                     new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+                // Make tabs for each MoveList
+                MoveLists = new ObservableCollection<object>();
+                for (int i = 0; i < bacFile.MoveLists.Length; i++)
+                    MoveLists.Add("MoveList " + (i+1));
+                
                 // TEMP
                 var jobj = bacFile.MoveLists[0].Moves[602];
                 // ----
+
+                if (jobj == null) return;
 
                 MaxFrame = jobj.TotalTicks - 1;
 
