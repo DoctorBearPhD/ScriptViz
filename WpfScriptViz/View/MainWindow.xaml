@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+        xmlns:local="clr-namespace:ScriptViz.View"
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
         Title="Mysterious Tool" 
@@ -154,12 +155,23 @@
             <Border Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
                 <!-- TODO: Replace with Tabs -->
                 <TabControl x:Name="tabControl" 
-                            ItemsSource="{Binding MoveLists}"
+                            ItemsSource="{Binding MoveListTabs}"
                             ItemContainerStyle="{StaticResource DarkTabItemStyle}"
+                            SelectedIndex="{Binding SelectedMoveList}"
                             Style="{DynamicResource DarkTabControlStyle}">
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ListBox DataContext="{StaticResource viewModel}" 
+                                         ItemsSource="{Binding Moves}"
+                                         ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
+                                         Style="{StaticResource DarkListBoxStyle}"/>
+                            </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>

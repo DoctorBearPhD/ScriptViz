@@ -27,12 +27,30 @@ namespace ScriptViz.ViewModel
         #region Lists
         public ObservableCollection<Box> CurrFrameBoxes;
 
-        ObservableCollection<object> _moveLists;
+        ObservableCollection<object> _moveListTabs;
 
-        public ObservableCollection<object> MoveLists
+        public ObservableCollection<object> MoveListTabs
         {
-            get => _moveLists;
-            set { _moveLists = value; RaisePropertyChanged("MoveLists"); }
+            get => _moveListTabs;
+            set { _moveListTabs = value; RaisePropertyChanged("MoveListTabs"); }
+        }
+
+        int _selectedMoveList;
+        public int SelectedMoveList
+        {
+            get => _selectedMoveList;
+            set
+            {
+                _selectedMoveList = value; RaisePropertyChanged("SelectedMoveList");
+            }
+        }
+
+        private ObservableCollection<string> _moves;
+
+        public ObservableCollection<string> Moves
+        {
+            get => _moves;
+            set { _moves = value; RaisePropertyChanged("Moves"); }
         }
 
         List<Position>  _positions;
@@ -223,13 +241,14 @@ namespace ScriptViz.ViewModel
 
         #region Box Updates
 
-        private void UpdateVisualizer()
+        private void LoadFile()
         {
             #region Reset Display
             //SetCanvasPosition(new Point(), false);
 
             Boxes = new ObservableCollection<Box>();
             _positions = new List<Position>();
+            _selectedMoveList = 0;
             #endregion
 
             #region Show Loading
@@ -246,14 +265,25 @@ namespace ScriptViz.ViewModel
                 // Convert the JSON String to a C# object.
                 var bacFile = JsonConvert.DeserializeObject<BACFile>(Script,
                     new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                
+                // Make list items for each Move
+                Moves = new ObservableCollection<string>();
+                int j = 0;
+                foreach (Move move in bacFile.MoveLists[_selectedMoveList].Moves)
+                {
+                    if (move != null)
+                        Moves.Add(move.Name);
+                    else Moves.Add("null (Script Index: " + j + ")");
+                    j++;
+                }
 
                 // Make tabs for each MoveList
-                MoveLists = new ObservableCollection<object>();
+                MoveListTabs = new ObservableCollection<object>();
                 for (int i = 0; i < bacFile.MoveLists.Length; i++)
-                    MoveLists.Add("MoveList " + (i+1));
+                    MoveListTabs.Add("MoveList " + (i + 1));
                 
                 // TEMP
-                var jobj = bacFile.MoveLists[0].Moves[602];
+                var jobj = bacFile.MoveLists[_selectedMoveList].Moves[602];
                 // ----
 
                 if (jobj == null) return;
@@ -591,7 +621,7 @@ namespace ScriptViz.ViewModel
                 
                 // Reset Display
                 ResetCanvasPosition();
-                UpdateVisualizer();
+                LoadFile();
             }
         }
         #endregion

@@ -112,12 +112,8 @@
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Util\Util.cs" />
-    <Compile Include="ViewModel\ScriptWindowViewModel.cs" />
     <Compile Include="ViewModel\VMBase.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="View\ScriptWindow.xaml.cs">
-      <DependentUpon>ScriptWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Model\MainWindowModel.cs" />
     <Resource Include="Resources\ColorStyles.xaml">
       <SubType>Designer</SubType>
@@ -135,6 +131,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
+    <Page Include="Resources\ListBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,10 +147,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ScriptWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
