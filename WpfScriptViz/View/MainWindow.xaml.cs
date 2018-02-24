@@ -91,15 +91,6 @@ namespace ScriptViz.View
         }
         #endregion
         
-        #region Slider Events
-        
-        private void sliderCurrentFrame_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            _vm.FrameChanged();
-        }
-
-        #endregion // Slider Events
-
         #endregion // Event Handling
         
         private void UndoMoveBoxes()

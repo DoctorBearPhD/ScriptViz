@@ -9,7 +9,7 @@
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
         Title="Mysterious Tool" 
-        Width="800" Height="680" 
+        Width="920" Height="680" 
         Background="{DynamicResource MainBgBrush}"
         Deactivated="Window_Deactivated">
 
@@ -25,8 +25,8 @@
         <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{StaticResource DarkMenuStyle}">
 
             <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
-                <MenuItem Header="_Open" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
-                          Command="{Binding OpenCommand, Mode=OneWay}"/>
+                <MenuItem Header="_Open BAC" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding OpenBacCommand, Mode=OneWay}"/>
 
                 <Separator Style="{DynamicResource DarkSeparatorStyle}" />
 
@@ -132,8 +132,7 @@
                             LargeChange="10" SmallChange="1" IsSnapToTickEnabled="True"
                             Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
                             Margin="10,0" VerticalAlignment="Top" 
-                            Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}"
-                            ValueChanged="sliderCurrentFrame_ValueChanged" IsMoveToPointEnabled="True"/>
+                            Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}" IsMoveToPointEnabled="True"/>
                     <Label x:Name="lblCurrentFrame"
                            HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
                            Foreground="{StaticResource DisabledTextBrush}">
@@ -142,7 +141,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0} / {1}">
                                         <Binding Path="CurrentFrame" />
-                                        <Binding Path="MaxFrame" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="MaxFrame" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -157,21 +156,11 @@
                 <TabControl x:Name="tabControl" 
                             ItemsSource="{Binding MoveListTabs}"
                             ItemContainerStyle="{StaticResource DarkTabItemStyle}"
-                            SelectedIndex="{Binding SelectedMoveList}"
+                            SelectedIndex="{Binding SelectedMoveListIndex}"
                             Style="{DynamicResource DarkTabControlStyle}">
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <ListBox DataContext="{StaticResource viewModel}" 
-                                         ItemsSource="{Binding Moves}"
-                                         ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
-                                         Style="{StaticResource DarkListBoxStyle}"/>
-                            </Grid>
+                            <local:MoveListControl DataContext="{StaticResource viewModel}"/>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>
@@ -190,7 +179,7 @@
                             Foreground="{StaticResource MainTextBrush}" 
                             Background="{DynamicResource ButtonBgBrush}" />-->
                     <ic:TextEditor x:Name="teScriptBox" DockPanel.Dock="Top" Margin="0,10,10,10"
-                                   Document="{Binding ScriptFile}"
+                                   Document="{Binding ScriptTextFile}"
                                    Background="{DynamicResource XtraDarkBgBrush}" Foreground="{StaticResource AltMainTextBrush}"
                                    ShowLineNumbers="True"
                                    LineNumbersForeground="{StaticResource DisabledTextBrush}"

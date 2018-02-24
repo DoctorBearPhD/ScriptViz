@@ -22,75 +22,8 @@ namespace ScriptViz.ViewModel
     public class MainWindowViewModel : VMBase
     {
         #region Variables
-        MainWindowModel model;
 
-        #region Lists
-        public ObservableCollection<Box> CurrFrameBoxes;
-
-        ObservableCollection<object> _moveListTabs;
-
-        public ObservableCollection<object> MoveListTabs
-        {
-            get => _moveListTabs;
-            set { _moveListTabs = value; RaisePropertyChanged("MoveListTabs"); }
-        }
-
-        int _selectedMoveList;
-        public int SelectedMoveList
-        {
-            get => _selectedMoveList;
-            set
-            {
-                _selectedMoveList = value; RaisePropertyChanged("SelectedMoveList");
-            }
-        }
-
-        private ObservableCollection<string> _moves;
-
-        public ObservableCollection<string> Moves
-        {
-            get => _moves;
-            set { _moves = value; RaisePropertyChanged("Moves"); }
-        }
-
-        List<Position>  _positions;
-        List<Position>  _currFramePositions;
-        #endregion
-
-        StreamReader file;
-
-        TextDocument _scriptFile = new TextDocument();
-        public TextDocument ScriptFile
-        {
-            get => _scriptFile;
-            set
-            {
-                _scriptFile = value; RaisePropertyChanged("ScriptFile");
-            }
-        }
-
-        double _currentFrame;
-        double _maxFrame;
-
-        public double CurrentFrame
-        {
-            get => _currentFrame;
-            set
-            {
-                _currentFrame = value;
-                RaisePropertyChanged("CurrentFrame");
-            }
-        }
-
-        public double MaxFrame
-        {
-            get => _maxFrame;
-            set
-            {
-                _maxFrame = value;
-                RaisePropertyChanged("MaxFrame");
-            }
-        }
+        #region Constants
 
         public const string LABEL_TEXT_COLOR = "#FFababad";
         public const float BOX_SCALAR = 100;
@@ -101,23 +34,119 @@ namespace ScriptViz.ViewModel
 
         const bool DEBUG = true;
 
-        private Color _hurtboxFillColor, _hurtboxStrokeColor,
-                      _hitboxFillColor, _hitboxStrokeColor,
-                      _physboxFillColor, _physboxStrokeColor,
-                      _proxboxFillColor, _proxboxStrokeColor;
+        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
+        const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script, or paste a script here...";
+
+        #endregion
+
+        MainWindowModel model;
+
+        #region Lists
+        public ObservableCollection<Box> CurrFrameBoxes;
+
+        ObservableCollection<object> _moveListTabs;
+        public ObservableCollection<object> MoveListTabs
+        {
+            get => _moveListTabs;
+            set { _moveListTabs = value; RaisePropertyChanged(nameof(MoveListTabs)); }
+        }
+
+        ObservableCollection<string> _moveNames;
+        public ObservableCollection<string> MoveNames
+        {
+            get => _moveNames;
+            set { _moveNames = value; RaisePropertyChanged(nameof(MoveNames)); }
+        }
+
+        List<Position>  _positions;
+        List<Position>  _currFramePositions;
+        #endregion
+
+        #region Selected
+
+        // The selected MoveList tab in the Script Info area (index)
+        int _selectedMoveListIndex;
+        public int SelectedMoveListIndex
+        {
+            get => _selectedMoveListIndex;
+            set
+            {
+                _selectedMoveListIndex = value;
+                RaisePropertyChanged(nameof(SelectedMoveListIndex));
+                SelectedMoveListChanged();
+            }
+        }
+
+        int _selectedMoveIndex;
+        public int SelectedMoveIndex
+        {
+            get => _selectedMoveIndex;
+            set
+            {
+                _selectedMoveIndex = value;
+                RaisePropertyChanged(nameof(SelectedMoveIndex));
+                SelectedMoveChanged();
+            }
+        }
+
+        public Move SelectedMove { get; private set; }
+
+        #endregion
+
+        double _currentFrame;
+        public double CurrentFrame
+        {
+            get => _currentFrame;
+            set
+            {
+                _currentFrame = value;
+                RaisePropertyChanged(nameof(CurrentFrame));
+                FrameChanged();
+            }
+        }
+
+        double _maxFrame;
+        public double MaxFrame
+        {
+            get => _maxFrame;
+            set
+            {
+                _maxFrame = value;
+                RaisePropertyChanged(nameof(MaxFrame));
+            }
+        }
+
+        Color _hurtboxFillColor, _hurtboxStrokeColor,
+              _hitboxFillColor,  _hitboxStrokeColor,
+              _physboxFillColor, _physboxStrokeColor,
+              _proxboxFillColor, _proxboxStrokeColor;
 
         #region Script
 
-        string _script = "Load a script, or paste a script here...";
+        // Script text file as a data object
+        BaseFile _scriptFileObject;
 
-        public string Script
+        BACFile bacFile;
+        //public BACFile BacFile
+        //{
+        //    get { return bacFile; }
+        //    set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
+        //}
+
+        // shortcut for accessing TextDocument's text
+        string ScriptText { get => ScriptTextFile.Text; set => ScriptTextFile.Text = value; }
+
+        TextDocument _scriptTextFile = new TextDocument();
+        public TextDocument ScriptTextFile
         {
-            get => ScriptFile.Text;
-            set { ScriptFile.Text = value; RaisePropertyChanged("ScriptFile"); }
+            get => _scriptTextFile;
+            set
+            {
+                _scriptTextFile = value; RaisePropertyChanged(nameof(ScriptTextFile));
+            }
         }
 
         bool _isScriptLoaded;
-
         public bool IsScriptLoaded
         {
             get { return _isScriptLoaded; }
@@ -127,9 +156,7 @@ namespace ScriptViz.ViewModel
                 RaisePropertyChanged("IsScriptLoaded");
             }
         }
-
-        JObject _selectedScript;
-
+        
         bool _isScriptBoxVisible = true;
         public bool IsScriptBoxVisible
         {
@@ -137,14 +164,11 @@ namespace ScriptViz.ViewModel
             set  { _isScriptBoxVisible = value; RaisePropertyChanged("IsScriptBoxVisible"); }
         }
 
-        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
-
         GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
         public GridLength ScriptBoxColumnSize {
             get => _scriptBoxColumnSize;
             set  { _scriptBoxColumnSize = value; RaisePropertyChanged("ScriptBoxColumnSize"); }
         }
-
 
         #endregion // Script
 
@@ -171,7 +195,6 @@ namespace ScriptViz.ViewModel
         #region View Properties
 
         Point _canvasPosition;
-
         public Point CanvasPosition
         {
             get { return _canvasPosition; }
@@ -184,7 +207,7 @@ namespace ScriptViz.ViewModel
         public ICommand CleanScriptCommand => new RelayCommand(CleanScript);
         public ICommand  ShowScriptCommand => new RelayCommand(ShowScript);
         public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
-        public ICommand        OpenCommand => new RelayCommand(OpenFile);
+        public ICommand     OpenBacCommand => new RelayCommand(OpenBACFile);
         public ICommand        ExitCommand => new RelayCommand(Exit);
         #endregion
 
@@ -236,20 +259,17 @@ namespace ScriptViz.ViewModel
             // instantiate the Model
             model = new MainWindowModel();
             // Set initial text for script box
-            ScriptFile.Text = _script;
+            ScriptTextFile.Text = DEFAULT_SCRIPT_BOX_TEXT;
         }
 
-        #region Box Updates
-
-        private void LoadFile()
+        // TODO: Don't use this to display?
+        #region Load
+        void LoadBacFile()
         {
-            #region Reset Display
-            //SetCanvasPosition(new Point(), false);
+            // Try to clean the JSON before doing anything with it.
+            CleanScript();
 
-            Boxes = new ObservableCollection<Box>();
-            _positions = new List<Position>();
-            _selectedMoveList = 0;
-            #endregion
+            ResetDisplay();
 
             #region Show Loading
             // TODO
@@ -257,108 +277,138 @@ namespace ScriptViz.ViewModel
 
             #region Parse JSON
             // Try to parse JSON out of the text
-            // Try to parse as a JObject
-            if (Script.TrimStart().StartsWith("{"))
+            // Try to parse as a BACFile
+
+            // Convert the JSON String to a C# object.
+            bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            //var bacFile = (BACFile)_scriptFileObject;
+
+            #endregion
+            
+            // Make list items for each Move
+            LoadAllMoveLists();
+            LoadMoveList();
+
+            #region Populate TreeView
+            //foreach (Box box in Boxes)
+            //{
+            //    Expander expanderBoxData = new Expander
+            //    {
+            //        Header = String.Format("{0} ({1}, {2})", box.GetType(), box.TickStart, box.TickEnd),
+            //        Content = GenerateBoxData(box),
+            //        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(LABEL_TEXT_COLOR))
+            //    };
+            //}
+            #endregion
+            
+            //LoadMove();
+        }
+
+        /// <summary>
+        /// Creates a tab for each MoveList in the BACFile. In actuality, creates a list of Strings which causes tabs to be created.
+        /// </summary>
+        void LoadAllMoveLists()
+        {
+            if (bacFile == null) return;
+
+            // Make tabs for each MoveList
+            MoveListTabs = new ObservableCollection<object>();
+            for (int i = 0; i < bacFile.MoveLists.Length; i++)
+                MoveListTabs.Add("MoveList " + (i + 1));
+        }
+
+        void LoadMoveList()
+        {
+            if (bacFile == null) return;
+
+            #region Create ListBoxItems
+            MoveNames = new ObservableCollection<string>();
+            int j = 0;
+            foreach (Move move in bacFile.MoveLists[SelectedMoveListIndex].Moves)
             {
-                CleanScript();
-
-                // Convert the JSON String to a C# object.
-                var bacFile = JsonConvert.DeserializeObject<BACFile>(Script,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                
-                // Make list items for each Move
-                Moves = new ObservableCollection<string>();
-                int j = 0;
-                foreach (Move move in bacFile.MoveLists[_selectedMoveList].Moves)
-                {
-                    if (move != null)
-                        Moves.Add(move.Name);
-                    else Moves.Add("null (Script Index: " + j + ")");
-                    j++;
-                }
-
-                // Make tabs for each MoveList
-                MoveListTabs = new ObservableCollection<object>();
-                for (int i = 0; i < bacFile.MoveLists.Length; i++)
-                    MoveListTabs.Add("MoveList " + (i + 1));
-                
-                // TEMP
-                var jobj = bacFile.MoveLists[_selectedMoveList].Moves[602];
-                // ----
-
-                if (jobj == null) return;
-
-                MaxFrame = jobj.TotalTicks - 1;
-
-                #region Check for Boxes
-
-                if (jobj.Hurtboxes != null && jobj.Hurtboxes.Length > 0)
-                {
-                    foreach (var hurtbox in jobj.Hurtboxes)
-                    {
-                        //Console.WriteLine(hurtbox);
-                        Boxes.Add(hurtbox);
-                    }
-                }
-                if (jobj.Hitboxes != null && jobj.Hitboxes.Length > 0)
-                {
-                    Console.WriteLine((jobj.Hitboxes));
-                    foreach (var hitbox in jobj.Hitboxes)
-                    {
-                        //Console.WriteLine(hurtbox);
-                        Boxes.Add(hitbox);
-                    }
-                }
-                if (jobj.PhysicsBoxes != null && jobj.PhysicsBoxes.Length > 0)
-                {
-                    foreach (var physbox in jobj.PhysicsBoxes)
-                    {
-                        //Console.WriteLine(hurtbox);
-                        Boxes.Add(physbox);
-                    }
-                }
-                #endregion
-
-                #region Check for Positions
-                if (jobj.Positions != null && jobj.Positions.Length > 0)
-                {
-                    foreach (var position in jobj.Positions)
-                    {
-                        _positions.Add(position);
-                    }
-                }
-                #endregion
-
-                #region No Candidates Found
-                if (Boxes.Count == 0)
-                {
-                    Console.WriteLine("Candidates not found.");
-                    return;
-                }
-                #endregion
-                
-                #region Populate TreeView
-                foreach (Box box in Boxes)
-                {
-                    Expander expanderBoxData = new Expander
-                    {
-                        Header = String.Format("{0} ({1}, {2})", box.GetType(), box.TickStart, box.TickEnd),
-                        Content = GenerateBoxData(box),
-                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(LABEL_TEXT_COLOR))
-                    };
-                }
-                #endregion
-
-                DrawBoxes();
+                if (move != null)
+                    MoveNames.Add(move.Name);
+                else MoveNames.Add("null (Script Index: " + j + ")");
+                j++;
             }
-            else
-            {
-                // Script didn't start with "{"
-            }
+
+            SelectedMoveIndex = 0;
             #endregion
         }
-        
-        private void DrawBoxes()
+
+        void LoadMove()
+        {
+            if (SelectedMove == null) return;
+
+            CurrentFrame = 0;
+            MaxFrame = SelectedMove.TotalTicks - 1; // Gets length of move (amount of time)
+
+            #region Check for Boxes
+
+            if (SelectedMove.Hurtboxes != null && SelectedMove.Hurtboxes.Length > 0)
+            {
+                foreach (var hurtbox in SelectedMove.Hurtboxes)
+                {
+                    //Console.WriteLine(hurtbox);
+                    Boxes.Add(hurtbox);
+                }
+            }
+            if (SelectedMove.Hitboxes != null && SelectedMove.Hitboxes.Length > 0)
+            {
+                Console.WriteLine((SelectedMove.Hitboxes));
+                foreach (var hitbox in SelectedMove.Hitboxes)
+                {
+                    //Console.WriteLine(hurtbox);
+                    Boxes.Add(hitbox);
+                }
+            }
+            if (SelectedMove.PhysicsBoxes != null && SelectedMove.PhysicsBoxes.Length > 0)
+            {
+                foreach (var physbox in SelectedMove.PhysicsBoxes)
+                {
+                    //Console.WriteLine(hurtbox);
+                    Boxes.Add(physbox);
+                }
+            }
+            #endregion
+
+            #region Check for Positions
+            if (SelectedMove.Positions != null && SelectedMove.Positions.Length > 0)
+            {
+                foreach (var position in SelectedMove.Positions)
+                {
+                    _positions.Add(position);
+                }
+            }
+            #endregion
+
+            #region No Candidates Found
+            if (Boxes.Count == 0)
+            {
+                Console.WriteLine("Candidates not found.");
+                return;
+            }
+            #endregion
+
+            DrawBoxes();
+        }
+        #endregion // Load
+
+        #region Box Updates
+
+
+
+        void ResetDisplay()
+        {
+            ResetCanvasPosition();
+
+            Boxes = new ObservableCollection<Box>();
+            _positions = new List<Position>();
+        }
+
+        void DrawBoxes()
         {
             // Clear the canvas
             Rectangles = new ObservableCollection<Rect>();
@@ -457,7 +507,7 @@ namespace ScriptViz.ViewModel
         #region Generate Script Data Fields
         
         // TODO: Replace with a Template
-        private object GenerateBoxData(Box box)
+        object GenerateBoxData(Box box)
         {
             Grid _item;
             Label _lblX, _lblY, _lblW, _lblH;
@@ -592,8 +642,9 @@ namespace ScriptViz.ViewModel
 
         #region MenuItem Click Handlers
         
+        // TODO - Use OpenBacFile for BAC files, OpenBcmFile for BCM files, etc.
         #region Open File
-        public void OpenFile()
+        public void OpenBACFile()
         {
             // Create Open File dialogue
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
@@ -607,21 +658,15 @@ namespace ScriptViz.ViewModel
 
             if (result == true)
             {
-                //if (file != null) file.Close(); // close the old file
+                //null the previous script file object
+                //_scriptFileObject = null;
 
                 // read the file in
-                string fileName = openFileDialog.FileName;
-
-                file = new StreamReader(fileName);
                 
-                Script = file.ReadToEnd();
+                ScriptTextFile = new TextDocument(ICSharpCode.AvalonEdit.Utils.FileReader.OpenFile(openFileDialog.FileName, System.Text.Encoding.UTF8).ReadToEnd());
                 IsScriptLoaded = true;
-
-                file.Close();
                 
-                // Reset Display
-                ResetCanvasPosition();
-                LoadFile();
+                LoadBacFile();
             }
         }
         #endregion
@@ -658,20 +703,20 @@ namespace ScriptViz.ViewModel
             int countSquare = 0;
 
             Regex regex = new Regex(@",(\s*)}");
-            Script = regex.Replace(Script, m =>
+            ScriptText = regex.Replace(ScriptText, m =>
             {
                 countCurly++;
                 return m.Result(@"$1}");
             });
 
             regex = new Regex(@",(\s*)]");
-            Script = regex.Replace(Script, m =>
+            ScriptText = regex.Replace(ScriptText, m =>
             {
                 countCurly++;
                 return m.Result(@"$1]");
             });
 
-            File.CreateText("temp.json").Write(Script);
+            //File.CreateText("temp.json").Write(Script);
 
             string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
             MessageBox.Show(msg);
@@ -689,7 +734,7 @@ namespace ScriptViz.ViewModel
 
             // replace AND count the number of replacements
             int count = 0;
-            Script = regex.Replace(Script,
+            ScriptText = regex.Replace(ScriptText,
                 m => {                   // function is called on each match
                     count++;
                     return m.Result(""); // replace the match with "" (delete the text)
@@ -720,6 +765,29 @@ namespace ScriptViz.ViewModel
                 DrawBoxes();
         }
         #endregion
+
+        // TODO NEXT - Continue checking logic from here (LoadBacFile() -> SelectedMoveListIndex == 0;)
+        void SelectedMoveListChanged()
+        {
+            if (SelectedMoveListIndex == -1) return;
+
+            LoadMoveList();
+        }
+
+        void SelectedMoveChanged()
+        {
+            if (SelectedMoveIndex < 0) return;
+
+            //MessageBox.Show("Move changed!");
+            ResetDisplay();
+
+            if (bacFile.MoveLists[SelectedMoveListIndex].Moves.Length != 0 && !(SelectedMoveIndex < 0))
+                SelectedMove = bacFile.MoveLists[SelectedMoveListIndex].Moves[SelectedMoveIndex];
+            else
+                SelectedMove = null;
+
+            LoadMove();
+        }
 
         #endregion // Event Handling
         

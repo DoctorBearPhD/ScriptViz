@@ -112,9 +112,17 @@
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Util\Util.cs" />
+    <Compile Include="ViewModel\MoveListControlViewModel.cs" />
     <Compile Include="ViewModel\VMBase.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="Model\MainWindowModel.cs" />
+    <Compile Include="View\MoveListControl.xaml.cs">
+      <DependentUpon>MoveListControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\MoveListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Resource Include="Resources\ColorStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
