@@ -1,0 +1,97 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ScriptViz.Resources">
+    <!--
+        212121 - Dark Bg
+        28282A - Main Bg
+        2C2C30 - Light Bg
+        313133 - Xtra Light Bg
+        383838 - Button Bg
+        59595B - Button Pressed Bg
+        616161 - Disable Text
+        7E7E7E - Checked Menu Item
+        B7B7B7 - Alt Main Text
+        C5C5C5 - Main Text
+        036FB7 - Selected
+    -->
+    
+    <Color x:Key="XtraDarkBgColor">#FF1E1E1E</Color>
+    <Color x:Key="DarkBgColor">#FF212121</Color>
+
+    <Color x:Key="MainBgColor">#FF3F3F46</Color>
+    <Color x:Key="LightBgColor">#FF2C2C30</Color>
+    <Color x:Key="XtraLightBgColor">#FF313133</Color>
+    <Color x:Key="ButtonBgColor">#FF383838</Color>
+    <Color x:Key="ButtonPressedBgColor">#FF4F4F58</Color>
+    <Color x:Key="DisabledTextColor">#FF616161</Color>
+    <Color x:Key="CheckedMenuItemColor">#FF7E7E7E</Color>
+    <Color x:Key="AltMainTextColor">#FFB7B7B7</Color>
+    <Color x:Key="MainTextColor">#FFC5C5C5</Color>
+    <Color x:Key="SelectedColor">#FF036FB7</Color>
+
+    <SolidColorBrush x:Key="XtraDarkBgBrush" Color="{StaticResource XtraDarkBgColor}"/>
+    <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource DarkBgColor}"/>
+    <SolidColorBrush x:Key="MainBgBrush" Color="{StaticResource MainBgColor}"/>
+    <SolidColorBrush x:Key="LightBgBrush" Color="{StaticResource LightBgColor}"/>
+    <SolidColorBrush x:Key="XtraLightBgBrush" Color="{StaticResource XtraLightBgColor}"/>
+    <SolidColorBrush x:Key="ButtonBgBrush" Color="{StaticResource ButtonBgColor}"/>
+    <SolidColorBrush x:Key="ButtonPressedBgBrush" Color="{StaticResource ButtonPressedBgColor}"/>
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="{StaticResource DisabledTextColor}"/>
+    <SolidColorBrush x:Key="CheckedMenuItemBrush" Color="{StaticResource CheckedMenuItemColor}"/>
+    <SolidColorBrush x:Key="AltMainTextBrush" Color="{StaticResource AltMainTextColor}"/>
+    <SolidColorBrush x:Key="MainTextBrush" Color="{StaticResource MainTextColor}"/>
+    <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedColor}"/>
+    <!-- Old Colors
+    <Color x:Key="MainBGColor">#FF3F3F46</Color>
+    <Color x:Key="MainTextColor">#FFF1F1F1</Color>
+    <Color x:Key="FadedTextColor">#FF7B7B7D</Color>
+    <Color x:Key="ScriptBoxBgColor">#FF1E1E1E</Color>
+    <Color x:Key="TabContentBgColor">#FF2A2A2F</Color>
+    <Color x:Key="TabItemBorderColor">#FF7B7B7D</Color>
+    <SolidColorBrush x:Key="MainBGBrush" Color="{StaticResource MainBGColor}"/>
+    <SolidColorBrush x:Key="MainTextBrush" Color="{StaticResource MainTextColor}"/>
+    <SolidColorBrush x:Key="FadedTextBrush" Color="{StaticResource FadedTextColor}"/>
+    <SolidColorBrush x:Key="ScriptBoxBgBrush" Color="{StaticResource ScriptBoxBgColor}"/>
+    <SolidColorBrush x:Key="TabContentBgBrush" Color="{StaticResource TabContentBgColor}"/>
+    <SolidColorBrush x:Key="TabItemBorderBrush" Color="{StaticResource TabItemBorderColor}"/>
+
+    <Color x:Key="ButtonBgColor">#FF525257</Color>
+    <Color x:Key="TabControlNormalBorderColor">#FF2E2E34</Color>
+
+    <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="{StaticResource TabControlNormalBorderColor}"/>
+
+    <SolidColorBrush x:Key="ButtonBgBrush" Color="#FF525257"/>
+
+    <Color x:Key="DisabledItemTextColor">#636363</Color>
+    <SolidColorBrush x:Key="DisabledItemTextBrush" Color="{StaticResource DisabledItemTextColor}"/>
+    -->
+    <Color x:Key="TabControlNormalBorderColor">#FF2E2E34</Color>
+    <Color x:Key="TabControlHeaderBgColor">#FF2E2E34</Color>
+
+    <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="{StaticResource TabControlNormalBorderColor}"/>
+    <SolidColorBrush x:Key="TabControlHeaderBgBrush" Color="#FF1D1D1D"/>
+
+    <SolidColorBrush x:Key="DarkButtonNormalBackground" Color="{StaticResource LightBgColor}"/>
+
+    <LinearGradientBrush x:Key="TabItemHotBackground" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#EAF6FD" Offset="0.15"/>
+        <GradientStop Color="#D9F0FC" Offset=".5"/>
+        <GradientStop Color="#BEE6FD" Offset=".5"/>
+        <GradientStop Color="#A7D9F5" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <SolidColorBrush x:Key="TabItemSelectedBackground" Color="{DynamicResource ButtonPressedBgColor}"/>
+    <SolidColorBrush x:Key="TabItemHotBorderBrush" Color="#3C7FB1"/>
+    <SolidColorBrush x:Key="TabItemDisabledBackground" Color="#F4F4F4"/>
+    <SolidColorBrush x:Key="TabItemDisabledBorderBrush" Color="#FFC9C7BA"/>
+    
+    <LinearGradientBrush x:Key="DarkTabItemHotBackground" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#EAF6FD" Offset="0.15"/>
+        <GradientStop Color="#D9F0FC" Offset=".5"/>
+        <GradientStop Color="#BEE6FD" Offset=".5"/>
+        <GradientStop Color="#A7D9F5" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <SolidColorBrush x:Key="TabItemBorderBrush" Color="{DynamicResource AltMainTextColor}"/>
+
+</ResourceDictionary>

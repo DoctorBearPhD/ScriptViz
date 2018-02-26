@@ -1,0 +1,197 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+        xmlns:local="clr-namespace:ScriptViz.View"
+        x:Class="ScriptViz.View.MainWindow"
+        mc:Ignorable="d"
+        Title="Mysterious Tool" 
+        Width="1280" Height="800" 
+        Background="{DynamicResource MainBgBrush}"
+        Deactivated="Window_Deactivated">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <vm:MainWindowViewModel x:Key="viewModel" />
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Mode="OneWay" Source="{StaticResource viewModel}"/>
+    </Window.DataContext>
+
+    <DockPanel>
+        <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{StaticResource DarkMenuStyle}">
+
+            <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
+                <MenuItem Header="_Open BAC" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding OpenBacCommand, Mode=OneWay}"/>
+
+                <Separator Style="{DynamicResource DarkSeparatorStyle}" />
+
+                <MenuItem Header="E_xit" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding ExitCommand, Mode=OneWay}"/>
+            </MenuItem>
+
+            <MenuItem Header="_View" Template="{DynamicResource DarkMenuItemControlTemplate}">
+                <MenuItem Header="_Show Script" 
+                          Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Style="{StaticResource DarkMenuItemStyle}"
+                          IsCheckable="True" 
+                          Command="{Binding ShowScriptCommand, Mode=OneWay}"
+                          IsChecked="{Binding IsScriptBoxVisible}"/>
+            </MenuItem>
+
+            <MenuItem Header="_Tools" Template="{DynamicResource DarkMenuItemControlTemplate}" >
+                <MenuItem Header="_Clean Script" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding CleanScriptCommand}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
+
+                <MenuItem Header="_Remove BACVERint" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          Command="{Binding RemoveBviCommand}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
+            </MenuItem>
+        </Menu>
+
+        <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="{Binding ScriptBoxColumnSize}"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="ScriptVisualizerContainer" Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
+                </Grid.Effect>
+                
+                <Canvas x:Name="canvasContainer"
+                        Margin="10" 
+                        Background="{StaticResource DarkBgBrush}" Grid.Column="1"
+                        MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
+                        MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
+                        MouseMove="canvasContainer_MouseMove" 
+                        MouseRightButtonDown="canvasContainer_MouseRightButtonDown" ClipToBounds="True" >
+                    
+                    <Grid x:Name="containerCanvasRectangles"
+                          Canvas.Left="{Binding CanvasPosition.X}" 
+                          Canvas.Bottom="{Binding CanvasPosition.Y}" 
+                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}" 
+                          >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl ItemsSource="{Binding Rectangles}"
+                                      Grid.Column="1">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas x:Name="canvasRectangles">
+                                        <Canvas.RenderTransform>
+                                            <ScaleTransform ScaleY="-1"/>
+                                        </Canvas.RenderTransform>
+                                    </Canvas>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" 
+                                               Fill="{Binding Fill}" Stroke="{Binding Stroke}">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+
+                </Canvas>
+                
+                <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
+                    <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
+                                  Content="&lt;" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,1" TabIndex="95" 
+                                  Command="{Binding PreviousFrameCommand}"
+                                  Delay="{DynamicResource RepeatButtonDelay}" 
+                                  Interval="{DynamicResource RepeatButtonInterval}"/>
+                    <RepeatButton x:Name="BtnNextFrame" Content="&gt;"
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                                  DockPanel.Dock="Right" 
+                                  Padding="5,1" TabIndex="97" 
+                                  Command="{Binding NextFrameCommand}"
+                                  Delay="{DynamicResource RepeatButtonDelay}" 
+                                  Interval="{DynamicResource RepeatButtonInterval}"/>
+                    <Slider x:Name="SliderCurrentFrame" 
+                            LargeChange="10" SmallChange="1" IsSnapToTickEnabled="True"
+                            Cursor="ScrollWE" DockPanel.Dock="Top" TabIndex="96"
+                            Margin="10,0" VerticalAlignment="Top" 
+                            Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}" IsMoveToPointEnabled="True"/>
+                    <Label x:Name="lblCurrentFrame"
+                           HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
+                           Foreground="{StaticResource DisabledTextBrush}">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} / {1}">
+                                        <Binding Path="CurrentFrame" />
+                                        <Binding Path="MaxFrame" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
+                </DockPanel>
+
+            </Grid>
+
+            <Border Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
+                <!-- TODO: Replace with Tabs -->
+                <TabControl x:Name="tabControl" 
+                            ItemsSource="{Binding MoveListTabs}"
+                            ItemContainerStyle="{StaticResource DarkTabItemStyle}"
+                            SelectedIndex="{Binding SelectedMoveListIndex}"
+                            Style="{DynamicResource DarkTabControlStyle}">
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <local:MoveListControl DataContext="{StaticResource viewModel}"/>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Border>
+
+            <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" 
+                       Grid.Row="0" Grid.Column="1" 
+                       Grid.RowSpan="2"
+                       Visibility="{Binding IsScriptBoxVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <DockPanel x:Name="dpScriptWindowContent" Background="{StaticResource MainBgBrush}">
+                    <!--<Button x:Name="btnUpdate" Width="80" Height="28" Margin="0,0,5,5" 
+                            VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                            DockPanel.Dock="Bottom" 
+                            TabIndex="99"
+                            Content="{DynamicResource ScriptUpdateButtonText}" 
+                            Foreground="{StaticResource MainTextBrush}" 
+                            Background="{DynamicResource ButtonBgBrush}" />-->
+                    <ic:TextEditor x:Name="teScriptBox" DockPanel.Dock="Top" Margin="0,10,10,10"
+                                   Document="{Binding ScriptTextFile}"
+                                   Background="{DynamicResource XtraDarkBgBrush}" Foreground="{StaticResource AltMainTextBrush}"
+                                   ShowLineNumbers="True"
+                                   LineNumbersForeground="{StaticResource DisabledTextBrush}"
+                                   FontFamily="Courier New"
+                                   Padding="5" />
+
+                </DockPanel>
+
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+
+</Window>
