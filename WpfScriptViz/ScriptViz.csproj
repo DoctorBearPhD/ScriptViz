@@ -111,6 +111,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Util\MoveToPropertiesConverter.cs" />
+    <Compile Include="Util\MovesToListConverter.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="ViewModel\MoveListControlViewModel.cs" />
     <Compile Include="ViewModel\VMBase.cs" />

@@ -9,7 +9,7 @@
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
         Title="Mysterious Tool" 
-        Width="920" Height="680" 
+        Width="1280" Height="800" 
         Background="{DynamicResource MainBgBrush}"
         Deactivated="Window_Deactivated">
 
@@ -69,21 +69,22 @@
                     <RowDefinition Height="10*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
+                </Grid.Effect>
+                
                 <Canvas x:Name="canvasContainer"
                         Margin="10" 
                         Background="{StaticResource DarkBgBrush}" Grid.Column="1"
                         MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
                         MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
                         MouseMove="canvasContainer_MouseMove" 
-                        MouseRightButtonDown="canvasContainer_MouseRightButtonDown" 
-                        ClipToBounds="True" >
-                    <!--<Canvas.Effect>
-                        <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
-                    </Canvas.Effect>-->
+                        MouseRightButtonDown="canvasContainer_MouseRightButtonDown" ClipToBounds="True" >
+                    
                     <Grid x:Name="containerCanvasRectangles"
-                          Canvas.Left="{Binding CanvasPosition.X}" Canvas.Bottom="{Binding CanvasPosition.Y}" 
-                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}"
+                          Canvas.Left="{Binding CanvasPosition.X}" 
+                          Canvas.Bottom="{Binding CanvasPosition.Y}" 
+                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}" 
                           >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -114,6 +115,7 @@
                     </Grid>
 
                 </Canvas>
+                
                 <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
                     <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
                                   Content="&lt;" 

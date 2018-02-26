@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ScriptLib;
 using ScriptViz.Command;
 using ScriptViz.Model;
@@ -8,14 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace ScriptViz.ViewModel
 {
@@ -51,13 +49,6 @@ namespace ScriptViz.ViewModel
             set { _moveListTabs = value; RaisePropertyChanged(nameof(MoveListTabs)); }
         }
 
-        ObservableCollection<string> _moveNames;
-        public ObservableCollection<string> MoveNames
-        {
-            get => _moveNames;
-            set { _moveNames = value; RaisePropertyChanged(nameof(MoveNames)); }
-        }
-
         List<Position>  _positions;
         List<Position>  _currFramePositions;
         #endregion
@@ -73,6 +64,7 @@ namespace ScriptViz.ViewModel
             {
                 _selectedMoveListIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveListIndex));
+                RaisePropertyChanged(nameof(SelectedMoveList));
                 SelectedMoveListChanged();
             }
         }
@@ -85,11 +77,39 @@ namespace ScriptViz.ViewModel
             {
                 _selectedMoveIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveIndex));
+                RaisePropertyChanged(nameof(SelectedMove));
                 SelectedMoveChanged();
             }
         }
 
         public Move SelectedMove { get; private set; }
+        public MoveList SelectedMoveList { get => this.BacFile.MoveLists[SelectedMoveListIndex]; }
+
+        private ObservableCollection<string> _selectedMoveProperties;
+        public ObservableCollection<string> SelectedMoveProperties
+        {
+            get { return _selectedMoveProperties; }
+            set { _selectedMoveProperties = value; RaisePropertyChanged(nameof(SelectedMoveProperties)); }
+        }
+        
+        private string _selectedProperty;
+        public string SelectedProperty
+        {
+            get { return SelectedPropertyIndex < 0 ? "" : SelectedMoveProperties[SelectedPropertyIndex]; }
+        }
+
+        int _selectedPropertyIndex;
+        public int SelectedPropertyIndex
+        {
+            get { return _selectedPropertyIndex; }
+            set
+            {
+                _selectedPropertyIndex = value;
+                RaisePropertyChanged(nameof(SelectedPropertyIndex));
+                SelectedPropertyChanged();
+            }
+        }
+
 
         #endregion
 
@@ -127,11 +147,11 @@ namespace ScriptViz.ViewModel
         BaseFile _scriptFileObject;
 
         BACFile bacFile;
-        //public BACFile BacFile
-        //{
-        //    get { return bacFile; }
-        //    set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
-        //}
+        public BACFile BacFile
+        {
+            get { return bacFile; }
+            set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
+        }
 
         // shortcut for accessing TextDocument's text
         string ScriptText { get => ScriptTextFile.Text; set => ScriptTextFile.Text = value; }
@@ -322,20 +342,9 @@ namespace ScriptViz.ViewModel
         void LoadMoveList()
         {
             if (bacFile == null) return;
-
-            #region Create ListBoxItems
-            MoveNames = new ObservableCollection<string>();
-            int j = 0;
-            foreach (Move move in bacFile.MoveLists[SelectedMoveListIndex].Moves)
-            {
-                if (move != null)
-                    MoveNames.Add(move.Name);
-                else MoveNames.Add("null (Script Index: " + j + ")");
-                j++;
-            }
-
+            if (SelectedMoveListIndex < 0) SelectedMoveListIndex = 0;
+            
             SelectedMoveIndex = 0;
-            #endregion
         }
 
         void LoadMove()
@@ -776,21 +785,32 @@ namespace ScriptViz.ViewModel
 
         void SelectedMoveChanged()
         {
-            if (SelectedMoveIndex < 0) return;
-
             //MessageBox.Show("Move changed!");
             ResetDisplay();
 
-            if (bacFile.MoveLists[SelectedMoveListIndex].Moves.Length != 0 && !(SelectedMoveIndex < 0))
+            int numberOfMoves = bacFile.MoveLists[SelectedMoveListIndex].Moves.Length;
+            if (numberOfMoves > 0 && SelectedMoveIndex.IsBetween(0, numberOfMoves-1))
                 SelectedMove = bacFile.MoveLists[SelectedMoveListIndex].Moves[SelectedMoveIndex];
             else
                 SelectedMove = null;
 
             LoadMove();
+
+            // Show Properties (Move Details)
+            if (SelectedMove != null)
+                SelectedMoveProperties = new ObservableCollection<string>(SelectedMove.GetType().GetProperties().Select(f => f.Name).ToList());
+            else
+                SelectedMoveProperties = new ObservableCollection<string>();
+        }
+
+        void SelectedPropertyChanged()
+        {
+            if (SelectedMove == null) return;
+            PropertyInfo pInfo = SelectedMove.GetType().GetProperty(SelectedProperty);
         }
 
         #endregion // Event Handling
-        
+
         #region Control Operations
 
         private void ResetCanvasPosition()

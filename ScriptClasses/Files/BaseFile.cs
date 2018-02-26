@@ -8,5 +8,6 @@ namespace ScriptLib
 {
     public class BaseFile
     {
+        public string RawUassetHeaderDontTouch { get; set; }
     }
 }
