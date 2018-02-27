@@ -13,7 +13,12 @@ namespace ScriptViz.Util
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null ? value.GetType().GetProperties().Select(f => f.Name).ToList() : new List<string>();
+            if (value == null) return new List<string>();
+
+            var props = new List<string> { "General" };
+            props.AddRange((value as Move).GetListProperties().Select(f => f.Name).ToList());
+
+            return props;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

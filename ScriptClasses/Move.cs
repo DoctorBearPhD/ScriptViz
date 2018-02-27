@@ -1,4 +1,8 @@
-﻿namespace ScriptLib
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace ScriptLib
 {
     public class Move
     {
@@ -44,5 +48,23 @@
         public SoundEffect[] SoundEffects { get; set; }
         public VisualEffect[] VisualEffects { get; set; }
         public Position[] Positions { get; set; }
+
+        public List<PropertyInfo> GetGeneralProperties()
+        {
+            var gen = (typeof(Move)).GetProperties().Where(
+                p => p.PropertyType == typeof(string)
+                  || p.PropertyType == typeof(int)
+                  || p.PropertyType == typeof(float)
+                  ).ToList();
+            
+            return gen;
+        }
+
+        public List<PropertyInfo> GetListProperties()
+        {
+            var lists = this.GetType().GetProperties().Except(GetGeneralProperties()).ToList();
+
+            return lists;
+        }
     }
 }
