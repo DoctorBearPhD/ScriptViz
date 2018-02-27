@@ -17,6 +17,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <ListBox x:Name="MovesListBox" Grid.Column="0"
@@ -29,6 +30,6 @@
                  SelectedIndex="{Binding SelectedPropertyIndex}"
                  ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
                  Style="{StaticResource DarkListBoxStyle}" />
-
+        <local:MoveDetailControl Grid.Column="2"/>
     </Grid>
 </UserControl>

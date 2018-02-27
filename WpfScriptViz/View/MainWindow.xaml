@@ -61,7 +61,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="{Binding ScriptBoxColumnSize}"/>
+                <ColumnDefinition Width="{Binding ScriptBoxColumnSize}" MaxWidth="500"/>
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="ScriptVisualizerContainer" Grid.Row="0" Grid.Column="0">

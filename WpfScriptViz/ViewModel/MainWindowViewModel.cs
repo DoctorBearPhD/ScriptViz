@@ -105,7 +105,7 @@ namespace ScriptViz.ViewModel
             get { return _selectedPropertyIndex; }
             set
             {
-                _selectedPropertyIndex = value;
+                _selectedPropertyIndex = (value < 0) ? 0 : value;
                 RaisePropertyChanged(nameof(SelectedPropertyIndex));
                 RaisePropertyChanged(nameof(SelectedProperty));
                 SelectedPropertyChanged();

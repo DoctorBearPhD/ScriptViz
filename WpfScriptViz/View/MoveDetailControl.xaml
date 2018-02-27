@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="ScriptViz.View.MoveDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ScriptViz.View"
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:u="clr-namespace:ScriptViz.Util"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{x:Type vm:MainWindowViewModel}">
+    <UserControl.Resources>
+        <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv"/>
+        <DataTemplate x:Key="generalPropertiesDetail">
+            <DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" />
+        </DataTemplate>
+        <DataTemplate x:Key="listPropertyDetail">
+            <TextBlock Text="This would be the list details" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl  Content="{Binding}">
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}">
+                <Setter Property="ContentTemplate" Value="{StaticResource listPropertyDetail}" />
+                <Style.Triggers>
+                    <!-- Path and Value represent the Selected Property and "General" -->
+                    <DataTrigger Binding="{Binding Path=SelectedPropertyIndex}" Value="0">
+                        <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesDetail}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+    
+</UserControl>
