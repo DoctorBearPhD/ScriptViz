@@ -16,6 +16,8 @@
                 <ResourceDictionary Source="Resources/MenuStyles.xaml"/>
                 <ResourceDictionary Source="Resources/TabStyles.xaml"/>
                 <ResourceDictionary Source="Resources/ListBoxStyles.xaml"/>
+                <ResourceDictionary Source="Resources/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
                 <ResourceDictionary>
                     <System:Int32 x:Key="RepeatButtonInterval">10</System:Int32>
                     <System:Int32 x:Key="RepeatButtonDelay">250</System:Int32>

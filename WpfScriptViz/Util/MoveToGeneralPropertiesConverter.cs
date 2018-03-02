@@ -18,14 +18,14 @@ namespace ScriptViz.Util
 
             var move = value as Move;
 
-            var props = new List<KeyValuePair<string, object>>();
+            var listOfGeneralProperties = new List<KeyValuePair<string, object>>();
 
             foreach (var prop in move.GetGeneralProperties())
             {
-                props.Add(new KeyValuePair<string, object>(prop.Name, prop.GetValue(move)));
+                listOfGeneralProperties.Add(new KeyValuePair<string, object>(prop.Name, prop.GetValue(move)));
             }
 
-            return props;
+            return listOfGeneralProperties;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

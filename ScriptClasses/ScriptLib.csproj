@@ -40,27 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
-    <Compile Include="AutoCancel.cs" />
+    <Compile Include="Types\Animation.cs" />
+    <Compile Include="Types\AutoCancel.cs" />
     <Compile Include="Files\BACFile.cs" />
     <Compile Include="Boxes\Box.cs" />
-    <Compile Include="Cancel.cs" />
+    <Compile Include="Types\Cancel.cs" />
     <Compile Include="Files\BaseFile.cs" />
-    <Compile Include="Force.cs" />
+    <Compile Include="Types\Force.cs" />
     <Compile Include="Boxes\Hitbox.cs" />
     <Compile Include="Effects\HitboxEffects.cs" />
     <Compile Include="Types\HitType.cs" />
     <Compile Include="Boxes\Hurtbox.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="MoveList.cs" />
-    <Compile Include="Other.cs" />
+    <Compile Include="Types\Other.cs" />
     <Compile Include="Boxes\PhysicsBox.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Effects\SoundEffect.cs" />
     <Compile Include="Types\Type1.cs" />
-    <Compile Include="Types\Type1s2.cs" />
-    <Compile Include="Types\Type2s.cs" />
+    <Compile Include="Types\HitboxFX\Type1.cs" />
+    <Compile Include="Types\HitboxFX\Type2.cs" />
     <Compile Include="Types\Type9.cs" />
     <Compile Include="Effects\VisualEffect.cs" />
   </ItemGroup>

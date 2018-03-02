@@ -111,20 +111,27 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Util\MoveToTypeConverter.cs" />
     <Compile Include="Util\MoveToGeneralPropertiesConverter.cs" />
     <Compile Include="Util\MoveToPropertiesConverter.cs" />
     <Compile Include="Util\MovesToListConverter.cs" />
     <Compile Include="Util\Util.cs" />
-    <Compile Include="ViewModel\MoveListControlViewModel.cs" />
     <Compile Include="ViewModel\VMBase.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="Model\MainWindowModel.cs" />
     <Compile Include="View\MoveListControl.xaml.cs">
       <DependentUpon>MoveListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MoveDetailControl.xaml.cs">
       <DependentUpon>MoveDetailControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\DataGridStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MoveListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -215,7 +222,9 @@
       <Name>ScriptLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

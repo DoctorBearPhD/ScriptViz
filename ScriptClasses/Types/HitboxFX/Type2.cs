@@ -1,6 +1,6 @@
-﻿namespace ScriptLib
+﻿namespace ScriptLib.HitboxFX
 {
-    public class Type2s
+    public class Type2
     {
         public int EffectType1 { get; set; }
         public int EffectType2 { get; set; }

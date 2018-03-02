@@ -49,9 +49,11 @@ namespace ScriptLib
         public VisualEffect[] VisualEffects { get; set; }
         public Position[] Positions { get; set; }
 
+        List<PropertyInfo> gen;
+
         public List<PropertyInfo> GetGeneralProperties()
         {
-            var gen = (typeof(Move)).GetProperties().Where(
+            gen = (typeof(Move)).GetProperties().Where(
                 p => p.PropertyType == typeof(string)
                   || p.PropertyType == typeof(int)
                   || p.PropertyType == typeof(float)
@@ -65,6 +67,16 @@ namespace ScriptLib
             var lists = this.GetType().GetProperties().Except(GetGeneralProperties()).ToList();
 
             return lists;
+        }
+
+        public PropertyInfo[] GetAllProperties()
+        {
+            return this.GetType().GetProperties();
+        }
+
+        public int GetGeneralPropertiesOffset()
+        {
+            return gen != null ? gen.Count - 1 : this.GetGeneralProperties().Count - 1;
         }
     }
 }

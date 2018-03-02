@@ -16,20 +16,20 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="Auto" MinWidth="75"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <ListBox x:Name="MovesListBox" Grid.Column="0"
-                 ItemsSource="{Binding SelectedMoveList, Converter={StaticResource movesToListConverter}}"
+                 ItemsSource="{Binding SelectedMoveList.Moves, Converter={StaticResource movesToListConverter}}"
                  SelectedIndex="{Binding SelectedMoveIndex}"
                  ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
                  Style="{StaticResource DarkListBoxStyle}"/>
         <ListBox x:Name="MoveDetailsListBox" Grid.Column="1"
                  ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToPropertiesConverter}}"
-                 SelectedIndex="{Binding SelectedPropertyIndex}"
+                 SelectedIndex="{Binding SelectedPropertyIndex, Mode=OneWayToSource}"
                  ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
                  Style="{StaticResource DarkListBoxStyle}" />
-        <local:MoveDetailControl Grid.Column="2"/>
+        <local:MoveDetailControl Grid.Column="2" />
     </Grid>
 </UserControl>

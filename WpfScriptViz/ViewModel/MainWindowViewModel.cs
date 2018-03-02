@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using ScriptLib;
 using ScriptViz.Command;
-using ScriptViz.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,9 +35,7 @@ namespace ScriptViz.ViewModel
         const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script, or paste a script here...";
 
         #endregion
-
-        MainWindowModel model;
-
+        
         #region Lists
         public ObservableCollection<Box> CurrFrameBoxes;
 
@@ -68,9 +65,34 @@ namespace ScriptViz.ViewModel
             }
         }
         // MOVELIST
-        public MoveList SelectedMoveList { get => this.BacFile.MoveLists[SelectedMoveListIndex]; }
+        public MoveList SelectedMoveList { get => this.BacFile.MoveLists[ (SelectedMoveListIndex < 0) ? 0 : SelectedMoveListIndex ]; }
         // PROPERTY
-        public string SelectedProperty { get; set; }
+        public PropertyInfo SelectedProperty { get => SelectedMove.GetAllProperties()[SelectedPropertyIndex]; }
+
+        int _selectedPropertyIndex;
+        public int SelectedPropertyIndex
+        {
+            get => _selectedPropertyIndex;
+            set
+            {
+                _selectedPropertyIndex = (value <= 0) ? 0 : (value + SelectedMove.GetGeneralPropertiesOffset());
+                RaisePropertyChanged(nameof(SelectedPropertyIndex));
+                RaisePropertyChanged(nameof(SelectedProperty));
+            }
+        }
+        // TYPE'S PROPERTY
+        public object SelectedTypeProperty
+        {
+            get => SelectedProperty.GetValue(SelectedMove);
+        }
+
+        int _selectedTypePropertyIndex;
+        public int SelectedTypePropertyIndex
+        {
+            get { return _selectedTypePropertyIndex; }
+            set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
+        }
+
 
         // The selected MoveList tab in the Script Info area (index)
         int _selectedMoveListIndex;
@@ -96,19 +118,6 @@ namespace ScriptViz.ViewModel
                 RaisePropertyChanged(nameof(SelectedMoveIndex));
                 RaisePropertyChanged(nameof(SelectedMove));
                 SelectedMoveChanged();
-            }
-        }
-
-        int _selectedPropertyIndex;
-        public int SelectedPropertyIndex
-        {
-            get { return _selectedPropertyIndex; }
-            set
-            {
-                _selectedPropertyIndex = (value < 0) ? 0 : value;
-                RaisePropertyChanged(nameof(SelectedPropertyIndex));
-                RaisePropertyChanged(nameof(SelectedProperty));
-                SelectedPropertyChanged();
             }
         }
 
@@ -280,9 +289,7 @@ namespace ScriptViz.ViewModel
             if (DEBUG)
                 LoadDefaultScript();
             #endregion
-
-            // instantiate the Model
-            model = new MainWindowModel();
+            
             // Set initial text for script box
             ScriptTextFile.Text = DEFAULT_SCRIPT_BOX_TEXT;
         }
@@ -792,16 +799,8 @@ namespace ScriptViz.ViewModel
         {
             //MessageBox.Show("Move changed!");
             ResetDisplay();
-
             
-
             LoadMove();
-        }
-
-        void SelectedPropertyChanged()
-        {
-            if (SelectedMove == null) return;
-            PropertyInfo pInfo = SelectedMove.GetType().GetProperties()[SelectedPropertyIndex];
         }
 
         #endregion // Event Handling

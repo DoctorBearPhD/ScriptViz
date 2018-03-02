@@ -30,7 +30,7 @@
         public int Index25 { get; set; }
         public int OffsetToStartOfType1 { get; set; }
         public int OffsetToStartOfType2 { get; set; }
-        public Type1s2[] Type1s { get; set; }
-        public Type2s[] Type2s { get; set; }
+        public HitboxFX.Type1[] Type1s { get; set; }
+        public HitboxFX.Type2[] Type2s { get; set; }
     }
 }

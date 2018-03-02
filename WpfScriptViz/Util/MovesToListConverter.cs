@@ -13,18 +13,19 @@ namespace ScriptViz.Util
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Move[] moves = (value as MoveList).Moves;
-            var names = new List<string>();
-            int i = 0;
-
-            foreach (var move in moves)
+            Move[] moves = (value as Move[]);
+            var listItems = new List<string>();
+            
+            for(int i = 0; i < moves.Length; i++)
             {
-                if (move != null) names.Add(move.Name);
-                else names.Add("null (Script Index: " + i + ")");
-                i++;
+                Move move = moves[i];
+                if (move != null)
+                    listItems.Add( move.Index + ": " + move.Name );
+                else listItems.Add( i + ": null" );
+                
             }
 
-            return names;
+            return listItems;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

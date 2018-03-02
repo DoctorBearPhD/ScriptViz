@@ -10,27 +10,57 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{x:Type vm:MainWindowViewModel}">
     <UserControl.Resources>
-        <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv"/>
+        <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
+        <u:MoveToTypeConverter x:Key="moveToTypeConv" />
+
         <DataTemplate x:Key="generalPropertiesDetail">
-            <DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" />
+            <DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" Style="{StaticResource DarkDataGridStyle}"/>
         </DataTemplate>
-        <DataTemplate x:Key="listPropertyDetail">
-            <TextBlock Text="This would be the list details" />
+        
+        <DataTemplate x:Key="typeDetail">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--<ListBox x:Name="typeItemsListBox" Grid.Column="0"
+                         SelectedIndex="{Binding SelectedTypePropertyIndex}"
+                         ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
+                         Style="{StaticResource DarkListBoxStyle}">
+                    <ListBox.ItemsSource>
+                        <MultiBinding Converter="{StaticResource moveToTypeConv}">
+                            <Binding Path="SelectedMove" />
+                            <Binding Path="SelectedProperty" />
+                            <Binding Path="SelectedTypePropertyIndex" />
+                        </MultiBinding>
+                    </ListBox.ItemsSource>
+                </ListBox>-->
+
+                <!-- Content of Type item -->
+                <DataGrid x:Name="TypeDataGrid" Grid.Column="1"
+                          Style="{StaticResource DarkDataGridStyle}">
+                    <DataGrid.ItemsSource>
+                        <MultiBinding Converter="{StaticResource moveToTypeConv}">
+                            <Binding Path="SelectedMove" />
+                            <Binding Path="SelectedProperty" />
+                        </MultiBinding>
+                    </DataGrid.ItemsSource>
+                </DataGrid>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
-
-    <ContentControl  Content="{Binding}">
+    
+    <ContentControl Content="{Binding}" x:Name="MovePropertiesControl">
         <ContentControl.Style>
             <Style TargetType="{x:Type ContentControl}">
-                <Setter Property="ContentTemplate" Value="{StaticResource listPropertyDetail}" />
+                <Setter Property="ContentTemplate" Value="{StaticResource typeDetail}" />
                 <Style.Triggers>
                     <!-- Path and Value represent the Selected Property and "General" -->
-                    <DataTrigger Binding="{Binding Path=SelectedPropertyIndex}" Value="0">
+                    <DataTrigger Binding="{Binding SelectedPropertyIndex, Mode=OneWay}" Value="0">
                         <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesDetail}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ContentControl.Style>
     </ContentControl>
-    
 </UserControl>

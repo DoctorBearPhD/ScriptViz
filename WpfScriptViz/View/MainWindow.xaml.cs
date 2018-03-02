@@ -90,9 +90,9 @@ namespace ScriptViz.View
             UndoMoveBoxes();
         }
         #endregion
-        
+
         #endregion // Event Handling
-        
+
         private void UndoMoveBoxes()
         {
             if (_flagDragging)

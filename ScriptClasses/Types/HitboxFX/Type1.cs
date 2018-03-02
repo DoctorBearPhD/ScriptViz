@@ -1,6 +1,6 @@
-﻿namespace ScriptLib
+﻿namespace ScriptLib.HitboxFX
 {
-    public class Type1s2
+    public class Type1
     {
         public int Unknown1 { get; set; }
         public int SoundType { get; set; }
