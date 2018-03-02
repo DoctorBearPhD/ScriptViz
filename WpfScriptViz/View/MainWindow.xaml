@@ -6,6 +6,7 @@
         xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         xmlns:local="clr-namespace:ScriptViz.View"
+        xmlns:u="clr-namespace:ScriptViz.Util"
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
         Title="Mysterious Tool" 
@@ -15,6 +16,7 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <u:MoveToNumberOfTypesConverter x:Key="NumOfTypesConverter"/>
         <vm:MainWindowViewModel x:Key="viewModel" />
     </Window.Resources>
     <Window.DataContext>
@@ -58,6 +60,10 @@
             </MenuItem>
         </Menu>
 
+        <StackPanel DockPanel.Dock="Bottom" Background="{StaticResource DarkBgBrush}">
+            <TextBlock Text="{Binding SelectedMove, Converter={StaticResource NumOfTypesConverter}}" Foreground="{StaticResource AltMainTextBrush}" Margin="5,1"/>
+        </StackPanel>
+        
         <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition/>
