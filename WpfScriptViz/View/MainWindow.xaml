@@ -158,9 +158,8 @@
 
             </Grid>
 
-            <Border Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
-                <!-- TODO: Replace with Tabs -->
-                <TabControl x:Name="tabControl" 
+            <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
+                <TabControl x:Name="MoveListTabControl" 
                             ItemsSource="{Binding MoveListTabs}"
                             ItemContainerStyle="{StaticResource DarkTabItemStyle}"
                             SelectedIndex="{Binding SelectedMoveListIndex}"

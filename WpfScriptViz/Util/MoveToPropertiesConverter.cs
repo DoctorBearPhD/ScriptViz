@@ -16,7 +16,7 @@ namespace ScriptViz.Util
             if (value == null) return new List<string>();
 
             var props = new List<string> { "General" };
-            props.AddRange((value as Move).GetListProperties().Select(f => f.Name).ToList());
+            props.AddRange((value as Move).GetListProperties().Select(f => f.Name + (f.GetValue(value) == null ? ": NULL" : "")).ToList());
 
             return props;
         }
