@@ -22,7 +22,8 @@
     <Color x:Key="LightBgColor">#FF2C2C30</Color>
     <Color x:Key="XtraLightBgColor">#FF313133</Color>
     <Color x:Key="ButtonBgColor">#FF383838</Color>
-    <Color x:Key="ButtonPressedBgColor">#FF4F4F58</Color>
+    <Color x:Key="ButtonPressedBgColor">#FF7E7E7E</Color>
+    <Color x:Key="ButtonHighlightedBgColor">#FF4F4F58</Color>
     <Color x:Key="ButtonNormalBorderColor">#FF313133</Color>
     <Color x:Key="DisabledTextColor">#FF616161</Color>
     <Color x:Key="CheckedMenuItemColor">#FF7E7E7E</Color>
@@ -38,6 +39,7 @@
     <SolidColorBrush x:Key="ButtonBgBrush" Color="{StaticResource ButtonBgColor}"/>
     <SolidColorBrush x:Key="ButtonPressedBgBrush" Color="{StaticResource ButtonPressedBgColor}"/>
     <SolidColorBrush x:Key="ButtonNormalBorderBrush" Color="{StaticResource ButtonNormalBorderColor}"/>
+    <SolidColorBrush x:Key="ButtonHighlightedBgBrush" Color="{StaticResource ButtonHighlightedBgColor}"/>
     <SolidColorBrush x:Key="DisabledTextBrush" Color="{StaticResource DisabledTextColor}"/>
     <SolidColorBrush x:Key="CheckedMenuItemBrush" Color="{StaticResource CheckedMenuItemColor}"/>
     <SolidColorBrush x:Key="AltMainTextBrush" Color="{StaticResource AltMainTextColor}"/>
@@ -82,7 +84,7 @@
         <GradientStop Color="#A7D9F5" Offset="1"/>
     </LinearGradientBrush>
     
-    <SolidColorBrush x:Key="TabItemSelectedBackground" Color="{DynamicResource ButtonPressedBgColor}"/>
+    <SolidColorBrush x:Key="TabItemSelectedBackground" Color="{StaticResource ButtonHighlightedBgColor}"/>
     <SolidColorBrush x:Key="TabItemHotBorderBrush" Color="#3C7FB1"/>
     <SolidColorBrush x:Key="TabItemDisabledBackground" Color="#F4F4F4"/>
     <SolidColorBrush x:Key="TabItemDisabledBorderBrush" Color="#FFC9C7BA"/>

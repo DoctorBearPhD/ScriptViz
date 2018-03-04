@@ -63,7 +63,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource ButtonPressedBgBrush}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource ButtonHighlightedBgBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource AltMainTextBrush}"/>
                         </Trigger>
                         <MultiTrigger>
@@ -71,7 +71,7 @@
                                 <Condition Property="IsSelected" Value="true"/>
                                 <Condition Property="Selector.IsSelectionActive" Value="false"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource ButtonPressedBgBrush}"/>
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource ButtonHighlightedBgBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource AltMainTextBrush}"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">

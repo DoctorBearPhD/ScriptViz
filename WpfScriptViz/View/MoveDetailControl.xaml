@@ -6,15 +6,129 @@
              xmlns:local="clr-namespace:ScriptViz.View"
              xmlns:vm="clr-namespace:ScriptViz.ViewModel"
              xmlns:u="clr-namespace:ScriptViz.Util"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             mc:Ignorable="d" d:DesignWidth="300"
              d:DataContext="{x:Type vm:MainWindowViewModel}">
     <UserControl.Resources>
         <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
         <u:MoveToTypeConverter x:Key="moveToTypeConv" />
 
         <DataTemplate x:Key="generalPropertiesDetail">
-            <DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" Style="{StaticResource DarkDataGridStyle}"/>
+            <!--<DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" 
+                      Style="{StaticResource DarkDataGridStyle}"/>-->
+            <ScrollViewer>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0">Name</TextBlock>
+                    <TextBox Grid.Row="0"  Grid.Column="1" Text="{Binding SelectedMove.Name}" Padding="4,2,1,2"/>
+                    <TextBlock Grid.Row="2">FirstHitboxFrame</TextBlock>
+                    <TextBox Grid.Row="2"  Grid.Column="1" Text="{Binding SelectedMove.FirstHitboxFrame}"/>
+                    <TextBlock Grid.Row="3">LastHitboxFrame</TextBlock>
+                    <TextBox Grid.Row="3"  Grid.Column="1" Text="{Binding SelectedMove.LastHitboxFrame}"/>
+                    <TextBlock Grid.Row="4">InterruptFrame</TextBlock>
+                    <TextBox Grid.Row="4"  Grid.Column="1" Text="{Binding SelectedMove.InterruptFrame}"/>
+                    <TextBlock Grid.Row="5">TotalTicks</TextBlock>
+                    <TextBox Grid.Row="5"  Grid.Column="1" Text="{Binding SelectedMove.TotalTicks}"/>
+                    <TextBlock Grid.Row="6">ReturnToOriginalPosition</TextBlock>
+                    <TextBox Grid.Row="6"  Grid.Column="1" Text="{Binding SelectedMove.ReturnToOriginalPosition}"/>
+                    <TextBlock Grid.Row="7">Flag</TextBlock>
+                    <TextBox Grid.Row="7"  Grid.Column="1" Text="{Binding SelectedMove.Flag}"/>
+                    <TextBlock Grid.Row="8">Slide</TextBlock>
+                    <TextBox Grid.Row="8"  Grid.Column="1" Text="{Binding SelectedMove.Slide}"/>
+                    <TextBlock Grid.Row="9">HeaderSize</TextBlock>
+                    <TextBox Grid.Row="9"  Grid.Column="1" Text="{Binding SelectedMove.HeaderSize}"/>
+                    <TextBlock Grid.Row="10">unk3</TextBlock>
+                    <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding SelectedMove.unk3}"/>
+                    <TextBlock Grid.Row="11">unk4</TextBlock>
+                    <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding SelectedMove.unk4}"/>
+                    <TextBlock Grid.Row="12">unk5</TextBlock>
+                    <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding SelectedMove.unk5}"/>
+                    <TextBlock Grid.Row="13">unk6</TextBlock>
+                    <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding SelectedMove.unk6}"/>
+                    <TextBlock Grid.Row="14">unk7</TextBlock>
+                    <TextBox Grid.Row="14" Grid.Column="1" Text="{Binding SelectedMove.unk7}"/>
+                    <TextBlock Grid.Row="15">unk9</TextBlock>
+                    <TextBox Grid.Row="15" Grid.Column="1" Text="{Binding SelectedMove.unk9}"/>
+                    <TextBlock Grid.Row="16">unk13</TextBlock>
+                    <TextBox Grid.Row="16" Grid.Column="1" Text="{Binding SelectedMove.unk13}"/>
+                    <TextBlock Grid.Row="17">Unknown12</TextBlock>
+                    <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding SelectedMove.Unknown12}"/>
+                    <TextBlock Grid.Row="18">Unknown13</TextBlock>
+                    <TextBox Grid.Row="18" Grid.Column="1" Text="{Binding SelectedMove.Unknown13}"/>
+                    <TextBlock Grid.Row="19">Unknown14</TextBlock>
+                    <TextBox Grid.Row="19" Grid.Column="1" Text="{Binding SelectedMove.Unknown14}"/>
+                    <TextBlock Grid.Row="20">Unknown15</TextBlock>
+                    <TextBox Grid.Row="20" Grid.Column="1" Text="{Binding SelectedMove.Unknown15}"/>
+                    <TextBlock Grid.Row="21">Unknown16</TextBlock>
+                    <TextBox Grid.Row="21" Grid.Column="1" Text="{Binding SelectedMove.Unknown16}"/>
+                    <TextBlock Grid.Row="22">Unknown17</TextBlock>
+                    <TextBox Grid.Row="22" Grid.Column="1" Text="{Binding SelectedMove.Unknown17}"/>
+                    <TextBlock Grid.Row="23">Unknown18</TextBlock>
+                    <TextBox Grid.Row="23" Grid.Column="1" Text="{Binding SelectedMove.Unknown18}"/>
+                    <TextBlock Grid.Row="24">Unknown19</TextBlock>
+                    <TextBox Grid.Row="24" Grid.Column="1" Text="{Binding SelectedMove.Unknown19}"/>
+                    <TextBlock Grid.Row="25">Unknown20</TextBlock>
+                    <TextBox Grid.Row="25" Grid.Column="1" Text="{Binding SelectedMove.Unknown20}"/>
+                    <TextBlock Grid.Row="26">Unknown21</TextBlock>
+                    <TextBox Grid.Row="26" Grid.Column="1" Text="{Binding SelectedMove.Unknown21}"/>
+                    <TextBlock Grid.Row="27">Unknown22</TextBlock>
+                    <TextBox Grid.Row="27" Grid.Column="1" Text="{Binding SelectedMove.Unknown22}"/>
+
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Background" Value="{StaticResource DarkBgBrush}" />
+                            <Style.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{StaticResource ButtonBgBrush}" />
+                                    <Setter Property="Foreground" Value="{StaticResource AltMainTextBrush}" />
+                                    <Setter Property="Padding" Value="5,2" />
+                                    <Setter Property="Margin" Value="1"/>
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="{StaticResource LightBgBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource MainTextBrush}" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Margin" Value="1" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Right" />
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+            </ScrollViewer>
         </DataTemplate>
         
         <DataTemplate x:Key="typeDetail">
@@ -23,19 +137,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <!--<ListBox x:Name="typeItemsListBox" Grid.Column="0"
-                         SelectedIndex="{Binding SelectedTypePropertyIndex}"
-                         ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
-                         Style="{StaticResource DarkListBoxStyle}">
-                    <ListBox.ItemsSource>
-                        <MultiBinding Converter="{StaticResource moveToTypeConv}">
-                            <Binding Path="SelectedMove" />
-                            <Binding Path="SelectedProperty" />
-                            <Binding Path="SelectedTypePropertyIndex" />
-                        </MultiBinding>
-                    </ListBox.ItemsSource>
-                </ListBox>-->
-
                 <!-- Content of Type item -->
                 <DataGrid x:Name="TypeDataGrid" Grid.Column="1"
                           Style="{StaticResource DarkDataGridStyle}">

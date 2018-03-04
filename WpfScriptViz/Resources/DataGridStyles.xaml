@@ -70,10 +70,10 @@
     </Style>
     
     <Style x:Key="DarkRowHeaderStyle" TargetType="DataGridRowHeader">
-        <Setter Property="Background" Value="{StaticResource ButtonPressedBgBrush}"/>
+        <Setter Property="Background" Value="{StaticResource ButtonHighlightedBgBrush}"/>
     </Style>
     <Style x:Key="DarkColumnHeaderStyle" TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="{StaticResource ButtonPressedBgBrush}"/>
+        <Setter Property="Background" Value="{StaticResource ButtonHighlightedBgBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource XtraLightBgBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="4,3"/>

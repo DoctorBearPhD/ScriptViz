@@ -53,58 +53,14 @@ namespace ScriptViz.ViewModel
         #region Selected
 
         // MOVE
+        Move _selectedMove;
         public Move SelectedMove
         {
-            get
-            {
-                int numberOfMoves = SelectedMoveList.Moves.Length;
-                if (numberOfMoves > 0 && SelectedMoveIndex.IsBetween(0, numberOfMoves - 1))
-                    return SelectedMoveList.Moves[SelectedMoveIndex];
-                else
-                    return null;
-            }
-        }
-        // MOVELIST
-        public MoveList SelectedMoveList { get => this.BacFile.MoveLists[ (SelectedMoveListIndex < 0) ? 0 : SelectedMoveListIndex ]; }
-        // PROPERTY
-        public PropertyInfo SelectedProperty { get => SelectedMove.GetAllProperties()[SelectedPropertyIndex]; }
-
-        int _selectedPropertyIndex;
-        public int SelectedPropertyIndex
-        {
-            get => _selectedPropertyIndex;
+            get => _selectedMove;
             set
             {
-                _selectedPropertyIndex = (value <= 0) ? 0 : (value + SelectedMove.GetGeneralPropertiesOffset());
-                RaisePropertyChanged(nameof(SelectedPropertyIndex));
-                RaisePropertyChanged(nameof(SelectedProperty));
-            }
-        }
-        // TYPE'S PROPERTY
-        public object SelectedTypeProperty
-        {
-            get => SelectedProperty.GetValue(SelectedMove);
-        }
-
-        int _selectedTypePropertyIndex;
-        public int SelectedTypePropertyIndex
-        {
-            get { return _selectedTypePropertyIndex; }
-            set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
-        }
-
-
-        // The selected MoveList tab in the Script Info area (index)
-        int _selectedMoveListIndex;
-        public int SelectedMoveListIndex
-        {
-            get => _selectedMoveListIndex;
-            set
-            {
-                _selectedMoveListIndex = value;
-                RaisePropertyChanged(nameof(SelectedMoveListIndex));
-                RaisePropertyChanged(nameof(SelectedMoveList));
-                SelectedMoveListChanged();
+                _selectedMove = value;
+                RaisePropertyChanged(nameof(SelectedMove));
             }
         }
 
@@ -119,6 +75,50 @@ namespace ScriptViz.ViewModel
                 RaisePropertyChanged(nameof(SelectedMove));
                 SelectedMoveChanged();
             }
+        }
+
+        // MOVELIST
+        public MoveList SelectedMoveList { get => (BacFile != null) ? this.BacFile.MoveLists[ (SelectedMoveListIndex < 0) ? 0 : SelectedMoveListIndex ] : null; }
+
+        int _selectedMoveListIndex; // The selected MoveList tab in the Script Info area (index)
+        public int SelectedMoveListIndex
+        {
+            get => _selectedMoveListIndex;
+            set
+            {
+                _selectedMoveListIndex = value;
+                RaisePropertyChanged(nameof(SelectedMoveListIndex));
+                RaisePropertyChanged(nameof(SelectedMoveList));
+                SelectedMoveListChanged();
+            }
+        }
+
+        // PROPERTY
+        public PropertyInfo SelectedProperty { get => SelectedMove.GetAllProperties()[SelectedPropertyIndex]; }
+
+        int _selectedPropertyIndex;
+        public int SelectedPropertyIndex
+        {
+            get => _selectedPropertyIndex;
+            set
+            {
+                _selectedPropertyIndex = (value <= 0) ? 0 : (value + SelectedMove.GetGeneralPropertiesOffset());
+                RaisePropertyChanged(nameof(SelectedPropertyIndex));
+                RaisePropertyChanged(nameof(SelectedProperty));
+            }
+        }
+
+        // TYPE'S PROPERTY
+        public object SelectedTypeProperty
+        {
+            get => SelectedProperty.GetValue(SelectedMove);
+        }
+
+        int _selectedTypePropertyIndex;
+        public int SelectedTypePropertyIndex
+        {
+            get { return _selectedTypePropertyIndex; }
+            set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
         }
 
         #endregion // Selected
@@ -797,6 +797,13 @@ namespace ScriptViz.ViewModel
 
         void SelectedMoveChanged()
         {
+            if (SelectedMoveList == null) SelectedMove = null;
+
+            int numberOfMoves = SelectedMoveList.Moves.Length;
+            if (numberOfMoves > 0 && SelectedMoveIndex.IsBetween(0, numberOfMoves - 1))
+                SelectedMove = SelectedMoveList.Moves[SelectedMoveIndex];
+            else
+                SelectedMove = null;
             //MessageBox.Show("Move changed!");
             ResetDisplay();
             

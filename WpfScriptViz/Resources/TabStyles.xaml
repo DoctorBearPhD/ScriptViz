@@ -36,7 +36,7 @@
                             </Border>
                             <!--CONTENT PANEL-->
                             <Border x:Name="ContentPanel" 
-                                    Background="{StaticResource ButtonPressedBgBrush}" 
+                                    Background="{StaticResource ButtonHighlightedBgBrush}" 
                                     BorderBrush="{x:Null}" 
                                     BorderThickness="0" CornerRadius="0,0,3,3"
                                     Grid.Row="1" Grid.Column="0" 

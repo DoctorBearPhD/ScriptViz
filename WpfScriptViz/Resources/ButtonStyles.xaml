@@ -12,16 +12,15 @@
         </Setter>
     </Style>
     <LinearGradientBrush x:Key="ButtonNormalBackground" EndPoint="0,1" StartPoint="0,0">
-        <GradientStop Color="#F3F3F3" Offset="0"/>
-        <GradientStop Color="#EBEBEB" Offset="0.5"/>
-        <GradientStop Color="#DDDDDD" Offset="0.5"/>
-        <GradientStop Color="#CDCDCD" Offset="1"/>
+        <GradientStop Color="{StaticResource ButtonBgColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource ButtonHighlightedBgBrush}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource DarkBgColor}" Offset="1"/>
     </LinearGradientBrush>
-    <Style x:Key="DarkButtonStyle" TargetType="{x:Type ToggleButton}">
+    <Style x:Key="DarkToggleButtonStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
         <Setter Property="Background" Value="{StaticResource ButtonBgBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="{StaticResource MainTextBrush}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -34,7 +33,7 @@
                     </Themes:ButtonChrome>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource ButtonPressedBgBrush}" />
+                            <Setter Property="Background" Value="{StaticResource ButtonHighlightedBgBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="{StaticResource CheckedMenuItemBrush}" />
@@ -47,6 +46,47 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="False">
                             <Setter Property="Content" Value="&lt;" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
+    <Style x:Key="DarkButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource ButtonBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{StaticResource AltMainTextBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border CornerRadius="3" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter x:Name="contentPresenter" 
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" 
+                                      RecognizesAccessKey="True" 
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                      />
+                    </Border>
+                    
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{StaticResource DisabledTextBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource ButtonHighlightedBgBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{StaticResource ButtonPressedBgBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
