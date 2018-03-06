@@ -21,7 +21,7 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <ListBox x:Name="MovesListBox" Grid.Column="0"
-                 ItemsSource="{Binding SelectedMoveList.Moves, Converter={StaticResource movesToListConverter}, Mode=OneWay}"
+                 ItemsSource="{Binding SelectedMoveList, Converter={StaticResource movesToListConverter}, Mode=OneWay}"
                  SelectedIndex="{Binding SelectedMoveIndex}"
                  ItemContainerStyle="{StaticResource DarkListBoxItemStyle}"
                  Style="{StaticResource DarkListBoxStyle}" d:IsLocked="True">

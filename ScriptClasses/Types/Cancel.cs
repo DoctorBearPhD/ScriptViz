@@ -1,9 +1,7 @@
-﻿namespace ScriptLib
+﻿namespace ScriptLib.Types
 {
-    public class Cancel
+    public class Cancel : BaseType
     {
-        public int TickStart { get; set; }
-        public int TickEnd { get; set; }
         public int CancelList { get; set; }
         public int Type { get; set; }
     }

@@ -13,7 +13,7 @@ namespace ScriptViz.Util
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Move[] moves = (value as Move[]);
+            Move[] moves = (value as MoveList).Moves;
             var listItems = new List<string>();
             
             for(int i = 0; i < moves.Length; i++)

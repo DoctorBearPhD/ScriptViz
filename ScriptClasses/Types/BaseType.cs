@@ -1,6 +1,12 @@
-﻿namespace ScriptLib
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScriptLib.Types
 {
-    public class Box
+    public class BaseType
     {
         public int TickStart { get; set; }
         public int TickEnd { get; set; }
@@ -8,10 +14,5 @@
         public int BACVERint2 { get; set; }
         public int BACVERint3 { get; set; }
         public int BACVERint4 { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
     }
 }

@@ -44,12 +44,13 @@
     <Compile Include="Types\AutoCancel.cs" />
     <Compile Include="Files\BACFile.cs" />
     <Compile Include="Boxes\Box.cs" />
+    <Compile Include="Types\BaseType.cs" />
     <Compile Include="Types\Cancel.cs" />
     <Compile Include="Files\BaseFile.cs" />
     <Compile Include="Types\Force.cs" />
     <Compile Include="Boxes\Hitbox.cs" />
-    <Compile Include="Effects\HitboxEffects.cs" />
-    <Compile Include="Types\HitType.cs" />
+    <Compile Include="HitboxEffects.cs" />
+    <Compile Include="Types\HitboxEffectType.cs" />
     <Compile Include="Boxes\Hurtbox.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="MoveList.cs" />

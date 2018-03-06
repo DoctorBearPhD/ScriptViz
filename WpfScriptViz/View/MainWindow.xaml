@@ -24,6 +24,7 @@
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenBacCommand}" Key="O" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
     <DockPanel>
@@ -32,7 +33,12 @@
             <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
                 <MenuItem Header="_Open BAC" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
                           Command="{Binding OpenBacCommand, Mode=OneWay}"
-                          InputGestureText="Ctrl + O"/>
+                          InputGestureText="Ctrl+O"/>
+                <MenuItem x:Name="menuItemSave" 
+                          Header="_Save" Template="{DynamicResource DarkSubMenuItemControlTemplate}"
+                          IsEnabled="{Binding IsScriptLoaded}"
+                          Command="{Binding SaveCommand, Mode=OneWay}" 
+                          InputGestureText="Ctrl+S"/>
 
                 <Separator Style="{DynamicResource DarkSeparatorStyle}" />
 
@@ -173,6 +179,8 @@
                             HorizontalAlignment="Right"
                             Content="Commit Changes"
                             Style="{DynamicResource DarkButtonStyle}"
+                            Command="{Binding CommitChangesCommand}"
+                            IsEnabled="{Binding IsScriptLoaded}"
                             >
                         <Button.Effect>
                             <DropShadowEffect BlurRadius="4" ShadowDepth="3"/>
@@ -215,13 +223,14 @@
                             Content="{DynamicResource ScriptUpdateButtonText}" 
                             Foreground="{StaticResource MainTextBrush}" 
                             Background="{DynamicResource ButtonBgBrush}" />-->
-                    <ic:TextEditor x:Name="teScriptBox" DockPanel.Dock="Top" Margin="0,10,10,10"
-                                   Document="{Binding ScriptTextFile}"
-                                   Background="{DynamicResource XtraDarkBgBrush}" Foreground="{StaticResource AltMainTextBrush}"
-                                   ShowLineNumbers="True"
-                                   LineNumbersForeground="{StaticResource DisabledTextBrush}"
-                                   FontFamily="Courier New"
-                                   Padding="5" />
+                    <u:ScriptBox x:Name="teScriptBox" DockPanel.Dock="Top" Margin="0,10,10,10"
+                                 IsReadOnly="True"
+                                 Document="{Binding ScriptTextFile}"
+                                 Background="{DynamicResource XtraDarkBgBrush}" Foreground="{StaticResource AltMainTextBrush}"
+                                 ShowLineNumbers="True"
+                                 LineNumbersForeground="{StaticResource DisabledTextBrush}"
+                                 FontFamily="Courier New"
+                                 Padding="5" />
 
                 </DockPanel>
 

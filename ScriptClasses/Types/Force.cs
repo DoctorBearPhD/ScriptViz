@@ -1,9 +1,7 @@
-﻿namespace ScriptLib
+﻿namespace ScriptLib.Types
 {
-    public class Force
+    public class Force : BaseType
     {
-        public int TickStart { get; set; }
-        public int TickEnd { get; set; }
         public float Amount { get; set; }
         public object Flag { get; set; }
     }

@@ -18,5 +18,6 @@
         public int HitboxEffectIndex { get; set; }
         public int Unknown10 { get; set; }
         public int Unknown11 { get; set; }
+        public int Unknown12 { get; set; }
     }
 }

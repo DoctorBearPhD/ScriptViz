@@ -1,6 +1,6 @@
 ﻿namespace ScriptLib
 {
-    public class HitType
+    public class HitboxEffectType
     {
         public int Type { get; set; }
         public int Index { get; set; }

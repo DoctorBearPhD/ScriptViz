@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -78,7 +79,18 @@ namespace ScriptViz.ViewModel
         }
 
         // MOVELIST
-        public MoveList SelectedMoveList { get => (BacFile != null) ? this.BacFile.MoveLists[ (SelectedMoveListIndex < 0) ? 0 : SelectedMoveListIndex ] : null; }
+        private MoveList _selectedMoveList;
+        public MoveList SelectedMoveList
+        {
+            get => _selectedMoveList;
+            set
+            {
+                _selectedMoveList = value;
+                RaisePropertyChanged(nameof(SelectedMoveList));
+            }
+        }
+
+        private MoveList BackupOfSelectedMoveList { get; set; }
 
         int _selectedMoveListIndex; // The selected MoveList tab in the Script Info area (index)
         public int SelectedMoveListIndex
@@ -88,7 +100,6 @@ namespace ScriptViz.ViewModel
             {
                 _selectedMoveListIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveListIndex));
-                RaisePropertyChanged(nameof(SelectedMoveList));
                 SelectedMoveListChanged();
             }
         }
@@ -167,6 +178,8 @@ namespace ScriptViz.ViewModel
             set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
         }
 
+        public string FileName { get; set; }
+
         // shortcut for accessing TextDocument's text
         string ScriptText { get => ScriptTextFile.Text; set => ScriptTextFile.Text = value; }
 
@@ -226,8 +239,6 @@ namespace ScriptViz.ViewModel
         }
         #endregion
         
-        #region View Properties
-
         Point _canvasPosition;
         public Point CanvasPosition
         {
@@ -242,17 +253,18 @@ namespace ScriptViz.ViewModel
         public ICommand  ShowScriptCommand => new RelayCommand(ShowScript);
         public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
         public ICommand     OpenBacCommand => new RelayCommand(OpenBACFile);
+        public ICommand        SaveCommand => new RelayCommand(SaveFile);
         public ICommand        ExitCommand => new RelayCommand(Exit);
         #endregion
 
         public ICommand PreviousFrameCommand => new RelayCommand(GoToPreviousFrame);
         public ICommand     NextFrameCommand => new RelayCommand(GoToNextFrame);
 
+        public ICommand CommitChangesCommand => new RelayCommand(CommitChanges);
+
         public Action CloseAction { get; set; } // Action for calling Close() on a Window
 
         #endregion // ICommands
-
-        #endregion // View Properties
 
         #endregion // Variables
 
@@ -320,20 +332,11 @@ namespace ScriptViz.ViewModel
             #endregion
             
             // Make list items for each Move
-            LoadAllMoveLists();
-            LoadMoveList();
+            EnumerateMoveLists();
 
-            #region Populate TreeView
-            //foreach (Box box in Boxes)
-            //{
-            //    Expander expanderBoxData = new Expander
-            //    {
-            //        Header = String.Format("{0} ({1}, {2})", box.GetType(), box.TickStart, box.TickEnd),
-            //        Content = GenerateBoxData(box),
-            //        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(LABEL_TEXT_COLOR))
-            //    };
-            //}
-            #endregion
+            SelectedMoveListIndex = 0; // Makes sure NotifyPropertyChanged event gets raised.
+
+            LoadMoveList();
             
             //LoadMove();
         }
@@ -341,7 +344,7 @@ namespace ScriptViz.ViewModel
         /// <summary>
         /// Creates a tab for each MoveList in the BACFile. In actuality, creates a list of Strings which causes tabs to be created.
         /// </summary>
-        void LoadAllMoveLists()
+        void EnumerateMoveLists()
         {
             if (bacFile == null) return;
 
@@ -356,7 +359,7 @@ namespace ScriptViz.ViewModel
             if (bacFile == null) return;
             if (SelectedMoveListIndex < 0) SelectedMoveListIndex = 0;
             
-            SelectedMoveIndex = 0;
+            SelectedMoveIndex = 0; // This raises the NotifyPropertyChanged event for SelectedMoveIndex and SelectedMove.
         }
 
         void LoadMove()
@@ -683,14 +686,31 @@ namespace ScriptViz.ViewModel
                 //_scriptFileObject = null;
 
                 // read the file in
-                
-                ScriptTextFile = new TextDocument(ICSharpCode.AvalonEdit.Utils.FileReader.OpenFile(openFileDialog.FileName, System.Text.Encoding.UTF8).ReadToEnd());
+                FileName = openFileDialog.FileName;
+
+                ScriptTextFile = new TextDocument(ICSharpCode.AvalonEdit.Utils.FileReader.OpenFile(FileName, System.Text.Encoding.UTF8).ReadToEnd());
                 IsScriptLoaded = true;
                 
                 LoadBacFile();
             }
         }
         #endregion
+
+        public void SaveFile()
+        {
+            //ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
+            Console.WriteLine("Saving...");
+            try
+            {
+                File.WriteAllText(FileName, ScriptText);
+            }
+            catch
+            {
+                MessageBox.Show("File could not be saved!");
+                return;
+            }
+            Console.WriteLine("Save complete.");
+        }
 
         #region Exit
         public void Exit()
@@ -751,7 +771,7 @@ namespace ScriptViz.ViewModel
 
 
             // if yes, replace // TODO: Replace with Script property.
-            Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,\s+");
+            Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,*\s+");
 
             // replace AND count the number of replacements
             int count = 0;
@@ -792,7 +812,18 @@ namespace ScriptViz.ViewModel
         {
             if (SelectedMoveListIndex == -1) return;
 
+            // TODO: Check if previous movelist changes - if any - were saved.
+            SelectedMoveList = (BacFile != null) ? this.BacFile.MoveLists[SelectedMoveListIndex] : null;
             LoadMoveList();
+
+            // Make backup of MoveList
+            CreateMoveListBackup();
+        }
+
+        private void CreateMoveListBackup()
+        {
+            // clones the MoveList
+            BackupOfSelectedMoveList = JsonConvert.DeserializeObject<MoveList>(JsonConvert.SerializeObject(SelectedMoveList));
         }
 
         void SelectedMoveChanged()
@@ -817,6 +848,24 @@ namespace ScriptViz.ViewModel
         private void ResetCanvasPosition()
         {
             CanvasPosition = new Point(0, CANVAS_PADDING);
+        }
+
+        private void CommitChanges()
+        {
+            var selectedMoveOriginal = BackupOfSelectedMoveList.Moves[SelectedMoveIndex];
+
+            if (SelectedMove != selectedMoveOriginal)
+            {
+                var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", selectedMoveOriginal.Name, SelectedMove.Name);
+                Console.WriteLine(message);
+
+                // Save changes
+                // reserialize movelists
+                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
+
+                // reload?
+                CreateMoveListBackup();
+            }
         }
 
         #endregion
