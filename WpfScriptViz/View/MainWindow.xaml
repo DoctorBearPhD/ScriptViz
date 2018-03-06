@@ -6,6 +6,7 @@
         xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         xmlns:local="clr-namespace:ScriptViz.View"
+        xmlns:u="clr-namespace:ScriptViz.Util"
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
         Title="Mysterious Tool" 

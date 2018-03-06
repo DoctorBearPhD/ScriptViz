@@ -8,6 +8,7 @@ namespace ScriptLib
 {
     public class BaseFile
     {
+        [Newtonsoft.Json.JsonProperty(Order = 3)]
         public string RawUassetHeaderDontTouch { get; set; }
     }
 }
