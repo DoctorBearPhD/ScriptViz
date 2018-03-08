@@ -84,20 +84,6 @@
             <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
                 <DockPanel x:Name="MoveListGrid">
 
-                    <Button x:Name="buttonCommit" DockPanel.Dock="Bottom"
-                            Margin="0,4,0,0"
-                            Padding="4"
-                            HorizontalAlignment="Right"
-                            Content="Commit Changes"
-                            Style="{DynamicResource DarkButtonStyle}"
-                            Command="{Binding CommitChangesCommand}"
-                            IsEnabled="{Binding IsScriptLoaded}"
-                            >
-                        <Button.Effect>
-                            <DropShadowEffect BlurRadius="4" ShadowDepth="3"/>
-                        </Button.Effect>
-                    </Button>
-
                     <TabControl x:Name="MoveListTabControl" 
                                 ItemsSource="{Binding MoveListTabs}"
                                 ItemContainerStyle="{StaticResource DarkTabItemStyle}"

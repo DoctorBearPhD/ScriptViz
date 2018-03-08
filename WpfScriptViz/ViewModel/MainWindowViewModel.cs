@@ -351,8 +351,6 @@ namespace ScriptViz.ViewModel
 
         #endregion // MenuItem Click Handlers
 
-
-
         void SelectedMoveListChanged()
         {
             if (SelectedMoveListIndex == -1) return;
@@ -372,24 +370,6 @@ namespace ScriptViz.ViewModel
         }
 
         #endregion // Event Handling
-
-        #region Control Operations
-
-        private void CommitChanges()
-        {
-            //var selectedMoveOriginal = BackupOfSelectedMoveList.Moves[SelectedMoveIndex];
-
-            //if (SelectedMove != selectedMoveOriginal)
-            //{
-            //    var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", 
-            //        selectedMoveOriginal.Name, SelectedMove.Name);
-            //    Console.WriteLine(message);
-
-                
-            //}
-        }
-
-        #endregion
 
         #region Debug Methods
         /// <summary>
