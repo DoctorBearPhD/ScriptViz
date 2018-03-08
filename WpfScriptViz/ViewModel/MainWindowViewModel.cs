@@ -40,95 +40,32 @@ namespace ScriptViz.ViewModel
             new ScriptVisualizerViewModel()
         };
 
-        ObservableCollection<object> _moveListTabs;
-        public ObservableCollection<object> MoveListTabs
+        ObservableCollection<TabItemViewModel> _moveListTabs = new ObservableCollection<TabItemViewModel>();
+        public ObservableCollection<TabItemViewModel> MoveListTabs
         {
-            get => _moveListTabs;
-            set { _moveListTabs = value; RaisePropertyChanged(nameof(MoveListTabs)); }
+            get => _moveListTabs ?? new ObservableCollection<TabItemViewModel>();
         }
 
         #endregion
 
         #region Selected
 
-        // MOVE
-        Move _selectedMove;
-        public Move SelectedMove
-        {
-            get => _selectedMove;
-            set
-            {
-                _selectedMove = value;
-                RaisePropertyChanged(nameof(SelectedMove));
-            }
-        }
-
-        int _selectedMoveIndex;
-        public int SelectedMoveIndex
-        {
-            get => _selectedMoveIndex;
-            set
-            {
-                _selectedMoveIndex = value;
-                RaisePropertyChanged(nameof(SelectedMoveIndex));
-                RaisePropertyChanged(nameof(SelectedMove));
-                SelectedMoveChanged();
-            }
-        }
-
         // MOVELIST
-        private MoveList _selectedMoveList;
-        public MoveList SelectedMoveList
-        {
-            get => _selectedMoveList;
-            set
-            {
-                _selectedMoveList = value;
-                RaisePropertyChanged(nameof(SelectedMoveList));
-            }
-        }
-
-        private MoveList BackupOfSelectedMoveList { get; set; }
-
-        int _selectedMoveListIndex; // The selected MoveList tab in the Script Info area (index)
+        int _selectedTabIndex; // The selected Tab in the Script Info area (index)
         public int SelectedMoveListIndex
         {
-            get => _selectedMoveListIndex;
+            get => _selectedTabIndex;
             set
             {
-                _selectedMoveListIndex = value;
+                _selectedTabIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveListIndex));
                 SelectedMoveListChanged();
             }
         }
 
-        // PROPERTY
-        public PropertyInfo SelectedProperty { get => SelectedMove.GetAllProperties()[SelectedPropertyIndex]; }
+        MoveList _selectedMoveList { get => this.BacFile?.MoveLists[SelectedMoveListIndex]; }
 
-        int _selectedPropertyIndex;
-        public int SelectedPropertyIndex
-        {
-            get => _selectedPropertyIndex;
-            set
-            {
-                _selectedPropertyIndex = (value <= 0) ? 0 : (value + SelectedMove.GetGeneralPropertiesOffset());
-                RaisePropertyChanged(nameof(SelectedPropertyIndex));
-                RaisePropertyChanged(nameof(SelectedProperty));
-            }
-        }
-
-        // TYPE'S PROPERTY
-        public object SelectedTypeProperty
-        {
-            get => SelectedProperty.GetValue(SelectedMove);
-        }
-
-        int _selectedTypePropertyIndex;
-        public int SelectedTypePropertyIndex
-        {
-            get { return _selectedTypePropertyIndex; }
-            set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
-        }
+        private MoveList BackupOfSelectedMoveList { get; set; }
 
         #endregion // Selected
 
@@ -242,35 +179,31 @@ namespace ScriptViz.ViewModel
             #endregion
             
             // Make list items for each Move
-            EnumerateMoveLists();
+            CreateTabs();
 
             SelectedMoveListIndex = 0; // Makes sure NotifyPropertyChanged event gets raised.
         }
 
         /// <summary>
-        /// Creates a tab for each MoveList in the BACFile. In actuality, creates a list of Strings which causes tabs to be created.
+        /// Creates a tab for each MoveList in the BACFile and creates a HitboxEffectses tab. 
+        /// TODO: Should rename it to something that has less to do with the UI.
         /// </summary>
-        void EnumerateMoveLists()
+        void CreateTabs()
         {
             if (bacFile == null) return;
+
+            MoveListTabs.Clear();
 
             // Make tabs for each MoveList
-            MoveListTabs = new ObservableCollection<object>();
             for (int i = 0; i < bacFile.MoveLists.Length; i++)
-                MoveListTabs.Add("MoveList " + (i + 1));
+                MoveListTabs.Add(new MoveListControlViewModel { Header = "MoveList " + (i + 1), Content = BacFile.MoveLists[i] } );
+
+            MoveListTabs.Add(new TabItemViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses } );
+
         }
 
-        void LoadMoveList()
-        {
-            if (bacFile == null) return;
-            if (SelectedMoveListIndex < 0) SelectedMoveListIndex = 0;
-            
-            SelectedMoveIndex = 0; // This raises the NotifyPropertyChanged event for SelectedMoveIndex and SelectedMove.
-        }
 
         #endregion // Load
-
-        
 
         #region Event Handling
 
@@ -312,11 +245,25 @@ namespace ScriptViz.ViewModel
             Console.WriteLine("Saving...");
             try
             {
+                // Save changes
+                // reserialize movelists
+                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented,
+                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+                    );
+
+                // reload?
+                CreateMoveListBackup();
+
                 File.WriteAllText(FileName, ScriptText);
             }
-            catch
+            catch (JsonSerializationException jse)
             {
-                MessageBox.Show("File could not be saved!");
+                MessageBox.Show("Json could not be serialized! Exception: \n" + jse);
+                return;
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("File could not be saved! (Is file in use?)");
                 return;
             }
             Console.WriteLine("Save complete.");
@@ -405,39 +352,23 @@ namespace ScriptViz.ViewModel
         #endregion // MenuItem Click Handlers
 
 
-        // TODO NEXT - Continue checking logic from here (LoadBacFile() -> SelectedMoveListIndex == 0;)
+
         void SelectedMoveListChanged()
         {
             if (SelectedMoveListIndex == -1) return;
 
             // TODO: Check if previous movelist changes - if any - were saved.
-            SelectedMoveList = (BacFile != null) ? this.BacFile.MoveLists[SelectedMoveListIndex] : null;
-            LoadMoveList();
+            Messenger.Default.Send<MoveList>( this.BacFile?.MoveLists[SelectedMoveListIndex] );
+            //LoadMoveList();
 
             // Make backup of MoveList
             CreateMoveListBackup();
         }
 
-        private void CreateMoveListBackup()
+        void CreateMoveListBackup()
         {
             // clone the MoveList
-            BackupOfSelectedMoveList = JsonConvert.DeserializeObject<MoveList>(JsonConvert.SerializeObject(SelectedMoveList));
-        }
-
-        void SelectedMoveChanged()
-        {
-            if (SelectedMoveList == null) SelectedMove = null;
-
-            int numberOfMoves = SelectedMoveList.Moves.Length;
-            if (numberOfMoves > 0 && SelectedMoveIndex.IsBetween(0, numberOfMoves - 1))
-                SelectedMove = SelectedMoveList.Moves[SelectedMoveIndex];
-            else
-                SelectedMove = null;
-
-            //MessageBox.Show("Move changed!");
-
-            // Tell registered listeners that SelectedMove has changed.
-            Messenger.Default.Send(SelectedMove);
+            BackupOfSelectedMoveList = JsonConvert.DeserializeObject<MoveList>(JsonConvert.SerializeObject(_selectedMoveList));
         }
 
         #endregion // Event Handling
@@ -446,23 +377,16 @@ namespace ScriptViz.ViewModel
 
         private void CommitChanges()
         {
-            var selectedMoveOriginal = BackupOfSelectedMoveList.Moves[SelectedMoveIndex];
+            //var selectedMoveOriginal = BackupOfSelectedMoveList.Moves[SelectedMoveIndex];
 
-            if (SelectedMove != selectedMoveOriginal)
-            {
-                var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", 
-                    selectedMoveOriginal.Name, SelectedMove.Name);
-                Console.WriteLine(message);
+            //if (SelectedMove != selectedMoveOriginal)
+            //{
+            //    var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", 
+            //        selectedMoveOriginal.Name, SelectedMove.Name);
+            //    Console.WriteLine(message);
 
-                // Save changes
-                // reserialize movelists
-                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
-                    );
-
-                // reload?
-                CreateMoveListBackup();
-            }
+                
+            //}
         }
 
         #endregion
@@ -477,18 +401,6 @@ namespace ScriptViz.ViewModel
         }
         #endregion
     }
-
-    /// <summary>
-    /// A logical representation of a script-based Box
-    /// </summary>
-    //public struct Box
-    //{
-    //    public int TickStart, TickEnd;
-    //    public float X, Y;
-    //    public float Width, Height;
-    //    public string BoxType;
-    //    public float HitType, HitboxEffectIndex;
-    //}
 
     /// <summary>
     /// A logical representation of a System.Windows.Shapes.Rectangle

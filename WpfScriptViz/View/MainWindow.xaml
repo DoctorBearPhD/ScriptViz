@@ -20,7 +20,7 @@
     </Window.Resources>
     
     <Window.DataContext>
-        <Binding Path="Main" Source="{StaticResource Locator}"/>
+        <Binding Path="Main_VM" Source="{StaticResource Locator}"/>
     </Window.DataContext>
     
     <Window.InputBindings>
@@ -79,7 +79,7 @@
             </Grid.ColumnDefinitions>
 
             <local:ScriptVisualizer Grid.Row="0" Grid.Column="0"
-                                    DataContext="{Binding Path=Visualizer, Source={StaticResource Locator}}"/>
+                                    DataContext="{Binding Path=Visualizer_VM, Source={StaticResource Locator}}"/>
 
             <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
                 <DockPanel x:Name="MoveListGrid">
@@ -103,10 +103,25 @@
                                 ItemContainerStyle="{StaticResource DarkTabItemStyle}"
                                 SelectedIndex="{Binding SelectedMoveListIndex}"
                                 Style="{DynamicResource DarkTabControlStyle}">
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Header}" />
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
                         <TabControl.ContentTemplate>
                             <DataTemplate>
-                                <local:MoveListControl DataContext="{Binding Path=Main, Source={StaticResource Locator}}" />
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.Resources>
+                                        <DataTemplate DataType="{x:Type vm:MoveListControlViewModel}" >
+                                            <local:MoveListControl />
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type vm:MainWindowViewModel}">
+                                            <local:MoveListControl />
+                                        </DataTemplate>
+                                    </ContentControl.Resources>
+                                </ContentControl>
                             </DataTemplate>
+                            
                         </TabControl.ContentTemplate>
                     </TabControl>
                     

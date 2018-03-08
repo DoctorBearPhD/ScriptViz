@@ -16,7 +16,7 @@ namespace ScriptViz.View
             InitializeComponent();
 
             // Set ViewModel reference
-            var _vm = (this.Resources["Locator"] as ViewModelLocator).Main;
+            var _vm = (this.Resources["Locator"] as ViewModelLocator).Main_VM;
 
             // Set the Window.Close function to the ViewModel command
             if (_vm.CloseAction == null) _vm.CloseAction = new Action(Close);

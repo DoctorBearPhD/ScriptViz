@@ -43,11 +43,12 @@ namespace ScriptViz.ViewModel
             ////}
 
             SimpleIoc.Default.Register<ScriptVisualizerViewModel>();
+            SimpleIoc.Default.Register<MoveListControlViewModel>();
 
             SimpleIoc.Default.Register<MainWindowViewModel>();
         }
 
-        public MainWindowViewModel Main
+        public MainWindowViewModel Main_VM
         {
             get
             {
@@ -55,11 +56,19 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        public ScriptVisualizerViewModel Visualizer
+        public ScriptVisualizerViewModel Visualizer_VM
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<ScriptVisualizerViewModel>();
+            }
+        }
+
+        public MoveListControlViewModel MoveList_VM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MoveListControlViewModel>();
             }
         }
         
