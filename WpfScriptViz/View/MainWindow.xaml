@@ -11,16 +11,18 @@
         mc:Ignorable="d"
         Title="Mysterious Tool" 
         Width="1280" Height="800" 
-        Background="{DynamicResource MainBgBrush}"
-        Deactivated="Window_Deactivated">
+        Background="{DynamicResource MainBgBrush}">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <vm:MainWindowViewModel x:Key="viewModel" />
+        <vm:ViewModelLocator x:Key="Locator"/>
     </Window.Resources>
+    
     <Window.DataContext>
-        <Binding Mode="OneWay" Source="{StaticResource viewModel}"/>
+        <Binding Path="Main" Source="{StaticResource Locator}"/>
     </Window.DataContext>
+    
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenBacCommand}" Key="O" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
@@ -76,94 +78,8 @@
                 <ColumnDefinition Width="{Binding ScriptBoxColumnSize}" MaxWidth="500"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="ScriptVisualizerContainer" Grid.Row="0" Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <Grid.Effect>
-                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"/>
-                </Grid.Effect>
-                
-                <Canvas x:Name="canvasContainer"
-                        Margin="10" 
-                        Background="{StaticResource DarkBgBrush}" Grid.Column="1"
-                        MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
-                        MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
-                        MouseMove="canvasContainer_MouseMove" 
-                        MouseRightButtonDown="canvasContainer_MouseRightButtonDown" ClipToBounds="True" >
-                    
-                    <Grid x:Name="containerCanvasRectangles"
-                          Canvas.Left="{Binding CanvasPosition.X}" 
-                          Canvas.Bottom="{Binding CanvasPosition.Y}" 
-                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}" 
-                          >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ItemsControl ItemsSource="{Binding Rectangles}"
-                                      Grid.Column="1">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <Canvas x:Name="canvasRectangles">
-                                        <Canvas.RenderTransform>
-                                            <ScaleTransform ScaleY="-1"/>
-                                        </Canvas.RenderTransform>
-                                    </Canvas>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Rectangle Width="{Binding Width}" Height="{Binding Height}" 
-                                               Fill="{Binding Fill}" Stroke="{Binding Stroke}">
-                                        <Rectangle.RenderTransform>
-                                            <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
-                                        </Rectangle.RenderTransform>
-                                    </Rectangle>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-
-                </Canvas>
-                
-                <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
-                    <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
-                                  Content="&lt;" 
-                                  HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,1" TabIndex="95" 
-                                  Command="{Binding PreviousFrameCommand}"
-                                  Delay="{DynamicResource RepeatButtonDelay}" 
-                                  Interval="{DynamicResource RepeatButtonInterval}"/>
-                    <RepeatButton x:Name="BtnNextFrame" Content="&gt;"
-                                  HorizontalAlignment="Left" VerticalAlignment="Top" 
-                                  DockPanel.Dock="Right" 
-                                  Padding="5,1" TabIndex="97" 
-                                  Command="{Binding NextFrameCommand}"
-                                  Delay="{DynamicResource RepeatButtonDelay}" 
-                                  Interval="{DynamicResource RepeatButtonInterval}"/>
-                    <Slider x:Name="SliderCurrentFrame" 
-                            LargeChange="10" SmallChange="1" IsSnapToTickEnabled="True"
-                            DockPanel.Dock="Top" TabIndex="96"
-                            Margin="10,0" VerticalAlignment="Top" 
-                            Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}" IsMoveToPointEnabled="True"/>
-                    <Label x:Name="lblCurrentFrame"
-                           HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
-                           Foreground="{StaticResource DisabledTextBrush}">
-                        <Label.Content>
-                            <TextBlock>
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} / {1}">
-                                        <Binding Path="CurrentFrame" />
-                                        <Binding Path="MaxFrame" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </Label.Content>
-                    </Label>
-                </DockPanel>
-
-            </Grid>
+            <local:ScriptVisualizer Grid.Row="0" Grid.Column="0"
+                                    DataContext="{Binding Path=Visualizer, Source={StaticResource Locator}}"/>
 
             <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
                 <DockPanel x:Name="MoveListGrid">
@@ -183,13 +99,13 @@
                     </Button>
 
                     <TabControl x:Name="MoveListTabControl" 
-                            ItemsSource="{Binding MoveListTabs}"
-                            ItemContainerStyle="{StaticResource DarkTabItemStyle}"
-                            SelectedIndex="{Binding SelectedMoveListIndex}"
-                            Style="{DynamicResource DarkTabControlStyle}">
+                                ItemsSource="{Binding MoveListTabs}"
+                                ItemContainerStyle="{StaticResource DarkTabItemStyle}"
+                                SelectedIndex="{Binding SelectedMoveListIndex}"
+                                Style="{DynamicResource DarkTabControlStyle}">
                         <TabControl.ContentTemplate>
                             <DataTemplate>
-                                <local:MoveListControl DataContext="{StaticResource viewModel}"/>
+                                <local:MoveListControl DataContext="{Binding Path=Main, Source={StaticResource Locator}}" />
                             </DataTemplate>
                         </TabControl.ContentTemplate>
                     </TabControl>

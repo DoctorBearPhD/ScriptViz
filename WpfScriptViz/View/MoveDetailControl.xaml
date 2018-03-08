@@ -151,12 +151,12 @@
         </DataTemplate>
     </UserControl.Resources>
     
-    <ContentControl Content="{Binding}" x:Name="MovePropertiesControl">
+    <ContentControl Content="{Binding}" x:Name="MoveDetailsControl">
         <ContentControl.Style>
             <Style TargetType="{x:Type ContentControl}">
                 <Setter Property="ContentTemplate" Value="{StaticResource typeDetail}" />
                 <Style.Triggers>
-                    <!-- Path and Value represent the Selected Property and "General" -->
+                    <!-- Set the DataTemplate based on the kind of property the user selected: General or Type. -->
                     <DataTrigger Binding="{Binding SelectedPropertyIndex, Mode=OneWay}" Value="0">
                         <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesDetail}" />
                     </DataTrigger>

@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.Document;
+﻿using GalaSoft.MvvmLight.Messaging;
+using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
 using ScriptLib;
 using ScriptViz.Command;
@@ -24,11 +25,6 @@ namespace ScriptViz.ViewModel
         #region Constants
 
         public const string LABEL_TEXT_COLOR = "#FFababad";
-        public const float BOX_SCALAR = 100;
-        public const float CANVAS_PADDING = 15;
-
-        const int POSITION_X_FLAG = 32768,
-                  POSITION_Y_FLAG = 65536;
 
         const bool DEBUG = true;
 
@@ -36,9 +32,13 @@ namespace ScriptViz.ViewModel
         const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script, or paste a script here...";
 
         #endregion
-        
+
         #region Lists
-        public ObservableCollection<Box> CurrFrameBoxes;
+
+        ObservableCollection<VMBase> _viewModels = new ObservableCollection<VMBase>
+        {
+            new ScriptVisualizerViewModel()
+        };
 
         ObservableCollection<object> _moveListTabs;
         public ObservableCollection<object> MoveListTabs
@@ -47,8 +47,6 @@ namespace ScriptViz.ViewModel
             set { _moveListTabs = value; RaisePropertyChanged(nameof(MoveListTabs)); }
         }
 
-        List<Position>  _positions;
-        List<Position>  _currFramePositions;
         #endregion
 
         #region Selected
@@ -134,42 +132,10 @@ namespace ScriptViz.ViewModel
 
         #endregion // Selected
 
-        #region Frame
-
-        double _currentFrame;
-        public double CurrentFrame
-        {
-            get => _currentFrame;
-            set
-            {
-                _currentFrame = value;
-                RaisePropertyChanged(nameof(CurrentFrame));
-                FrameChanged();
-            }
-        }
-
-        double _maxFrame;
-        public double MaxFrame
-        {
-            get => _maxFrame;
-            set
-            {
-                _maxFrame = value;
-                RaisePropertyChanged(nameof(MaxFrame));
-            }
-        }
-
-        #endregion // Frame
-
-        Color _hurtboxFillColor, _hurtboxStrokeColor,
-              _hitboxFillColor,  _hitboxStrokeColor,
-              _physboxFillColor, _physboxStrokeColor,
-              _proxboxFillColor, _proxboxStrokeColor;
-
         #region Script
 
         // Script text file as a data object
-        BaseFile _scriptFileObject;
+        //BaseFile _scriptFileObject;
 
         BACFile bacFile;
         public BACFile BacFile
@@ -218,34 +184,7 @@ namespace ScriptViz.ViewModel
         }
 
         #endregion // Script
-
-        #region Rectangles
-        ObservableCollection<Rect> _rectangles;
-
-        public ObservableCollection<Rect> Rectangles
-        {
-            get => _rectangles;
-            set { _rectangles = value; RaisePropertyChanged("Rectangles"); }
-        }
-        #endregion
-
-        #region Boxes
-        ObservableCollection<Box> _boxes;
-
-        public ObservableCollection<Box> Boxes
-        {
-            get => _boxes;
-            set { _boxes = value; RaisePropertyChanged("Boxes"); }
-        }
-        #endregion
         
-        Point _canvasPosition;
-        public Point CanvasPosition
-        {
-            get { return _canvasPosition; }
-            set { _canvasPosition = value; RaisePropertyChanged("CanvasPosition"); }
-        }
-
         #region ICommands
 
         #region Menu Commands
@@ -256,9 +195,6 @@ namespace ScriptViz.ViewModel
         public ICommand        SaveCommand => new RelayCommand(SaveFile);
         public ICommand        ExitCommand => new RelayCommand(Exit);
         #endregion
-
-        public ICommand PreviousFrameCommand => new RelayCommand(GoToPreviousFrame);
-        public ICommand     NextFrameCommand => new RelayCommand(GoToNextFrame);
 
         public ICommand CommitChangesCommand => new RelayCommand(CommitChanges);
 
@@ -271,32 +207,6 @@ namespace ScriptViz.ViewModel
 
         public MainWindowViewModel()
         {
-            #region Setup Colors
-            _hurtboxFillColor = Colors.Green;
-            _hurtboxFillColor.A = 124;
-
-            _hurtboxStrokeColor = Colors.GreenYellow;
-            _hurtboxStrokeColor.A = 180;
-
-            _hitboxFillColor = Colors.Red;
-            _hitboxFillColor.A = 124;
-
-            _hitboxStrokeColor = Colors.Salmon;
-            _hitboxStrokeColor.A = 124;
-
-            _physboxFillColor = Colors.Cyan;
-            _physboxFillColor.A = 124;
-
-            _physboxStrokeColor = Colors.LightCyan;
-            _physboxStrokeColor.A = 180;
-
-            _proxboxFillColor = Colors.LightPink;
-            _proxboxFillColor.A = 80;
-
-            _proxboxStrokeColor = Colors.HotPink;
-            _proxboxStrokeColor.A = 80;
-            #endregion
-
             #region Debug Actions
             if (DEBUG)
                 LoadDefaultScript();
@@ -313,7 +223,7 @@ namespace ScriptViz.ViewModel
             // Try to clean the JSON before doing anything with it.
             CleanScript();
 
-            ResetDisplay();
+            (_viewModels[0] as ScriptVisualizerViewModel).ResetDisplay();
 
             #region Show Loading
             // TODO
@@ -335,10 +245,6 @@ namespace ScriptViz.ViewModel
             EnumerateMoveLists();
 
             SelectedMoveListIndex = 0; // Makes sure NotifyPropertyChanged event gets raised.
-
-            LoadMoveList();
-            
-            //LoadMove();
         }
 
         /// <summary>
@@ -362,305 +268,9 @@ namespace ScriptViz.ViewModel
             SelectedMoveIndex = 0; // This raises the NotifyPropertyChanged event for SelectedMoveIndex and SelectedMove.
         }
 
-        void LoadMove()
-        {
-            if (SelectedMove == null) return;
-
-            CurrentFrame = 0;
-            MaxFrame = SelectedMove.TotalTicks - 1; // Gets length of move (amount of time)
-
-            #region Check for Boxes
-
-            if (SelectedMove.Hurtboxes != null && SelectedMove.Hurtboxes.Length > 0)
-            {
-                foreach (var hurtbox in SelectedMove.Hurtboxes)
-                {
-                    //Console.WriteLine(hurtbox);
-                    Boxes.Add(hurtbox);
-                }
-            }
-            if (SelectedMove.Hitboxes != null && SelectedMove.Hitboxes.Length > 0)
-            {
-                Console.WriteLine((SelectedMove.Hitboxes));
-                foreach (var hitbox in SelectedMove.Hitboxes)
-                {
-                    //Console.WriteLine(hurtbox);
-                    Boxes.Add(hitbox);
-                }
-            }
-            if (SelectedMove.PhysicsBoxes != null && SelectedMove.PhysicsBoxes.Length > 0)
-            {
-                foreach (var physbox in SelectedMove.PhysicsBoxes)
-                {
-                    //Console.WriteLine(hurtbox);
-                    Boxes.Add(physbox);
-                }
-            }
-            #endregion
-
-            #region Check for Positions
-            if (SelectedMove.Positions != null && SelectedMove.Positions.Length > 0)
-            {
-                foreach (var position in SelectedMove.Positions)
-                {
-                    _positions.Add(position);
-                }
-            }
-            #endregion
-
-            #region No Candidates Found
-            if (Boxes.Count == 0)
-            {
-                Console.WriteLine("Candidates not found.");
-                return;
-            }
-            #endregion
-
-            DrawBoxes();
-        }
         #endregion // Load
 
-        #region Box Updates
-
-
-
-        void ResetDisplay()
-        {
-            ResetCanvasPosition();
-
-            Boxes = new ObservableCollection<Box>();
-            _positions = new List<Position>();
-        }
-
-        void DrawBoxes()
-        {
-            // Clear the canvas
-            Rectangles = new ObservableCollection<Rect>();
-
-            // Update the list of boxes that are active in the current frame.
-            UpdateCurrFrameBoxes();
-            UpdateCurrFramePositionModifiers();
-
-            // For each Box, draw a Rectangle
-            foreach (Box box in CurrFrameBoxes)
-            {
-                SolidColorBrush fill = new SolidColorBrush();
-                SolidColorBrush stroke = new SolidColorBrush();
-                
-                #region Determine Fill/Stroke Color
-                switch (box.GetType().Name)
-                {
-                    case "Hurtbox":
-                        fill.Color = _hurtboxFillColor;
-                        stroke.Color = _hurtboxStrokeColor;
-                        break;
-
-                    case "Hitbox":
-                        if ((box as Hitbox).HitboxEffectIndex == -1 ||
-                            (box as Hitbox).HitType == 4)
-                        {
-                            fill.Color = _proxboxFillColor;
-                            stroke.Color = _proxboxStrokeColor;
-                            break;
-                        }
-                        else
-                        {
-                            fill.Color = _hitboxFillColor;
-                            stroke.Color = _hitboxStrokeColor;
-                            break;
-                        }
-
-                    case "PhysicsBox":
-                        fill.Color = _physboxFillColor;
-                        stroke.Color = _physboxStrokeColor;
-                        break;
-
-                    default:
-                        fill.Color = Colors.Gray;
-                        stroke.Color = Colors.LightGray;
-                        break;
-                }
-                #endregion
-
-                // TODO: If enabledBoxTypes contains box.BoxType, draw box. For enabling/disabling visibility of Boxes.
-                var rectangle = new Rect()
-                {
-                    Width = box.Width * BOX_SCALAR,
-                    Height = box.Height * BOX_SCALAR,
-                    Fill = fill,
-                    Stroke = stroke
-                };
-
-                Rectangles.Add(rectangle);
-            }
-
-            UpdateRectangleLocations();
-        }
-
-        public void UpdateRectangleLocations()
-        {
-            if (Rectangles != null)
-            {
-                for (int i = 0; i < Rectangles.Count; i++)
-                {
-                    Rect rectangle = Rectangles[i];
-                    Box  box       = CurrFrameBoxes[i];
-
-                    // Modify position of box, based on Positions
-                    Point boxScaledLocation = new Point(box.X * BOX_SCALAR, 
-                                                        box.Y * BOX_SCALAR);
-                    Point boxOrigin = new Point(boxScaledLocation.X,
-                                                boxScaledLocation.Y);
-
-                    Point location = boxOrigin;
-
-                    foreach (var pos in _currFramePositions)
-                    {
-                        if (pos.Flag == POSITION_X_FLAG)
-                            location.X += pos.Movement * BOX_SCALAR;
-                        else if (pos.Flag == POSITION_Y_FLAG)
-                            location.Y += pos.Movement * BOX_SCALAR;
-                    }
-
-                    rectangle.X = (float)location.X;
-                    rectangle.Y = (float)location.Y;
-                }
-            }
-        }
-
-        #region Generate Script Data Fields
         
-        // TODO: Replace with a Template
-        object GenerateBoxData(Box box)
-        {
-            Grid _item;
-            Label _lblX, _lblY, _lblW, _lblH;
-            TextBox _tbX, _tbY, _tbW, _tbH;
-
-            SolidColorBrush _textColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(LABEL_TEXT_COLOR));
-
-            /*
-             * Make a label and textbox for each property of the Box (besides Tick-).
-            (nameof(box.X), box.X);
-            (nameof(box.Y), box.Y);
-            (nameof(box.Width), box.Width);
-            (nameof(box.Height), box.Height);
-             */
-
-            _item = new Grid();
-
-            #region Create Row and Column Definitions
-            ColumnDefinition colDef0 = new ColumnDefinition();
-            ColumnDefinition colDef1 = new ColumnDefinition();
-
-            colDef0.Width = new GridLength(3, GridUnitType.Star);
-            colDef1.Width = new GridLength(2, GridUnitType.Star);
-
-            RowDefinition rowDef0 = new RowDefinition();
-            RowDefinition rowDef1 = new RowDefinition();
-            RowDefinition rowDef2 = new RowDefinition();
-            RowDefinition rowDef3 = new RowDefinition();
-
-            _item.ColumnDefinitions.Add(colDef0);
-            _item.ColumnDefinitions.Add(colDef1);
-
-            _item.RowDefinitions.Add(rowDef0);
-            _item.RowDefinitions.Add(rowDef1);
-            _item.RowDefinitions.Add(rowDef2);
-            _item.RowDefinitions.Add(rowDef3);
-            #endregion
-
-            #region Create Item Content
-            _lblX = MakeDataBoxLabel(nameof(box.X), _textColor);
-            _lblY = MakeDataBoxLabel(nameof(box.Y), _textColor);
-            _lblW = MakeDataBoxLabel(nameof(box.Width), _textColor);
-            _lblH = MakeDataBoxLabel(nameof(box.Height), _textColor);
-
-            _tbX = MakeDataBoxTextBox(box.X);
-            _tbY = MakeDataBoxTextBox(box.Y);
-            _tbW = MakeDataBoxTextBox(box.Width);
-            _tbH = MakeDataBoxTextBox(box.Height);
-            #endregion
-
-            #region Set Rows and Columns
-            Grid.SetRow(_lblX, 0);
-            Grid.SetRow(_lblY, 1);
-            Grid.SetRow(_lblW, 2);
-            Grid.SetRow(_lblH, 3);
-            Grid.SetColumn(_lblX, 0);
-            Grid.SetColumn(_lblY, 0);
-            Grid.SetColumn(_lblW, 0);
-            Grid.SetColumn(_lblH, 0);
-
-            Grid.SetRow(_tbX, 0);
-            Grid.SetRow(_tbY, 1);
-            Grid.SetRow(_tbW, 2);
-            Grid.SetRow(_tbH, 3);
-            Grid.SetColumn(_tbX, 1);
-            Grid.SetColumn(_tbY, 1);
-            Grid.SetColumn(_tbW, 1);
-            Grid.SetColumn(_tbH, 1);
-            #endregion
-
-            #region Add Content to Item
-            _item.Children.Add(_lblX);
-            _item.Children.Add(_tbX);
-            _item.Children.Add(_lblY);
-            _item.Children.Add(_tbY);
-            _item.Children.Add(_lblW);
-            _item.Children.Add(_tbW);
-            _item.Children.Add(_lblH);
-            _item.Children.Add(_tbH);
-            #endregion
-
-            return _item;
-        }
-
-        private Label MakeDataBoxLabel(string property, SolidColorBrush color)
-        {
-            return new Label()
-            {
-                Content = property,
-                Foreground = color
-            };
-        }
-
-        private TextBox MakeDataBoxTextBox(float value)
-        {
-            return new TextBox()
-            {
-                Text = value.ToString(),
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Updates the list of all boxes that are active on the current frame.
-        /// </summary>
-        private void UpdateCurrFrameBoxes()
-        {
-            CurrFrameBoxes = new ObservableCollection<Box>();
-
-            foreach (Box box in Boxes)
-            {
-                if (_currentFrame.IsBetween(box.TickStart, box.TickEnd - 1))
-                    CurrFrameBoxes.Add(box);
-            }
-        }
-
-        private void UpdateCurrFramePositionModifiers()
-        {
-            _currFramePositions = new List<Position>();
-
-            foreach (Position pos in _positions)
-            {
-                if (_currentFrame.IsBetween(pos.TickStart, pos.TickEnd - 1))
-                    _currFramePositions.Add(pos);
-            }
-        }
-        #endregion // Box Updates
 
         #region Event Handling
 
@@ -759,8 +369,13 @@ namespace ScriptViz.ViewModel
 
             //File.CreateText("temp.json").Write(Script);
 
-            string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", countCurly, countSquare);
-            MessageBox.Show(msg);
+            if (countCurly > 0 || countSquare > 0)
+            {
+                string msg = String.Format("Cleaned {0} instances of \"}}\" errors and {1} instances of \"]\" errors.", 
+                    countCurly, countSquare);
+
+                MessageBox.Show(msg);
+            }
         }
         #endregion
 
@@ -789,23 +404,6 @@ namespace ScriptViz.ViewModel
 
         #endregion // MenuItem Click Handlers
 
-        #region Frame Change
-        public void GoToPreviousFrame()
-        {
-            if (CurrentFrame > 0) CurrentFrame--;
-        }
-
-        public void GoToNextFrame()
-        {
-            if (CurrentFrame < _maxFrame) CurrentFrame++;
-        }
-
-        public void FrameChanged()
-        {
-            if (Boxes != null)
-                DrawBoxes();
-        }
-        #endregion
 
         // TODO NEXT - Continue checking logic from here (LoadBacFile() -> SelectedMoveListIndex == 0;)
         void SelectedMoveListChanged()
@@ -822,7 +420,7 @@ namespace ScriptViz.ViewModel
 
         private void CreateMoveListBackup()
         {
-            // clones the MoveList
+            // clone the MoveList
             BackupOfSelectedMoveList = JsonConvert.DeserializeObject<MoveList>(JsonConvert.SerializeObject(SelectedMoveList));
         }
 
@@ -835,20 +433,16 @@ namespace ScriptViz.ViewModel
                 SelectedMove = SelectedMoveList.Moves[SelectedMoveIndex];
             else
                 SelectedMove = null;
+
             //MessageBox.Show("Move changed!");
-            ResetDisplay();
-            
-            LoadMove();
+
+            // Tell registered listeners that SelectedMove has changed.
+            Messenger.Default.Send(SelectedMove);
         }
 
         #endregion // Event Handling
 
         #region Control Operations
-
-        private void ResetCanvasPosition()
-        {
-            CanvasPosition = new Point(0, CANVAS_PADDING);
-        }
 
         private void CommitChanges()
         {
@@ -856,12 +450,15 @@ namespace ScriptViz.ViewModel
 
             if (SelectedMove != selectedMoveOriginal)
             {
-                var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", selectedMoveOriginal.Name, SelectedMove.Name);
+                var message = String.Format("SelectedMove.Name backup: {0}, SelectedMove.Name change: {1}", 
+                    selectedMoveOriginal.Name, SelectedMove.Name);
                 Console.WriteLine(message);
 
                 // Save changes
                 // reserialize movelists
-                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
+                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented,
+                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+                    );
 
                 // reload?
                 CreateMoveListBackup();
