@@ -133,8 +133,6 @@ namespace ScriptViz.ViewModel
         public ICommand        ExitCommand => new RelayCommand(Exit);
         #endregion
 
-        public ICommand CommitChangesCommand => new RelayCommand(CommitChanges);
-
         public Action CloseAction { get; set; } // Action for calling Close() on a Window
 
         #endregion // ICommands
