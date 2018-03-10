@@ -6,15 +6,14 @@
              xmlns:local="clr-namespace:ScriptViz.View"
              xmlns:vm="clr-namespace:ScriptViz.ViewModel"
              xmlns:u="clr-namespace:ScriptViz.Util"
-             mc:Ignorable="d" d:DesignWidth="300"
+             mc:Ignorable="d" 
+             d:DesignWidth="380" d:DesignHeight="330"
              d:DataContext="{x:Type vm:MainWindowViewModel}">
     <UserControl.Resources>
         <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
         <u:MoveToTypeConverter x:Key="moveToTypeConv" />
 
         <DataTemplate x:Key="generalPropertiesDetail">
-            <!--<DataGrid ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToGPropConv}}" 
-                      Style="{StaticResource DarkDataGridStyle}"/>-->
             <ScrollViewer>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -148,6 +147,10 @@
                     </DataGrid.ItemsSource>
                 </DataGrid>
             </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="emptyTemplate">
+            <TextBlock Text="Empty" Foreground="{StaticResource MainTextBrush}" />
         </DataTemplate>
     </UserControl.Resources>
     

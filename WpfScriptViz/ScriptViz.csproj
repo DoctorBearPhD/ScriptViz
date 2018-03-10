@@ -126,12 +126,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Util\HitboxEffectsesToListConverter.cs" />
+    <Compile Include="Util\HitboxEffectsToContentConverter.cs" />
+    <Compile Include="ViewModel\HitboxEffectsesViewModel.cs" />
     <Compile Include="ViewModel\TabItemViewModel.cs" />
     <Compile Include="Util\MoveToTypeConverter.cs" />
     <Compile Include="Util\MoveToGeneralPropertiesConverter.cs" />
     <Compile Include="Util\MoveToPropertiesConverter.cs" />
     <Compile Include="Util\MovesToListConverter.cs" />
-    <Compile Include="Util\ScriptBox.cs" />
+    <Compile Include="View\ScriptBox.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="ViewModel\MoveListControlViewModel.cs" />
     <Compile Include="ViewModel\ScriptVisualizerViewModel.cs" />
@@ -147,6 +150,9 @@
     </Compile>
     <Compile Include="View\ScriptVisualizer.xaml.cs">
       <DependentUpon>ScriptVisualizer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HitboxEffectsesControl.xaml.cs">
+      <DependentUpon>HitboxEffectsesControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\DataGridStyles.xaml">
       <SubType>Designer</SubType>
@@ -165,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ScriptVisualizer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HitboxEffectsesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -218,6 +228,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

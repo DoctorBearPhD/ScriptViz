@@ -45,30 +45,7 @@
     <SolidColorBrush x:Key="AltMainTextBrush" Color="{StaticResource AltMainTextColor}"/>
     <SolidColorBrush x:Key="MainTextBrush" Color="{StaticResource MainTextColor}"/>
     <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedColor}"/>
-    <!-- Old Colors
-    <Color x:Key="MainBGColor">#FF3F3F46</Color>
-    <Color x:Key="MainTextColor">#FFF1F1F1</Color>
-    <Color x:Key="FadedTextColor">#FF7B7B7D</Color>
-    <Color x:Key="ScriptBoxBgColor">#FF1E1E1E</Color>
-    <Color x:Key="TabContentBgColor">#FF2A2A2F</Color>
-    <Color x:Key="TabItemBorderColor">#FF7B7B7D</Color>
-    <SolidColorBrush x:Key="MainBGBrush" Color="{StaticResource MainBGColor}"/>
-    <SolidColorBrush x:Key="MainTextBrush" Color="{StaticResource MainTextColor}"/>
-    <SolidColorBrush x:Key="FadedTextBrush" Color="{StaticResource FadedTextColor}"/>
-    <SolidColorBrush x:Key="ScriptBoxBgBrush" Color="{StaticResource ScriptBoxBgColor}"/>
-    <SolidColorBrush x:Key="TabContentBgBrush" Color="{StaticResource TabContentBgColor}"/>
-    <SolidColorBrush x:Key="TabItemBorderBrush" Color="{StaticResource TabItemBorderColor}"/>
-
-    <Color x:Key="ButtonBgColor">#FF525257</Color>
-    <Color x:Key="TabControlNormalBorderColor">#FF2E2E34</Color>
-
-    <SolidColorBrush x:Key="TabControlNormalBorderBrush" Color="{StaticResource TabControlNormalBorderColor}"/>
-
-    <SolidColorBrush x:Key="ButtonBgBrush" Color="#FF525257"/>
-
-    <Color x:Key="DisabledItemTextColor">#636363</Color>
-    <SolidColorBrush x:Key="DisabledItemTextBrush" Color="{StaticResource DisabledItemTextColor}"/>
-    -->
+    
     <Color x:Key="TabControlNormalBorderColor">#FF2E2E34</Color>
     <Color x:Key="TabControlHeaderBgColor">#FF2E2E34</Color>
 
@@ -97,5 +74,7 @@
     </LinearGradientBrush>
     
     <SolidColorBrush x:Key="TabItemBorderBrush" Color="{DynamicResource AltMainTextColor}"/>
+
+    <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
 
 </ResourceDictionary>

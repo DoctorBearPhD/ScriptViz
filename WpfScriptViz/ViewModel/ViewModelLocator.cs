@@ -42,10 +42,11 @@ namespace ScriptViz.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
+            SimpleIoc.Default.Register<MainWindowViewModel>();
+
             SimpleIoc.Default.Register<ScriptVisualizerViewModel>();
             SimpleIoc.Default.Register<MoveListControlViewModel>();
-
-            SimpleIoc.Default.Register<MainWindowViewModel>();
+            SimpleIoc.Default.Register<HitboxEffectsesViewModel>();
         }
 
         public MainWindowViewModel Main_VM
@@ -71,7 +72,15 @@ namespace ScriptViz.ViewModel
                 return ServiceLocator.Current.GetInstance<MoveListControlViewModel>();
             }
         }
-        
+
+        public HitboxEffectsesViewModel HitboxEffectses_VM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<HitboxEffectsesViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

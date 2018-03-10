@@ -18,12 +18,14 @@ namespace ScriptViz.ViewModel
             get => SelectedMoveList.Moves[SelectedMoveIndex];
         }
 
-        int _selectedMoveIndex = 0;
+        int _selectedMoveIndex;
         public int SelectedMoveIndex
         {
             get => _selectedMoveIndex;
             set
             {
+                if (value < 0) return;
+
                 _selectedMoveIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveIndex)); // Notifies connected UI elements that SelectedMoveIndex has changed
                 RaisePropertyChanged(nameof(SelectedMove));
@@ -41,7 +43,10 @@ namespace ScriptViz.ViewModel
         }
 
         // PROPERTY
-        public PropertyInfo SelectedProperty { get => SelectedMove.GetAllProperties()[SelectedPropertyIndex]; }
+        public PropertyInfo SelectedProperty
+        {
+            get => (SelectedPropertyIndex <= 0) ? null : SelectedMove.GetAllProperties()[SelectedPropertyIndex];
+        }
 
         int _selectedPropertyIndex;
         public int SelectedPropertyIndex
@@ -49,7 +54,7 @@ namespace ScriptViz.ViewModel
             get => _selectedPropertyIndex;
             set
             {
-                _selectedPropertyIndex = (value <= 0) ? 0 : (value + SelectedMove.GetGeneralPropertiesOffset());
+                _selectedPropertyIndex = (value <= 0) ? value : (value + SelectedMove.GetGeneralPropertiesOffset());
                 RaisePropertyChanged(nameof(SelectedPropertyIndex));
                 RaisePropertyChanged(nameof(SelectedProperty));
             }

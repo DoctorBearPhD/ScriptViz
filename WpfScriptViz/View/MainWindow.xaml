@@ -9,7 +9,7 @@
         xmlns:u="clr-namespace:ScriptViz.Util"
         x:Class="ScriptViz.View.MainWindow"
         mc:Ignorable="d"
-        Title="Mysterious Tool" 
+        Title="ScriptViz" 
         Width="1280" Height="800" 
         Background="{DynamicResource MainBgBrush}">
 
@@ -64,9 +64,29 @@
                 <MenuItem Header="_Remove BACVERint" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
                           Command="{Binding RemoveBviCommand}"
                           IsEnabled="{Binding IsScriptLoaded}" />
+
+                <Separator Style="{DynamicResource DarkSeparatorStyle}" />
+
+                <MenuItem Header="_Save With BACVERint" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          IsCheckable="True"
+                          IsChecked="{Binding SaveWithBACVERint}"
+                          IsEnabled="{Binding IsScriptLoaded}" />
             </MenuItem>
         </Menu>
 
+        <Grid x:Name="BottomStatusBar" DockPanel.Dock="Bottom" 
+              Background="{StaticResource DarkBgBrush}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="100"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Foreground="{StaticResource AltMainTextBrush}" Margin="5,2">
+                <TextBlock Text="numberOfTypes: "/>
+                <TextBlock Text="{Binding NumberOfTypes}"/>
+            </TextBlock>
+                       
+        </Grid>
+        
         <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -87,8 +107,8 @@
                     <TabControl x:Name="MoveListTabControl" 
                                 ItemsSource="{Binding MoveListTabs}"
                                 ItemContainerStyle="{StaticResource DarkTabItemStyle}"
-                                SelectedIndex="{Binding SelectedMoveListIndex}"
-                                Style="{DynamicResource DarkTabControlStyle}">
+                                SelectedIndex="{Binding SelectedTabIndex}"
+                                Style="{DynamicResource DarkTabControlStyle}" RenderTransformOrigin="0.5,0.5">
                         <TabControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Header}" />
@@ -101,8 +121,8 @@
                                         <DataTemplate DataType="{x:Type vm:MoveListControlViewModel}" >
                                             <local:MoveListControl />
                                         </DataTemplate>
-                                        <DataTemplate DataType="{x:Type vm:MainWindowViewModel}">
-                                            <local:MoveListControl />
+                                        <DataTemplate DataType="{x:Type vm:HitboxEffectsesViewModel}">
+                                            <local:HitboxEffectsesControl />
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>

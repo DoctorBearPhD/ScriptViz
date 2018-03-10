@@ -22,8 +22,6 @@ namespace ScriptViz.View
     {
         #region Vars
 
-        ScriptViz.ViewModel.ScriptVisualizerViewModel _vm;
-
         bool _flagDragging = false;
 
         Point originalMousePos,
@@ -114,6 +112,8 @@ namespace ScriptViz.View
 
         private void SetCanvasPosition(Point position, bool useOriginalPosition = true)
         {
+            var _vm = this.DataContext as ScriptViz.ViewModel.ScriptVisualizerViewModel;
+
             if (useOriginalPosition)
                 _vm.CanvasPosition = new Point(originalCanvasPos.X + position.X, originalCanvasPos.Y + position.Y);
             else

@@ -52,12 +52,29 @@ namespace ScriptViz.ViewModel
 
         // MOVELIST
         int _selectedTabIndex; // The selected Tab in the Script Info area (index)
-        public int SelectedMoveListIndex
+        public int SelectedTabIndex
         {
             get => _selectedTabIndex;
             set
             {
                 _selectedTabIndex = value;
+                RaisePropertyChanged(nameof(SelectedTabIndex));
+
+                // | MoveList 1 |    | MoveList 2 |    | HitboxEffectses |
+                if ( _selectedTabIndex !=  MoveListTabs.Count - 1 ) // if not the last tab (the HitboxEffectses tab)
+                {
+                    SelectedMoveListIndex = _selectedTabIndex;
+                }
+            }
+        }
+
+        int _selectedMoveListIndex;
+        public int SelectedMoveListIndex
+        {
+            get => _selectedMoveListIndex;
+            set
+            {
+                _selectedMoveListIndex = value;
                 RaisePropertyChanged(nameof(SelectedMoveListIndex));
                 SelectedMoveListChanged();
             }
@@ -106,13 +123,6 @@ namespace ScriptViz.ViewModel
                 RaisePropertyChanged("IsScriptLoaded");
             }
         }
-        
-        bool _isScriptBoxVisible = true;
-        public bool IsScriptBoxVisible
-        {
-            get => _isScriptBoxVisible;
-            set  { _isScriptBoxVisible = value; RaisePropertyChanged("IsScriptBoxVisible"); }
-        }
 
         GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
         public GridLength ScriptBoxColumnSize {
@@ -121,7 +131,27 @@ namespace ScriptViz.ViewModel
         }
 
         #endregion // Script
-        
+
+        #region Preferences
+
+        bool _isScriptBoxVisible = true;
+        public bool IsScriptBoxVisible
+        {
+            get => _isScriptBoxVisible;
+            set { _isScriptBoxVisible = value; RaisePropertyChanged("IsScriptBoxVisible"); }
+        }
+
+        private bool mSaveWithBACVERint = true;
+        public bool SaveWithBACVERint
+        {
+            get { return mSaveWithBACVERint; }
+            set { mSaveWithBACVERint = value; RaisePropertyChanged(nameof(SaveWithBACVERint)); }
+        }
+
+
+
+        #endregion // Preferences
+
         #region ICommands
 
         #region Menu Commands
@@ -137,6 +167,18 @@ namespace ScriptViz.ViewModel
 
         #endregion // ICommands
 
+        #region Misc
+
+        string _numberOfTypes;
+        public string NumberOfTypes
+        {
+            get { return _numberOfTypes ?? "N/A"; }
+            set { _numberOfTypes = value; RaisePropertyChanged(nameof(NumberOfTypes)); }
+        }
+
+
+        #endregion // Misc
+
         #endregion // Variables
 
 
@@ -149,9 +191,10 @@ namespace ScriptViz.ViewModel
             
             // Set initial text for script box
             ScriptTextFile.Text = DEFAULT_SCRIPT_BOX_TEXT;
+
+            Messenger.Default.Register<Move>(this, move => NumberOfTypes = move?.numberOfTypes.ToString());
         }
 
-        // TODO: Don't use this to display?
         #region Load
         void LoadBacFile()
         {
@@ -169,8 +212,7 @@ namespace ScriptViz.ViewModel
             // Try to parse as a BACFile
 
             // Convert the JSON String to a C# object.
-            bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text,
-                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
 
             //var bacFile = (BACFile)_scriptFileObject;
 
@@ -196,7 +238,8 @@ namespace ScriptViz.ViewModel
             for (int i = 0; i < bacFile.MoveLists.Length; i++)
                 MoveListTabs.Add(new MoveListControlViewModel { Header = "MoveList " + (i + 1), Content = BacFile.MoveLists[i] } );
 
-            MoveListTabs.Add(new TabItemViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses } );
+            // Make a tab for the list of HitboxEffects objects
+            MoveListTabs.Add(new HitboxEffectsesViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses } );
 
         }
 
@@ -245,12 +288,13 @@ namespace ScriptViz.ViewModel
             {
                 // Save changes
                 // reserialize movelists
-                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented,
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
-                    );
+                ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
 
                 // reload?
                 CreateMoveListBackup();
+
+                if (!SaveWithBACVERint)
+                    RemoveBACVERint(false);
 
                 File.WriteAllText(FileName, ScriptText);
             }
@@ -327,21 +371,32 @@ namespace ScriptViz.ViewModel
         #region Remove BACVERint
         public void RemoveBACVERint()
         {
+            RemoveBACVERint(true);
+        }
+
+        public void RemoveBACVERint(bool showMessage)
+        {
             // TODO: Create yes/no dialogue
 
 
             // if yes, replace // TODO: Replace with Script property.
             Regex regex = new Regex(@"""BACVERint\d"": (?=0)\d,*\s+");
 
-            // replace AND count the number of replacements
-            int count = 0;
-            ScriptText = regex.Replace(ScriptText,
-                m => {                   // function is called on each match
+            if (!showMessage)
+                // replace without counting
+                ScriptText = regex.Replace(ScriptText, "");
+            else
+            {
+                // replace AND count the number of replacements
+                int count = 0;
+                ScriptText = regex.Replace(ScriptText,
+                    m => {               // function is called on each match
                     count++;
                     return m.Result(""); // replace the match with "" (delete the text)
                 });
 
-            MessageBox.Show(String.Format("Removed {0} lines!", count), "RemoveBACVERint Results");
+                MessageBox.Show(String.Format("Removed {0} lines!", count), "RemoveBACVERint Results");
+            }
         }
         #endregion // Remove BACVERint
 

@@ -53,7 +53,7 @@
     <Compile Include="Types\Force.cs" />
     <Compile Include="Boxes\Hitbox.cs" />
     <Compile Include="HitboxEffects.cs" />
-    <Compile Include="Types\HitboxEffectType.cs" />
+    <Compile Include="Types\HitboxFX\HitboxEffectType.cs" />
     <Compile Include="Boxes\Hurtbox.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="MoveList.cs" />
