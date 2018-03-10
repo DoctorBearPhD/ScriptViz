@@ -13,9 +13,9 @@ namespace ScriptViz.Util
             var item = (value as HitboxEffects);
 
             if (item.IsEmpty())
-                return item.GetHitboxEffectTypes();
-            else
                 return null;
+            else
+                return item.GetHitboxEffectTypes();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

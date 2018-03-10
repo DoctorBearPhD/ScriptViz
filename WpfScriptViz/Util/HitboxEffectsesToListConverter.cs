@@ -20,9 +20,9 @@ namespace ScriptViz.Util
             foreach (var item in _in)
             {
                 if (item.IsEmpty())
-                    _out.Add(item.Index.ToString());
-                else
                     _out.Add(item.Index.ToString() + ": (empty)");
+                else
+                    _out.Add(item.Index.ToString());
             }
 
             return _out;

@@ -32,7 +32,8 @@ namespace ScriptLib
         {
             get
             {
-                //if (HIT_STAND == null) return null; // This is valid if this actually reflects the nature of HitboxEffectTypes.
+                if (IsEmpty()) return null;
+
                 return new List<HitboxEffectType> {
                                HIT_STAND          ,
                                HIT_CROUCH         ,
@@ -68,7 +69,7 @@ namespace ScriptLib
 
         public bool IsEmpty()
         {
-            return GetHitboxEffectTypes().Where( t => t != null ).Any();
+            return HIT_STAND == null;
         }
     }
 }

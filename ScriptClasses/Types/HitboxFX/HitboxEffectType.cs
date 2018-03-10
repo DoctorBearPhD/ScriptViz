@@ -1,7 +1,12 @@
-﻿namespace ScriptLib
+﻿using Newtonsoft.Json;
+
+namespace ScriptLib
 {
     public class HitboxEffectType
     {
+        [JsonIgnore]
+        public string Name { get; set; }
+
         public int Type { get; set; }
         public int Index { get; set; }
         public int DamageType { get; set; }
