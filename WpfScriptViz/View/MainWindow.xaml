@@ -50,7 +50,6 @@
             <MenuItem Header="_View" Template="{DynamicResource DarkMenuItemControlTemplate}">
                 <MenuItem Header="_Show Script" 
                           Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
-                          Style="{StaticResource DarkMenuItemStyle}"
                           IsCheckable="True" 
                           Command="{Binding ShowScriptCommand, Mode=OneWay}"
                           IsChecked="{Binding IsScriptBoxVisible}"/>
@@ -75,7 +74,7 @@
         </Menu>
 
         <Grid x:Name="BottomStatusBar" DockPanel.Dock="Bottom" 
-              Background="{StaticResource DarkBgBrush}" >
+              Background="{StaticResource DarkerBgBrush}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="100"/>
                 <ColumnDefinition />

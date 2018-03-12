@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ScriptViz.View"
              xmlns:vm="clr-namespace:ScriptViz.ViewModel"
              xmlns:util="clr-namespace:ScriptViz.Util"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:scriptLib="clr-namespace:ScriptLib;assembly=ScriptLib"
              mc:Ignorable="d" 
-             d:DesignWidth="700" d:DesignHeight="330" 
+             d:DesignWidth="700" d:DesignHeight="600" 
              d:DataContext="{x:Type vm:MoveListControlViewModel}">
     <UserControl.Resources>
         <util:MovesToListConverter x:Key="movesToListConverter" />
@@ -17,21 +18,26 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="Auto" MinWidth="75"/>
-            <ColumnDefinition Width="5*"/>
+            <!--<ColumnDefinition Width="Auto" MinWidth="75"/>-->
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
         <ListBox x:Name="MovesListBox" Grid.Column="0"
                  ItemsSource="{Binding SelectedMoveList, Converter={StaticResource movesToListConverter}, Mode=OneWay}"
                  SelectedIndex="{Binding SelectedMoveIndex, Mode=OneWayToSource, FallbackValue=0}"
                  Style="{StaticResource DarkListBoxStyle}"/>
+
+        <xctk:PropertyGrid SelectedObject="{Binding SelectedMove}" SelectedObjectType="{x:Type scriptLib:Move}" 
+                           Grid.Column="1" 
+                           ShowSortOptions="False"
+                           />
         
-        <ListBox x:Name="MoveDetailsListBox" Grid.Column="1"
+        <!--<ListBox x:Name="MoveDetailsListBox" Grid.Column="1"
                  ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToPropertiesConverter}, Mode=OneWay}"
                  SelectedIndex="{Binding SelectedPropertyIndex, Mode=OneWayToSource, FallbackValue=0}"
-                 Style="{StaticResource DarkListBoxStyle}" />
+                 Style="{StaticResource DarkListBoxStyle}" />-->
         
-        <local:MoveDetailControl Grid.Column="2" />
+        <!--<local:MoveDetailControl Grid.Column="2" />-->
         
     </Grid>
 </UserControl>

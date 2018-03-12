@@ -39,7 +39,7 @@
 
         <Canvas x:Name="canvasContainer"
                         Margin="10" 
-                        Background="{StaticResource DarkBgBrush}" Grid.Column="1"
+                        Background="{StaticResource XtraDarkBgBrush}" Grid.Column="1"
                         MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
                         MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
                         MouseMove="canvasContainer_MouseMove" 
@@ -48,8 +48,7 @@
             <Grid x:Name="containerCanvasRectangles"
                           Canvas.Left="{Binding CanvasPosition.X}" 
                           Canvas.Bottom="{Binding CanvasPosition.Y}" 
-                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}" 
-                          >
+                          Width="{Binding ElementName=canvasContainer, Path=ActualWidth}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />

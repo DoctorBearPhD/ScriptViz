@@ -6,11 +6,12 @@
              xmlns:local="clr-namespace:ScriptViz.View"
              xmlns:vm="clr-namespace:ScriptViz.ViewModel"
              xmlns:u="clr-namespace:ScriptViz.Util"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:scriptLib="clr-namespace:ScriptLib;assembly=ScriptLib"
              mc:Ignorable="d" 
              d:DesignWidth="380" d:DesignHeight="330"
-             d:DataContext="{x:Type vm:MainWindowViewModel}">
+             d:DataContext="{x:Type vm:MoveListControlViewModel}">
     <UserControl.Resources>
-        <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
         <u:MoveToTypeConverter x:Key="moveToTypeConv" />
 
         <DataTemplate x:Key="generalPropertiesDetail">
@@ -132,12 +133,14 @@
         
         <DataTemplate x:Key="typeDetail">
             <Grid>
-                <Grid.ColumnDefinitions>
+                <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>-->
                 <!-- Content of Type item -->
-                <DataGrid x:Name="TypeDataGrid" Grid.Column="1"
+                <xctk:PropertyGrid SelectedObject="{Binding SelectedMove}" SelectedObjectType="{x:Type scriptLib:Move}" />
+
+                <!--<DataGrid x:Name="TypeDataGrid" Grid.Column="1"
                           Style="{StaticResource DarkDataGridStyle}">
                     <DataGrid.ItemsSource>
                         <MultiBinding Converter="{StaticResource moveToTypeConv}">
@@ -145,7 +148,7 @@
                             <Binding Path="SelectedProperty" />
                         </MultiBinding>
                     </DataGrid.ItemsSource>
-                </DataGrid>
+                </DataGrid>-->
             </Grid>
         </DataTemplate>
 

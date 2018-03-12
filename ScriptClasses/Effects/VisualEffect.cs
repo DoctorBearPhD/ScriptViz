@@ -1,18 +1,23 @@
-﻿namespace ScriptLib
+﻿using System.ComponentModel;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+
+namespace ScriptLib
 {
+    [CategoryOrder("Common", 1), CategoryOrder("Misc", 3),
+     CategoryOrder("Unknown", 98), CategoryOrder("BACVERint", 99)]
     public class VisualEffect : Types.BaseType
     {
-        public int Unknown1 { get; set; }
-        public int Unknown2 { get; set; }
-        public int Unknown3 { get; set; }
+        [Category("Unknown")] public int Unknown1 { get; set; }
+        [Category("Unknown")] public int Unknown2 { get; set; }
+        [Category("Unknown")] public int Unknown3 { get; set; }
         public int Type { get; set; }
-        public int Unknown5 { get; set; }
+        [Category("Unknown")] public int Unknown5 { get; set; }
         public int AttachPoint { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public int Unknown10 { get; set; }
-        public float Size { get; set; }
-        public float Unknown12 { get; set; }
+        [Category("Common")] public float X { get; set; }
+        [Category("Common")] public float Y { get; set; }
+        [Category("Common")] public float Z { get; set; }
+        [Category("Unknown")] public int Unknown10 { get; set; }
+        [Category("Common")] public float Size { get; set; }
+        [Category("Unknown")] public float Unknown12 { get; set; }
     }
 }

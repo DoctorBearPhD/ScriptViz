@@ -13,14 +13,21 @@
         B7B7B7 - Alt Main Text
         C5C5C5 - Main Text
         036FB7 - Selected
-    -->
     
-    <Color x:Key="XtraDarkBgColor">#FF1E1E1E</Color>
-    <Color x:Key="DarkBgColor">#FF212121</Color>
+    
+    #1b1b1c #2e2e31 #434248 #595960 #707078 #888891 #a1a1ab #babac5 #d5d5e0
+    -->
 
-    <Color x:Key="MainBgColor">#FF3F3F46</Color>
-    <Color x:Key="LightBgColor">#FF2C2C30</Color>
-    <Color x:Key="XtraLightBgColor">#FF313133</Color>
+    <Color x:Key="XtraDarkBgColor">#1b1b1c</Color>
+    <Color x:Key="DarkerBgColor">#2a2a2d</Color>
+    <Color x:Key="DarkBgColor">#434248</Color>
+    <Color x:Key="MidBgColor">#595960</Color>
+    <Color x:Key="LightBgColor">#707078</Color>
+    <Color x:Key="LighterBgColor">#888891</Color>
+    <Color x:Key="XtraLightBgColor">#a1a1ab</Color>
+
+    <Color x:Key="MainBgColor">#38373d</Color>
+
     <Color x:Key="ButtonBgColor">#FF383838</Color>
     <Color x:Key="ButtonPressedBgColor">#FF7E7E7E</Color>
     <Color x:Key="ButtonHighlightedBgColor">#FF4F4F58</Color>
@@ -31,11 +38,18 @@
     <Color x:Key="MainTextColor">#FFC5C5C5</Color>
     <Color x:Key="SelectedColor">#FF036FB7</Color>
 
+    <!--<Color x:Key="LightBgColor">#FF61616C</Color>
+    <Color x:Key="XtraLightBgColor">#FF767683</Color>-->
+
     <SolidColorBrush x:Key="XtraDarkBgBrush" Color="{StaticResource XtraDarkBgColor}"/>
+    <SolidColorBrush x:Key="DarkerBgBrush" Color="{StaticResource DarkerBgColor}"/>
     <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource DarkBgColor}"/>
+    <SolidColorBrush x:Key="MidBgBrush" Color="{StaticResource MidBgColor}"/>
     <SolidColorBrush x:Key="MainBgBrush" Color="{StaticResource MainBgColor}"/>
     <SolidColorBrush x:Key="LightBgBrush" Color="{StaticResource LightBgColor}"/>
+    <SolidColorBrush x:Key="LighterBgBrush" Color="{StaticResource LighterBgColor}"/>
     <SolidColorBrush x:Key="XtraLightBgBrush" Color="{StaticResource XtraLightBgColor}"/>
+    
     <SolidColorBrush x:Key="ButtonBgBrush" Color="{StaticResource ButtonBgColor}"/>
     <SolidColorBrush x:Key="ButtonPressedBgBrush" Color="{StaticResource ButtonPressedBgColor}"/>
     <SolidColorBrush x:Key="ButtonNormalBorderBrush" Color="{StaticResource ButtonNormalBorderColor}"/>

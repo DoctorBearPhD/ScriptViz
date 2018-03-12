@@ -1,10 +1,12 @@
-﻿namespace ScriptLib
+﻿using System.ComponentModel;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+
+namespace ScriptLib
 {
-    public class Position
+    [CategoryOrder("Common", 1), CategoryOrder("Misc", 2), CategoryOrder("BACVERint", 99)]
+    public class Position : Types.BaseType
     {
-        public int TickStart { get; set; }
-        public int TickEnd { get; set; }
-        public float Movement { get; set; }
+        [Category("Common")] public float Movement { get; set; }
         public int Flag { get; set; }
     }
 }

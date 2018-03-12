@@ -4,11 +4,7 @@
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
     
     <Style x:Key="DarkMenuStyle" TargetType="{x:Type Menu}">
-        <Setter Property="Background" Value="{StaticResource MainBgBrush}" />
-    </Style>
-
-    <Style x:Key="DarkMenuItemStyle" TargetType="{x:Type MenuItem}">
-        <Setter Property="Foreground" Value="{StaticResource MainTextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 
     <Style x:Key="DarkSeparatorStyle" TargetType="{x:Type Separator}">
@@ -26,17 +22,27 @@
 
     <ControlTemplate x:Key="DarkMenuItemControlTemplate" TargetType="{x:Type MenuItem}">
         <Grid x:Name="Grid" SnapsToDevicePixels="True">
-            <Rectangle x:Name="OuterBorder" RadiusY="2" RadiusX="2" Fill="#FF3F3F46"/>
+            <Rectangle x:Name="OuterBorder" RadiusY="2" RadiusX="2" Fill="Transparent"/>
             <Rectangle x:Name="Bg" Fill="{TemplateBinding Background}" Margin="1" RadiusY="1" RadiusX="1" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1"/>
             <Rectangle x:Name="InnerBorder" Margin="2"/>
             <DockPanel x:Name="DockPanel">
                 <ContentPresenter x:Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" Margin="4,0,6,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
                 <Path x:Name="GlyphPanel" Data="M0,5.1L1.7,5.2 3.4,7.1 8,0.4 9.2,0 3.3,10.8z" Fill="{TemplateBinding Foreground}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
-                <ContentPresenter x:Name="ContentPresenter" TextBlock.Foreground="{StaticResource MainTextBrush}" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                <ContentPresenter x:Name="ContentPresenter" 
+                                  TextBlock.Foreground="{StaticResource MainTextBrush}" 
+                                  ContentTemplate="{TemplateBinding HeaderTemplate}" 
+                                  Content="{TemplateBinding Header}" 
+                                  ContentStringFormat="{TemplateBinding HeaderStringFormat}" 
+                                  ContentSource="Header" 
+                                  Margin="{TemplateBinding Padding}" 
+                                  RecognizesAccessKey="True" 
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
             </DockPanel>
             <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False" HorizontalOffset="1" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" Placement="Bottom" VerticalOffset="-1">
                 <Themes:SystemDropShadowChrome x:Name="Shdw" Color="Transparent">
-                    <Border x:Name="SubMenuBorder" BorderBrush="#FF343434" BorderThickness="1" Background="{StaticResource MainBgBrush}" >
+                    <Border x:Name="SubMenuBorder" 
+                            Background="{DynamicResource DarkerBgBrush}" 
+                            BorderBrush="#FF343434" BorderThickness="1">
                         <ScrollViewer x:Name="SubMenuScrollViewer" Margin="1,0" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                             <Grid x:Name="Grid1" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas x:Name="Canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0"/>
@@ -105,8 +111,14 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
     <ControlTemplate x:Key="DarkSubMenuItemControlTemplate" TargetType="{x:Type MenuItem}">
+        <ControlTemplate.Resources>
+            <Style TargetType="{x:Type MenuItem}">
+                <Setter Property="Foreground" Value="{StaticResource MainTextBrush}" />
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+        </ControlTemplate.Resources>
         <Grid SnapsToDevicePixels="True">
-            <Rectangle x:Name="Bg" Fill="#FF3F3F46" RadiusY="2" RadiusX="2" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1"/>
+            <Rectangle x:Name="Bg" Fill="{TemplateBinding Background}" RadiusY="2" RadiusX="2" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1"/>
             <Rectangle x:Name="InnerBorder" Margin="1" RadiusY="2" RadiusX="2"/>
             <Grid>
                 <Grid.ColumnDefinitions>
