@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace ScriptViz.Command
 {
-    class RelayCommand : ICommand
+    class RelayCommandOld : ICommand
     {
         private Action commandTask;
 
@@ -15,7 +15,7 @@ namespace ScriptViz.Command
         public event EventHandler CanExecuteChanged;
 
 
-        public RelayCommand(Action task)
+        public RelayCommandOld(Action task)
         {
             commandTask = task;
         }
@@ -29,7 +29,6 @@ namespace ScriptViz.Command
         // execute the command
         public void Execute(object parameter)
         {
-            // Show the Script Window
             commandTask();
         }
     }

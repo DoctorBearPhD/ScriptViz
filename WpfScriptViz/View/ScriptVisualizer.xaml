@@ -4,9 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ScriptViz.View"
+             xmlns:u="clr-namespace:ScriptViz.Util"
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" 
+             d:DataContext="{x:Type vm:ScriptVisualizerViewModel}"
              LostFocus="ScriptVisualizer_LostFocus">
+    <UserControl.Resources>
+        <sys:Int32 x:Key="AmountOfFramesToSkip">10</sys:Int32>
+    </UserControl.Resources>
+    
+    <UserControl.InputBindings>
+        <MouseBinding Command="{Binding NextFrameCommand}" Gesture="{u:MouseWheel Direction=Up, Keys=Ctrl}"/>
+        <MouseBinding Command="{Binding PreviousFrameCommand}" Gesture="{u:MouseWheel Direction=Down, Keys=Ctrl}"/>
+
+        <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}" 
+                      Command="{Binding NextFrameManyCommand}" 
+                      Gesture="{u:MouseWheel Direction=Up, Keys=Ctrl+Shift}"/>
+        
+        <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}"
+                      Command="{Binding PreviousFrameManyCommand}"
+                      Gesture="{u:MouseWheel Direction=Down, Keys=Ctrl+Shift}"/>
+    </UserControl.InputBindings>
     
     <Grid x:Name="ScriptVisualizerContainer">
         <Grid.RowDefinitions>

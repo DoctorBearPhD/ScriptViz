@@ -24,8 +24,8 @@
     </Window.DataContext>
     
     <Window.InputBindings>
-        <KeyBinding Command="{Binding OpenBacCommand}" Key="O" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
+        <KeyBinding   Command="{Binding OpenBacCommand}" Key="O" Modifiers="Ctrl"/>
+        <KeyBinding   Command="{Binding SaveCommand}"    Key="S" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
     <DockPanel>

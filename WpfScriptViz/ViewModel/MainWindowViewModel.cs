@@ -1,18 +1,14 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
 using ScriptLib;
-using ScriptViz.Command;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -160,7 +156,7 @@ namespace ScriptViz.ViewModel
         public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
         public ICommand     OpenBacCommand => new RelayCommand(OpenBACFile);
         public ICommand        SaveCommand => new RelayCommand(SaveFile);
-        public ICommand        ExitCommand => new RelayCommand(Exit);
+        public ICommand        ExitCommand => new RelayCommand(Exit, true);
         #endregion
 
         public Action CloseAction { get; set; } // Action for calling Close() on a Window
@@ -212,9 +208,7 @@ namespace ScriptViz.ViewModel
             // Try to parse as a BACFile
 
             // Convert the JSON String to a C# object.
-            bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
-
-            //var bacFile = (BACFile)_scriptFileObject;
+            BacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
 
             #endregion
             
@@ -280,6 +274,7 @@ namespace ScriptViz.ViewModel
         }
         #endregion
 
+        #region Save File
         public void SaveFile()
         {
             //ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
@@ -310,6 +305,7 @@ namespace ScriptViz.ViewModel
             }
             Console.WriteLine("Save complete.");
         }
+        #endregion
 
         #region Exit
         public void Exit()

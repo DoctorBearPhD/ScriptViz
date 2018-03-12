@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using ScriptLib;
-using ScriptViz.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +15,8 @@ namespace ScriptViz.ViewModel
         #region Vars
 
         #region Constants
+
+        public const int LARGE_FRAME_CHANGE = 10;
 
         public const float CANVAS_PADDING = 15;
         public const float BOX_SCALAR = 100;
@@ -98,6 +100,8 @@ namespace ScriptViz.ViewModel
 
         public ICommand PreviousFrameCommand => new RelayCommand(GoToPreviousFrame);
         public ICommand NextFrameCommand => new RelayCommand(GoToNextFrame);
+        public ICommand PreviousFrameManyCommand => new RelayCommand<object>(amount => GoToPreviousFrame((int)amount));
+        public ICommand NextFrameManyCommand => new RelayCommand<object>(amount => GoToNextFrame((int)amount));
 
         #endregion // Commands
 
@@ -292,9 +296,31 @@ namespace ScriptViz.ViewModel
             if (CurrentFrame > 0) CurrentFrame--;
         }
 
+        public void GoToPreviousFrame(int amount)
+        {
+            if (CurrentFrame > 0)
+            {
+                if (CurrentFrame - amount < 0)
+                    CurrentFrame = 0;
+                else
+                    CurrentFrame -= amount;
+            }
+        }
+
         public void GoToNextFrame()
         {
             if (CurrentFrame < _maxFrame) CurrentFrame++;
+        }
+
+        public void GoToNextFrame(int amount)
+        {
+            if (CurrentFrame < _maxFrame)
+            {
+                if (CurrentFrame + amount > _maxFrame)
+                    CurrentFrame = _maxFrame;
+                else
+                    CurrentFrame += amount;
+            }
         }
 
         public void FrameChanged() { if (Boxes != null) DrawBoxes(); }
@@ -322,40 +348,23 @@ namespace ScriptViz.ViewModel
             #region Check for Boxes
 
             if (SelectedMove.Hurtboxes != null && SelectedMove.Hurtboxes.Length > 0)
-            {
                 foreach (var hurtbox in SelectedMove.Hurtboxes)
-                {
-                    //Console.WriteLine(hurtbox);
                     Boxes.Add(hurtbox);
-                }
-            }
+            
             if (SelectedMove.Hitboxes != null && SelectedMove.Hitboxes.Length > 0)
-            {
-                Console.WriteLine((SelectedMove.Hitboxes));
                 foreach (var hitbox in SelectedMove.Hitboxes)
-                {
-                    //Console.WriteLine(hurtbox);
                     Boxes.Add(hitbox);
-                }
-            }
+            
             if (SelectedMove.PhysicsBoxes != null && SelectedMove.PhysicsBoxes.Length > 0)
-            {
                 foreach (var physbox in SelectedMove.PhysicsBoxes)
-                {
-                    //Console.WriteLine(hurtbox);
                     Boxes.Add(physbox);
-                }
-            }
+            
             #endregion
 
             #region Check for Positions
             if (SelectedMove.Positions != null && SelectedMove.Positions.Length > 0)
-            {
                 foreach (var position in SelectedMove.Positions)
-                {
                     _positions.Add(position);
-                }
-            }
             #endregion
 
             #region No Candidates Found
