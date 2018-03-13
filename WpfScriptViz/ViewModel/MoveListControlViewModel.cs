@@ -8,18 +8,12 @@ namespace ScriptViz.ViewModel
     {
         #region Variables
 
-        public MoveList SelectedMoveList
-        {
-            get => Content as MoveList;
-        }
+        public MoveList SelectedMoveList => Content as MoveList;
 
-        public Move SelectedMove
-        {
-            get => SelectedMoveList.Moves[SelectedMoveIndex];
-        }
+        public Move SelectedMove => SelectedMoveList.Moves[SelectedMoveIndex];
 
-        int _selectedMoveIndex;
-        public int SelectedMoveIndex
+        private int _selectedMoveIndex;
+        public  int SelectedMoveIndex
         {
             get => _selectedMoveIndex;
             set
@@ -43,13 +37,11 @@ namespace ScriptViz.ViewModel
         }
 
         // PROPERTY
-        public PropertyInfo SelectedProperty
-        {
-            get => (SelectedPropertyIndex <= 0) ? null : SelectedMove.GetAllProperties()[SelectedPropertyIndex];
-        }
+        public PropertyInfo SelectedProperty => 
+            (SelectedPropertyIndex <= 0) ? null : SelectedMove.GetAllProperties()[SelectedPropertyIndex];
 
-        int _selectedPropertyIndex;
-        public int SelectedPropertyIndex
+        private int _selectedPropertyIndex;
+        public  int SelectedPropertyIndex
         {
             get => _selectedPropertyIndex;
             set
@@ -61,34 +53,15 @@ namespace ScriptViz.ViewModel
         }
 
         // TYPE'S PROPERTY
-        public object SelectedTypeProperty
-        {
-            get => SelectedProperty.GetValue(SelectedMove);
-        }
+        public object SelectedTypeProperty => SelectedProperty?.GetValue(SelectedMove);
 
-        int _selectedTypePropertyIndex;
-        public int SelectedTypePropertyIndex
+        private int _selectedTypePropertyIndex;
+        public  int SelectedTypePropertyIndex
         {
-            get { return _selectedTypePropertyIndex; }
+            get => _selectedTypePropertyIndex;
             set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
         }
 
         #endregion // Variables
-
-        #region Constructor
-
-        public MoveListControlViewModel()
-        {
-            
-        }
-
-        #endregion
-
-        #region Load MoveList
-
-
-
-        #endregion
-
     }
 }

@@ -29,7 +29,7 @@
 
         <xctk:PropertyGrid SelectedObject="{Binding SelectedMove}" SelectedObjectType="{x:Type scriptLib:Move}" 
                            Grid.Column="1" 
-                           ShowSortOptions="False"
+                           ShowSortOptions="False" 
                            />
         
         <!--<ListBox x:Name="MoveDetailsListBox" Grid.Column="1"

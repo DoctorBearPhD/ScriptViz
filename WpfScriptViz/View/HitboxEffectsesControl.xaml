@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:ScriptViz.View"
              xmlns:vm="clr-namespace:ScriptViz.ViewModel"
              xmlns:u="clr-namespace:ScriptViz.Util"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignWidth="746" d:DesignHeight="320" 
              d:DataContext="{x:Type vm:HitboxEffectsesViewModel}">
@@ -15,8 +16,8 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" MaxWidth="100"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <!-- A List of HitboxEffects objects. 
              Each HitboxEffects object holds an index and twenty (20) HitType properties. -->
@@ -29,5 +30,7 @@
         <DataGrid x:Name="HitboxEffectsContent" Grid.Column="1"
                   ItemsSource="{Binding SelectedHitboxEffects, Converter={StaticResource hitboxFxToContentConv}}"
                   Style="{StaticResource DarkDataGridStyle}" />
+        <xctk:PropertyGrid Grid.Column="1"
+                           SelectedObject="{Binding SelectedHitboxEffects}"/>
     </Grid>
 </UserControl>

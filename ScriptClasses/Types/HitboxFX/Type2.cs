@@ -1,5 +1,8 @@
-﻿namespace ScriptLib.HitboxFX
+﻿using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+
+namespace ScriptLib.HitboxFX
 {
+    [ExpandableObject]
     public class Type2
     {
         public int EffectType1 { get; set; }

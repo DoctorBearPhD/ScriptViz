@@ -1,6 +1,4 @@
 ﻿using ScriptLib;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ScriptViz.ViewModel
 {
@@ -8,22 +6,19 @@ namespace ScriptViz.ViewModel
     {
         #region Variables
 
-        int mSelectedHitboxEffectsIndex;
+        private int _selectedHitboxEffectsIndex;
         public int SelectedHitboxEffectsIndex
         {
-            get => mSelectedHitboxEffectsIndex;
+            get => _selectedHitboxEffectsIndex;
             set
             {
-                mSelectedHitboxEffectsIndex = value;
+                _selectedHitboxEffectsIndex = value;
                 RaisePropertyChanged(nameof(SelectedHitboxEffectsIndex));
                 RaisePropertyChanged(nameof(SelectedHitboxEffects));
             }
         }
 
-        public HitboxEffects SelectedHitboxEffects
-        {
-            get => ( this.Content as HitboxEffects[] )[SelectedHitboxEffectsIndex];
-        }
+        public HitboxEffects SelectedHitboxEffects => (this.Content as HitboxEffects[])?[SelectedHitboxEffectsIndex];
 
         #endregion // Variables
 

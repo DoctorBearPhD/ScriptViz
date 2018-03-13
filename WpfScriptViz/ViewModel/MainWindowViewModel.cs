@@ -22,8 +22,6 @@ namespace ScriptViz.ViewModel
 
         public const string LABEL_TEXT_COLOR = "#FFababad";
 
-        const bool DEBUG = true;
-
         const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
         const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script, or paste a script here...";
 
@@ -31,16 +29,12 @@ namespace ScriptViz.ViewModel
 
         #region Lists
 
-        ObservableCollection<VMBase> _viewModels = new ObservableCollection<VMBase>
+        private readonly ObservableCollection<VMBase> _viewModels = new ObservableCollection<VMBase>
         {
             new ScriptVisualizerViewModel()
         };
 
-        ObservableCollection<TabItemViewModel> _moveListTabs = new ObservableCollection<TabItemViewModel>();
-        public ObservableCollection<TabItemViewModel> MoveListTabs
-        {
-            get => _moveListTabs ?? new ObservableCollection<TabItemViewModel>();
-        }
+        public ObservableCollection<TabItemViewModel> MoveListTabs { get; } = new ObservableCollection<TabItemViewModel>();
 
         #endregion
 
@@ -90,7 +84,7 @@ namespace ScriptViz.ViewModel
         BACFile bacFile;
         public BACFile BacFile
         {
-            get { return bacFile; }
+            get => bacFile;
             set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
         }
 
@@ -112,7 +106,7 @@ namespace ScriptViz.ViewModel
         bool _isScriptLoaded;
         public bool IsScriptLoaded
         {
-            get { return _isScriptLoaded; }
+            get => _isScriptLoaded;
             set
             {
                 _isScriptLoaded = value;
@@ -168,7 +162,7 @@ namespace ScriptViz.ViewModel
         string _numberOfTypes;
         public string NumberOfTypes
         {
-            get { return _numberOfTypes ?? "N/A"; }
+            get => _numberOfTypes ?? "N/A";
             set { _numberOfTypes = value; RaisePropertyChanged(nameof(NumberOfTypes)); }
         }
 
@@ -180,10 +174,9 @@ namespace ScriptViz.ViewModel
 
         public MainWindowViewModel()
         {
-            #region Debug Actions
-            if (DEBUG)
-                LoadDefaultScript();
-            #endregion
+            #if DEBUG
+              LoadDefaultScript();
+            #endif
             
             // Set initial text for script box
             ScriptTextFile.Text = DEFAULT_SCRIPT_BOX_TEXT;
@@ -197,7 +190,7 @@ namespace ScriptViz.ViewModel
             // Try to clean the JSON before doing anything with it.
             CleanScript();
 
-            (_viewModels[0] as ScriptVisualizerViewModel).ResetDisplay();
+            (_viewModels[0] as ScriptVisualizerViewModel)?.ResetDisplay();
 
             #region Show Loading
             // TODO
@@ -208,7 +201,19 @@ namespace ScriptViz.ViewModel
             // Try to parse as a BACFile
 
             // Convert the JSON String to a C# object.
-            BacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate
+                };
+
+                BacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text, settings);
+            }
+            catch (JsonSerializationException e)
+            {
+                throw new JsonSerializationException(e.Message);
+            }
 
             #endregion
             
@@ -249,28 +254,26 @@ namespace ScriptViz.ViewModel
         public void OpenBACFile()
         {
             // Create Open File dialogue
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
                 FileName = "BAC_*",
                 DefaultExt = ".json",
                 Filter = "JSON Files (*.json)|*.json"
             };
 
-            bool? result = openFileDialog.ShowDialog();
+            var result = openFileDialog.ShowDialog();
 
-            if (result == true)
-            {
-                //null the previous script file object
-                //_scriptFileObject = null;
+            if (result != true) return;
+            //nullify the previous script file object
+            //_scriptFileObject = null;
 
-                // read the file in
-                FileName = openFileDialog.FileName;
+            // read the file in
+            FileName = openFileDialog.FileName;
 
-                ScriptTextFile = new TextDocument(ICSharpCode.AvalonEdit.Utils.FileReader.OpenFile(FileName, System.Text.Encoding.UTF8).ReadToEnd());
-                IsScriptLoaded = true;
+            ScriptTextFile = new TextDocument(ICSharpCode.AvalonEdit.Utils.FileReader.OpenFile(FileName, System.Text.Encoding.UTF8).ReadToEnd());
+            IsScriptLoaded = true;
                 
-                LoadBacFile();
-            }
+            LoadBacFile();
         }
         #endregion
 
@@ -427,10 +430,16 @@ namespace ScriptViz.ViewModel
         void LoadDefaultScript()
         {
             // TODO: use scriptviz_sampledata.json
+            // Load script
+
+            // Script is loaded 
+
+            //IsScriptLoaded = true;
         }
         #endregion
     }
 
+    /// <inheritdoc />
     /// <summary>
     /// A logical representation of a System.Windows.Shapes.Rectangle
     /// </summary>

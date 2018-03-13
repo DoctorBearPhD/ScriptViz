@@ -12,11 +12,11 @@ namespace ScriptLib
     public class Move
     {
         [Category("Common")] public string Name { get; set; }
-        [Category("Common")] public int Index { get; set; }
-        [Category("Common")] public int FirstHitboxFrame { get; set; }
-        [Category("Common")] public int LastHitboxFrame { get; set; }
-        [Category("Common")] public int InterruptFrame { get; set; }
-        [Category("Common")] public int TotalTicks { get; set; }
+        [Category("Common"), PropertyOrder(1)] public int Index { get; set; }
+        [Category("Common"), PropertyOrder(2)] public int FirstHitboxFrame { get; set; }
+        [Category("Common"), PropertyOrder(3)] public int LastHitboxFrame { get; set; }
+        [Category("Common"), PropertyOrder(4)] public int InterruptFrame { get; set; }
+        [Category("Common"), PropertyOrder(5)] public int TotalTicks { get; set; }
         public int ReturnToOriginalPosition { get; set; }
         public float Slide { get; set; }
         [Category("Unknown"), PropertyOrder(-1)] public float unk3 { get; set; }
@@ -40,19 +40,19 @@ namespace ScriptLib
         [Category("Unknown")] public int Unknown20 { get; set; }
         [Category("Unknown")] public int Unknown21 { get; set; }
         [Category("Unknown")] public int Unknown22 { get; set; }
-        [Category("Types")]public AutoCancel[] AutoCancels { get; set; }
-        [Category("Types")]public Type1[] Type1s { get; set; }
-        [Category("Types")]public Force[] Forces { get; set; }
-        [Category("Types")]public Cancel[] Cancels { get; set; }
-        [Category("Types")]public Other[] Others { get; set; }
-        [Category("Types")]public Hitbox[] Hitboxes { get; set; }
-        [Category("Types")]public Hurtbox[] Hurtboxes { get; set; }
-        [Category("Types")]public PhysicsBox[] PhysicsBoxes { get; set; }
-        [Category("Types")]public Animation[] Animations { get; set; }
-        [Category("Types")]public Type9[] Type9s { get; set; }
-        [Category("Types")]public SoundEffect[] SoundEffects { get; set; }
-        [Category("Types")]public VisualEffect[] VisualEffects { get; set; }
-        [Category("Types")]public Position[] Positions { get; set; }
+        [Category("Types")] public AutoCancel[] AutoCancels { get; set; }
+        [Category("Types")] public Type1[] Type1s { get; set; }
+        [Category("Types")] public Force[] Forces { get; set; }
+        [Category("Types")] public Cancel[] Cancels { get; set; }
+        [Category("Types")] public Other[] Others { get; set; }
+        [Category("Types")] public Hitbox[] Hitboxes { get; set; }
+        [Category("Types")] public Hurtbox[] Hurtboxes { get; set; }
+        [Category("Types")] public PhysicsBox[] PhysicsBoxes { get; set; }
+        [Category("Types")] public Animation[] Animations { get; set; }
+        [Category("Types")] public Type9[] Type9s { get; set; }
+        [Category("Types")] public SoundEffect[] SoundEffects { get; set; }
+        [Category("Types")] public VisualEffect[] VisualEffects { get; set; }
+        [Category("Types")] public Position[] Positions { get; set; }
 
         List<PropertyInfo> _gen;
 
@@ -81,7 +81,7 @@ namespace ScriptLib
 
         public int GetGeneralPropertiesOffset()
         {
-            return _gen != null ? _gen.Count - 1 : this.GetGeneralProperties().Count - 1;
+            return _gen?.Count - 1 ?? this.GetGeneralProperties().Count - 1;
         }
     }
 }

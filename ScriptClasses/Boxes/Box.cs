@@ -24,5 +24,12 @@ namespace ScriptLib
         public float Width { get; set; }
         [Category("Common"), JsonProperty(Order = -2), PropertyOrder(4)]
         public float Height { get; set; }
+
+        [Category("Unknown"), PropertyOrder(1), JsonProperty(Order = -2)] public int Unknown1 { get; set; }
+        [Category("Unknown"), PropertyOrder(2), JsonProperty(Order = -2)] public int Unknown2 { get; set; }
+        [Category("Unknown"), PropertyOrder(3), JsonProperty(Order = -2)] public int Unknown3 { get; set; }
+        [Category("Unknown"), PropertyOrder(4), JsonProperty(Order = -2)] public int Unknown4 { get; set; }
+        [Category("Unknown"), PropertyOrder(5), JsonProperty(Order = -2)] public int Unknown5 { get; set; }
+        [Category("Unknown"), PropertyOrder(6), JsonProperty(Order = -2)] public int Unknown6 { get; set; }
     }
 }

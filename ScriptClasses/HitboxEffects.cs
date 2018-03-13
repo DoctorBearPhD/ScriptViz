@@ -1,32 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace ScriptLib
 {
     public class HitboxEffects
     {
-        public int Index { get; set; }
-        public HitboxEffectType HIT_STAND           { get; set; }
-        public HitboxEffectType HIT_CROUCH          { get; set; }
-        public HitboxEffectType HIT_AIR             { get; set; }
-        public HitboxEffectType HIT_UNKNOWN         { get; set; }
-        public HitboxEffectType HIT_UNKNOWN2        { get; set; }
-        public HitboxEffectType GUARD_STAND         { get; set; }
-        public HitboxEffectType GUARD_CROUCH        { get; set; }
-        public HitboxEffectType GUARD_AIR           { get; set; }
-        public HitboxEffectType GUARD_UNKNOWN       { get; set; }
-        public HitboxEffectType GUARD_UNKNOWN2      { get; set; }
-        public HitboxEffectType COUNTERHIT_STAND    { get; set; }
-        public HitboxEffectType COUNTERHIT_CROUCH   { get; set; }
-        public HitboxEffectType COUNTERHIT_AIR      { get; set; }
-        public HitboxEffectType COUNTERHIT_UNKNOWN  { get; set; }
-        public HitboxEffectType COUNTERHIT_UNKNOWN2 { get; set; }
-        public HitboxEffectType UNKNOWN_STAND       { get; set; }
-        public HitboxEffectType UNKNOWN_CROUCH      { get; set; }
-        public HitboxEffectType UNKNOWN_AIR         { get; set; }
-        public HitboxEffectType UNKNOWN_UNKNOWN     { get; set; }
-        public HitboxEffectType UNKNOWN_UNKNOWN2    { get; set; }
+        [PropertyOrder(1)]  public int Index                            { get; set; }
+        [PropertyOrder(2)]  public HitboxEffectType HIT_STAND           { get; set; }
+        [PropertyOrder(3)]  public HitboxEffectType HIT_CROUCH          { get; set; }
+        [PropertyOrder(4)]  public HitboxEffectType HIT_AIR             { get; set; }
+        [PropertyOrder(5)]  public HitboxEffectType HIT_UNKNOWN         { get; set; }
+        [PropertyOrder(6)]  public HitboxEffectType HIT_UNKNOWN2        { get; set; }
+        [PropertyOrder(7)]  public HitboxEffectType GUARD_STAND         { get; set; }
+        [PropertyOrder(8)]  public HitboxEffectType GUARD_CROUCH        { get; set; }
+        [PropertyOrder(9)]  public HitboxEffectType GUARD_AIR           { get; set; }
+        [PropertyOrder(10)] public HitboxEffectType GUARD_UNKNOWN       { get; set; }
+        [PropertyOrder(11)] public HitboxEffectType GUARD_UNKNOWN2      { get; set; }
+        [PropertyOrder(12)] public HitboxEffectType COUNTERHIT_STAND    { get; set; }
+        [PropertyOrder(13)] public HitboxEffectType COUNTERHIT_CROUCH   { get; set; }
+        [PropertyOrder(14)] public HitboxEffectType COUNTERHIT_AIR      { get; set; }
+        [PropertyOrder(15)] public HitboxEffectType COUNTERHIT_UNKNOWN  { get; set; }
+        [PropertyOrder(16)] public HitboxEffectType COUNTERHIT_UNKNOWN2 { get; set; }
+        [PropertyOrder(17)] public HitboxEffectType UNKNOWN_STAND       { get; set; }
+        [PropertyOrder(18)] public HitboxEffectType UNKNOWN_CROUCH      { get; set; }
+        [PropertyOrder(19)] public HitboxEffectType UNKNOWN_AIR         { get; set; }
+        [PropertyOrder(20)] public HitboxEffectType UNKNOWN_UNKNOWN     { get; set; }
+        [PropertyOrder(21)] public HitboxEffectType UNKNOWN_UNKNOWN2    { get; set; }
 
         List<HitboxEffectType> mHitboxEffectTypes
         {

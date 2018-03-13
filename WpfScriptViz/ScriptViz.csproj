@@ -144,7 +144,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Util\HitboxEffectsesToListConverter.cs" />
     <Compile Include="Util\HitboxEffectsToContentConverter.cs" />
     <Compile Include="Util\MouseWheelGesture.cs" />

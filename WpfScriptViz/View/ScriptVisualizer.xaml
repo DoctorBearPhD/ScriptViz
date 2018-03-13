@@ -16,16 +16,16 @@
     </UserControl.Resources>
     
     <UserControl.InputBindings>
-        <MouseBinding Command="{Binding NextFrameCommand}" Gesture="{u:MouseWheel Direction=Up, Keys=Ctrl}"/>
-        <MouseBinding Command="{Binding PreviousFrameCommand}" Gesture="{u:MouseWheel Direction=Down, Keys=Ctrl}"/>
+        <MouseBinding Command="{Binding NextFrameCommand}" Gesture="{u:MouseWheel Direction=Up}"/>
+        <MouseBinding Command="{Binding PreviousFrameCommand}" Gesture="{u:MouseWheel Direction=Down}"/>
 
         <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}" 
                       Command="{Binding NextFrameManyCommand}" 
-                      Gesture="{u:MouseWheel Direction=Up, Keys=Ctrl+Shift}"/>
+                      Gesture="{u:MouseWheel Direction=Up, Keys=Shift}"/>
         
         <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}"
                       Command="{Binding PreviousFrameManyCommand}"
-                      Gesture="{u:MouseWheel Direction=Down, Keys=Ctrl+Shift}"/>
+                      Gesture="{u:MouseWheel Direction=Down, Keys=Shift}"/>
     </UserControl.InputBindings>
     
     <Grid x:Name="ScriptVisualizerContainer">

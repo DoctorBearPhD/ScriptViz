@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         xmlns:local="clr-namespace:ScriptViz.View"
         xmlns:u="clr-namespace:ScriptViz.Util"
@@ -15,7 +14,6 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <vm:MainWindowViewModel x:Key="viewModel" />
         <vm:ViewModelLocator x:Key="Locator"/>
     </Window.Resources>
     
@@ -29,7 +27,7 @@
     </Window.InputBindings>
 
     <DockPanel>
-        <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{StaticResource DarkMenuStyle}">
+        <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{DynamicResource DarkMenuStyle}">
 
             <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
                 <MenuItem Header="_Open BAC" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
@@ -74,12 +72,12 @@
         </Menu>
 
         <Grid x:Name="BottomStatusBar" DockPanel.Dock="Bottom" 
-              Background="{StaticResource DarkerBgBrush}" >
+              Background="{DynamicResource DarkerBgBrush}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="100"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Foreground="{StaticResource AltMainTextBrush}" Margin="5,2">
+            <TextBlock Grid.Column="0" Foreground="{DynamicResource AltMainTextBrush}" Margin="5,2">
                 <TextBlock Text="numberOfTypes: "/>
                 <TextBlock Text="{Binding NumberOfTypes}"/>
             </TextBlock>
@@ -92,50 +90,46 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*" MinWidth="200"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="{Binding ScriptBoxColumnSize}" MaxWidth="500"/>
+                <ColumnDefinition Width="3*" MaxWidth="600"/>
             </Grid.ColumnDefinitions>
 
-            <local:ScriptVisualizer Grid.Row="0" Grid.Column="0"
+            <local:ScriptVisualizer Grid.Row="0" Grid.Column="2"
                                     DataContext="{Binding Path=Visualizer_VM, Source={StaticResource Locator}}"/>
 
-            <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
-                <DockPanel x:Name="MoveListGrid">
-
-                    <TabControl x:Name="MoveListTabControl" 
-                                ItemsSource="{Binding MoveListTabs}"
-                                ItemContainerStyle="{StaticResource DarkTabItemStyle}"
-                                SelectedIndex="{Binding SelectedTabIndex}"
-                                Style="{DynamicResource DarkTabControlStyle}" RenderTransformOrigin="0.5,0.5">
-                        <TabControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Header}" />
-                            </DataTemplate>
-                        </TabControl.ItemTemplate>
-                        <TabControl.ContentTemplate>
-                            <DataTemplate>
-                                <ContentControl Content="{Binding}">
-                                    <ContentControl.Resources>
-                                        <DataTemplate DataType="{x:Type vm:MoveListControlViewModel}" >
-                                            <local:MoveListControl />
-                                        </DataTemplate>
-                                        <DataTemplate DataType="{x:Type vm:HitboxEffectsesViewModel}">
-                                            <local:HitboxEffectsesControl />
-                                        </DataTemplate>
-                                    </ContentControl.Resources>
-                                </ContentControl>
-                            </DataTemplate>
+            <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+                <TabControl x:Name="MoveListTabControl" 
+                            ItemsSource="{Binding MoveListTabs}"
+                            ItemContainerStyle="{DynamicResource DarkTabItemStyle}"
+                            SelectedIndex="{Binding SelectedTabIndex}"
+                            Style="{DynamicResource DarkTabControlStyle}" RenderTransformOrigin="0.5,0.5">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Header}" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding}">
+                                <ContentControl.Resources>
+                                    <DataTemplate DataType="{x:Type vm:MoveListControlViewModel}" >
+                                        <local:MoveListControl />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type vm:HitboxEffectsesViewModel}">
+                                        <local:HitboxEffectsesControl />
+                                    </DataTemplate>
+                                </ContentControl.Resources>
+                            </ContentControl>
+                        </DataTemplate>
                             
-                        </TabControl.ContentTemplate>
-                    </TabControl>
-                    
-                </DockPanel>
+                    </TabControl.ContentTemplate>
+                </TabControl>
             </Border>
 
-            <ToggleButton Name="toggleScriptButton"
-                          Command="{Binding ShowScriptCommand}" Margin="10,10,5,0"
-                          Grid.Column="1" 
+            <ToggleButton Name="btnToggleScript"
+                          Command="{Binding ShowScriptCommand}" Margin="10,10,-9,0" Panel.ZIndex="2"
+                          Grid.Column="1" Grid.Row="1"
                           VerticalAlignment="Top" 
                           Style="{StaticResource DarkToggleButtonStyle}"
                           IsChecked="{Binding IsScriptBoxVisible}" 
@@ -143,10 +137,9 @@
                           />
 
             <DockPanel x:Name="dpScriptBoxGroup" LastChildFill="True" 
-                       Grid.Row="0" Grid.Column="2" 
-                       Grid.RowSpan="2"
+                       Grid.Row="1" Grid.Column="2"
                        Visibility="{Binding IsScriptBoxVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <DockPanel x:Name="dpScriptWindowContent" Background="{StaticResource MainBgBrush}">
+                <DockPanel x:Name="dpScriptWindowContent" Background="{DynamicResource MainBgBrush}">
                     <!--<Button x:Name="btnUpdate" Width="80" Height="28" Margin="0,0,5,5" 
                             VerticalAlignment="Bottom" HorizontalAlignment="Right" 
                             DockPanel.Dock="Bottom" 
@@ -154,12 +147,12 @@
                             Content="{DynamicResource ScriptUpdateButtonText}" 
                             Foreground="{StaticResource MainTextBrush}" 
                             Background="{DynamicResource ButtonBgBrush}" />-->
-                    <u:ScriptBox x:Name="teScriptBox" DockPanel.Dock="Top" Margin="0,10,10,10"
+                    <u:ScriptBox x:Name="teScriptBox" DockPanel.Dock="Top" Margin="10"
                                  IsReadOnly="True"
                                  Document="{Binding ScriptTextFile}"
-                                 Background="{DynamicResource XtraDarkBgBrush}" Foreground="{StaticResource AltMainTextBrush}"
+                                 Background="{DynamicResource XtraDarkBgBrush}" Foreground="{DynamicResource AltMainTextBrush}"
                                  ShowLineNumbers="True"
-                                 LineNumbersForeground="{StaticResource DisabledTextBrush}"
+                                 LineNumbersForeground="{DynamicResource DisabledTextBrush}"
                                  FontFamily="Courier New"
                                  Padding="5" />
 
