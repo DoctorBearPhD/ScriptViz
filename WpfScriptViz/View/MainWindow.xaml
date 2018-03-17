@@ -25,7 +25,7 @@
     
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenBacCommand}" Key="O" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding SaveCommand}"    Key="S" Modifiers="Ctrl"/>
     </Window.InputBindings>
 
     <DockPanel>
@@ -101,7 +101,7 @@
             <local:ScriptVisualizer Grid.Row="0" Grid.Column="0"
                                     DataContext="{Binding Path=Visualizer_VM, Source={StaticResource Locator}}"/>
 
-            <Border x:Name="MoveListBorder" Margin="10,0,10,10" CornerRadius="3" Grid.Row="1">
+            <Border x:Name="MoveListBorder" Grid.Column="0" Grid.Row="1" Margin="10,0,10,10" CornerRadius="3">
                 <DockPanel x:Name="MoveListGrid">
 
                     <TabControl x:Name="MoveListTabControl" 

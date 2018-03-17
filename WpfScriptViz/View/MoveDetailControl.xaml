@@ -8,7 +8,7 @@
              xmlns:u="clr-namespace:ScriptViz.Util"
              mc:Ignorable="d" 
              d:DesignWidth="380" d:DesignHeight="330"
-             d:DataContext="{x:Type vm:MainWindowViewModel}">
+             d:DataContext="{x:Type vm:MoveDetailViewModel}">
     <UserControl.Resources>
         <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
         <u:MoveToTypeConverter x:Key="moveToTypeConv" />
@@ -153,18 +153,25 @@
             <TextBlock Text="Empty" Foreground="{StaticResource MainTextBrush}" />
         </DataTemplate>
     </UserControl.Resources>
+    <Grid>
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="75"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>-->
+
+        <ContentControl Content="{Binding}" x:Name="MoveDetailsControl"> <!--Grid.Column="1">-->
+            <ContentControl.Style>
+                <Style TargetType="{x:Type ContentControl}">
+                    <Setter Property="ContentTemplate" Value="{StaticResource typeDetail}" />
+                    <Style.Triggers>
+                        <!-- Set the DataTemplate based on the kind of property the user selected: General or Type. -->
+                        <DataTrigger Binding="{Binding SelectedPropertyIndex, Mode=OneWay}" Value="0">
+                            <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesDetail}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+    </Grid>
     
-    <ContentControl Content="{Binding}" x:Name="MoveDetailsControl">
-        <ContentControl.Style>
-            <Style TargetType="{x:Type ContentControl}">
-                <Setter Property="ContentTemplate" Value="{StaticResource typeDetail}" />
-                <Style.Triggers>
-                    <!-- Set the DataTemplate based on the kind of property the user selected: General or Type. -->
-                    <DataTrigger Binding="{Binding SelectedPropertyIndex, Mode=OneWay}" Value="0">
-                        <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesDetail}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ContentControl.Style>
-    </ContentControl>
 </UserControl>

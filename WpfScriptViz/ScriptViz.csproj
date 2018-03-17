@@ -129,6 +129,7 @@
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Util\HitboxEffectsesToListConverter.cs" />
     <Compile Include="Util\HitboxEffectsToContentConverter.cs" />
+    <Compile Include="Util\MouseWheelGesture.cs" />
     <Compile Include="ViewModel\HitboxEffectsesViewModel.cs" />
     <Compile Include="ViewModel\TabItemViewModel.cs" />
     <Compile Include="Util\MoveToTypeConverter.cs" />

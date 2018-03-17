@@ -2,12 +2,31 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ScriptViz.View"
-             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:u="clr-namespace:ScriptViz.Util"
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" 
+             d:DataContext="{x:Type vm:ScriptVisualizerViewModel}"
              LostFocus="ScriptVisualizer_LostFocus">
-    
+    <UserControl.Resources>
+        <sys:Int32 x:Key="AmountOfFramesToSkip">10</sys:Int32>
+    </UserControl.Resources>
+
+    <UserControl.InputBindings>
+        <MouseBinding Command="{Binding NextFrameCommand}" Gesture="{u:MouseWheel Direction=Up}"/>
+        <MouseBinding Command="{Binding PreviousFrameCommand}" Gesture="{u:MouseWheel Direction=Down}"/>
+
+        <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}" 
+                      Command="{Binding NextFrameManyCommand}" 
+                      Gesture="{u:MouseWheel Direction=Up, Keys=Shift}"/>
+
+        <MouseBinding CommandParameter="{StaticResource AmountOfFramesToSkip}"
+                      Command="{Binding PreviousFrameManyCommand}"
+                      Gesture="{u:MouseWheel Direction=Down, Keys=Shift}"/>
+    </UserControl.InputBindings>
+
     <Grid x:Name="ScriptVisualizerContainer">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
@@ -19,7 +38,7 @@
 
         <Canvas x:Name="canvasContainer"
                         Margin="10" 
-                        Background="{StaticResource DarkBgBrush}" Grid.Column="1"
+                        Background="{StaticResource DarkBgBrush}"
                         MouseLeftButtonDown="canvasContainer_MouseLeftButtonDown" 
                         MouseLeftButtonUp="canvasContainer_MouseLeftButtonUp" 
                         MouseMove="canvasContainer_MouseMove" 
@@ -60,7 +79,7 @@
 
         </Canvas>
 
-        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,0">
+        <DockPanel Grid.Row="1" Margin="10,0">
             <RepeatButton x:Name="BtnPreviousFrame" DockPanel.Dock="Left"
                                   Content="&lt;" 
                                   HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5,1" TabIndex="95" 
@@ -81,7 +100,7 @@
                             Value="{Binding CurrentFrame}" Maximum="{Binding MaxFrame}" IsMoveToPointEnabled="True"/>
             <Label x:Name="lblCurrentFrame"
                            HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top"
-                           Foreground="{StaticResource DisabledTextBrush}">
+                           Foreground="{StaticResource AltMainTextBrush}">
                 <Label.Content>
                     <TextBlock>
                         <TextBlock.Text>
