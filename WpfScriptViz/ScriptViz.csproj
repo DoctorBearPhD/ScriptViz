@@ -101,6 +101,12 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="PropertyTools, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.dll</HintPath>
+    </Reference>
+    <Reference Include="PropertyTools.Wpf, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2.0.1\lib\net45\PropertyTools.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -126,7 +132,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Util\HitboxEffectsesToListConverter.cs" />
     <Compile Include="Util\HitboxEffectsToContentConverter.cs" />
     <Compile Include="Util\MouseWheelGesture.cs" />
@@ -138,7 +143,7 @@
     <Compile Include="Util\MovesToListConverter.cs" />
     <Compile Include="View\ScriptBox.cs" />
     <Compile Include="Util\Util.cs" />
-    <Compile Include="ViewModel\MoveListControlViewModel.cs" />
+    <Compile Include="ViewModel\MoveListViewModel.cs" />
     <Compile Include="ViewModel\ScriptVisualizerViewModel.cs" />
     <Compile Include="ViewModel\MoveDetailViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -264,6 +269,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Command\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

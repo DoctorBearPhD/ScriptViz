@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.CommandWpf;
-using RelayCommand = ScriptViz.Command.RelayCommand;
 
 namespace ScriptViz.ViewModel
 {

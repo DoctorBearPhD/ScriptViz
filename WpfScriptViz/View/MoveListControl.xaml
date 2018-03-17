@@ -8,7 +8,7 @@
              xmlns:util="clr-namespace:ScriptViz.Util"
              mc:Ignorable="d" 
              d:DesignWidth="700" d:DesignHeight="330" 
-             d:DataContext="{x:Type vm:MoveListControlViewModel}">
+             d:DataContext="{x:Type vm:MoveListViewModel}">
     <UserControl.Resources>
         <util:MovesToListConverter x:Key="movesToListConverter" />
         <util:MoveToPropertiesConverter x:Key="moveToPropertiesConverter" />

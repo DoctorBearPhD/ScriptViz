@@ -1,29 +1,30 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScriptLib
 {
     public class Box
     {
-        [JsonProperty(Order = -2)] public int TickStart { get; set; }
-        [JsonProperty(Order = -2)] public int TickEnd { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -99)] public int TickStart { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -98)] public int TickEnd { get; set; }
 
-        [DefaultValue(0)]
-        [JsonProperty(Order = -2)] public int? BACVERint1 { get; set; }
+        [Category("BACVERint"), DefaultValue(0), JsonProperty(Order = -2), Display(Order = 101)] public int? BACVERint1 { get; set; }
+        [Category("BACVERint"), DefaultValue(0), JsonProperty(Order = -2), Display(Order = 102)] public int? BACVERint2 { get; set; }
+        [Category("BACVERint"), DefaultValue(0), JsonProperty(Order = -2), Display(Order = 103)] public int? BACVERint3 { get; set; }
+        [Category("BACVERint"), DefaultValue(0), JsonProperty(Order = -2), Display(Order = 104)] public int? BACVERint4 { get; set; }
 
-        [DefaultValue(0)]
-        [JsonProperty(Order = -2)] public int? BACVERint2 { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -97)] public float X { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -96)] public float Y { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -95)] public float Z { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -94)] public float Width { get; set; }
+        [Category("Common"), JsonProperty(Order = -2), Display(Order = -93)] public float Height { get; set; }
 
-        [DefaultValue(0)]
-        [JsonProperty(Order = -2)] public int? BACVERint3 { get; set; }
-
-        [DefaultValue(0)]
-        [JsonProperty(Order = -2)] public int? BACVERint4 { get; set; }
-
-        [JsonProperty(Order = -2)] public float X { get; set; }
-        [JsonProperty(Order = -2)] public float Y { get; set; }
-        [JsonProperty(Order = -2)] public float Z { get; set; }
-        [JsonProperty(Order = -2)] public float Width { get; set; }
-        [JsonProperty(Order = -2)] public float Height { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -49)] public int Unknown1 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -48)] public int Unknown2 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -47)] public int Unknown3 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -46)] public int Unknown4 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -45)] public int Unknown5 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -44)] public int Unknown6 { get; set; }
     }
 }

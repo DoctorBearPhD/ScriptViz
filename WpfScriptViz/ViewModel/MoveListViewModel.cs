@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ScriptViz.ViewModel
 {
-    public class MoveListControlViewModel : TabItemViewModel
+    public class MoveListViewModel : TabItemViewModel
     {
         #region Variables
 
@@ -13,10 +13,7 @@ namespace ScriptViz.ViewModel
             get => Content as MoveList;
         }
 
-        public Move SelectedMove
-        {
-            get => SelectedMoveList.Moves[SelectedMoveIndex];
-        }
+        public Move SelectedMove => SelectedMoveList.Moves[SelectedMoveIndex];
 
         int _selectedMoveIndex;
         public int SelectedMoveIndex
@@ -61,15 +58,12 @@ namespace ScriptViz.ViewModel
         }
 
         // TYPE'S PROPERTY
-        public object SelectedTypeProperty
-        {
-            get => SelectedProperty.GetValue(SelectedMove);
-        }
+        public object SelectedTypeProperty => SelectedProperty?.GetValue(SelectedMove);
 
         int _selectedTypePropertyIndex;
         public int SelectedTypePropertyIndex
         {
-            get { return _selectedTypePropertyIndex; }
+            get => _selectedTypePropertyIndex;
             set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
         }
 
@@ -77,7 +71,7 @@ namespace ScriptViz.ViewModel
 
         #region Constructor
 
-        public MoveListControlViewModel()
+        public MoveListViewModel()
         {
             
         }

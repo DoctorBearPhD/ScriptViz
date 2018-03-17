@@ -8,7 +8,7 @@
              xmlns:u="clr-namespace:ScriptViz.Util"
              mc:Ignorable="d" 
              d:DesignWidth="380" d:DesignHeight="330"
-             d:DataContext="{x:Type vm:MoveDetailViewModel}">
+             d:DataContext="{x:Type vm:MoveListViewModel}">
     <UserControl.Resources>
         <u:MoveToGeneralPropertiesConverter x:Key="moveToGPropConv" />
         <u:MoveToTypeConverter x:Key="moveToTypeConv" />
@@ -52,59 +52,59 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0">Name</TextBlock>
-                    <TextBox Grid.Row="0"  Grid.Column="1" Text="{Binding SelectedMove.Name}" Padding="4,2,1,2"/>
-                    <TextBlock Grid.Row="2">FirstHitboxFrame</TextBlock>
-                    <TextBox Grid.Row="2"  Grid.Column="1" Text="{Binding SelectedMove.FirstHitboxFrame}"/>
-                    <TextBlock Grid.Row="3">LastHitboxFrame</TextBlock>
-                    <TextBox Grid.Row="3"  Grid.Column="1" Text="{Binding SelectedMove.LastHitboxFrame}"/>
-                    <TextBlock Grid.Row="4">InterruptFrame</TextBlock>
-                    <TextBox Grid.Row="4"  Grid.Column="1" Text="{Binding SelectedMove.InterruptFrame}"/>
-                    <TextBlock Grid.Row="5">TotalTicks</TextBlock>
-                    <TextBox Grid.Row="5"  Grid.Column="1" Text="{Binding SelectedMove.TotalTicks}"/>
-                    <TextBlock Grid.Row="6">ReturnToOriginalPosition</TextBlock>
-                    <TextBox Grid.Row="6"  Grid.Column="1" Text="{Binding SelectedMove.ReturnToOriginalPosition}"/>
-                    <TextBlock Grid.Row="7">Flag</TextBlock>
-                    <TextBox Grid.Row="7"  Grid.Column="1" Text="{Binding SelectedMove.Flag}"/>
-                    <TextBlock Grid.Row="8">Slide</TextBlock>
-                    <TextBox Grid.Row="8"  Grid.Column="1" Text="{Binding SelectedMove.Slide}"/>
-                    <TextBlock Grid.Row="9">HeaderSize</TextBlock>
-                    <TextBox Grid.Row="9"  Grid.Column="1" Text="{Binding SelectedMove.HeaderSize}"/>
-                    <TextBlock Grid.Row="10">unk3</TextBlock>
-                    <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding SelectedMove.unk3}"/>
-                    <TextBlock Grid.Row="11">unk4</TextBlock>
-                    <TextBox Grid.Row="11" Grid.Column="1" Text="{Binding SelectedMove.unk4}"/>
-                    <TextBlock Grid.Row="12">unk5</TextBlock>
-                    <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding SelectedMove.unk5}"/>
-                    <TextBlock Grid.Row="13">unk6</TextBlock>
-                    <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding SelectedMove.unk6}"/>
-                    <TextBlock Grid.Row="14">unk7</TextBlock>
-                    <TextBox Grid.Row="14" Grid.Column="1" Text="{Binding SelectedMove.unk7}"/>
-                    <TextBlock Grid.Row="15">unk9</TextBlock>
-                    <TextBox Grid.Row="15" Grid.Column="1" Text="{Binding SelectedMove.unk9}"/>
-                    <TextBlock Grid.Row="16">unk13</TextBlock>
-                    <TextBox Grid.Row="16" Grid.Column="1" Text="{Binding SelectedMove.unk13}"/>
-                    <TextBlock Grid.Row="17">Unknown12</TextBlock>
-                    <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding SelectedMove.Unknown12}"/>
-                    <TextBlock Grid.Row="18">Unknown13</TextBlock>
-                    <TextBox Grid.Row="18" Grid.Column="1" Text="{Binding SelectedMove.Unknown13}"/>
-                    <TextBlock Grid.Row="19">Unknown14</TextBlock>
-                    <TextBox Grid.Row="19" Grid.Column="1" Text="{Binding SelectedMove.Unknown14}"/>
-                    <TextBlock Grid.Row="20">Unknown15</TextBlock>
-                    <TextBox Grid.Row="20" Grid.Column="1" Text="{Binding SelectedMove.Unknown15}"/>
-                    <TextBlock Grid.Row="21">Unknown16</TextBlock>
-                    <TextBox Grid.Row="21" Grid.Column="1" Text="{Binding SelectedMove.Unknown16}"/>
-                    <TextBlock Grid.Row="22">Unknown17</TextBlock>
-                    <TextBox Grid.Row="22" Grid.Column="1" Text="{Binding SelectedMove.Unknown17}"/>
-                    <TextBlock Grid.Row="23">Unknown18</TextBlock>
-                    <TextBox Grid.Row="23" Grid.Column="1" Text="{Binding SelectedMove.Unknown18}"/>
-                    <TextBlock Grid.Row="24">Unknown19</TextBlock>
-                    <TextBox Grid.Row="24" Grid.Column="1" Text="{Binding SelectedMove.Unknown19}"/>
-                    <TextBlock Grid.Row="25">Unknown20</TextBlock>
-                    <TextBox Grid.Row="25" Grid.Column="1" Text="{Binding SelectedMove.Unknown20}"/>
-                    <TextBlock Grid.Row="26">Unknown21</TextBlock>
-                    <TextBox Grid.Row="26" Grid.Column="1" Text="{Binding SelectedMove.Unknown21}"/>
-                    <TextBlock Grid.Row="27">Unknown22</TextBlock>
-                    <TextBox Grid.Row="27" Grid.Column="1" Text="{Binding SelectedMove.Unknown22}"/>
+                    <TextBox   Grid.Row="0"  Grid.Column="1" Text="{Binding SelectedMove.Name}" Padding="4,2,1,2"/>
+                    <TextBlock Grid.Row="1">FirstHitboxFrame</TextBlock>
+                    <TextBox   Grid.Row="1"  Grid.Column="1" Text="{Binding SelectedMove.FirstHitboxFrame}"/>
+                    <TextBlock Grid.Row="2">LastHitboxFrame</TextBlock>
+                    <TextBox   Grid.Row="2"  Grid.Column="1" Text="{Binding SelectedMove.LastHitboxFrame}"/>
+                    <TextBlock Grid.Row="3">InterruptFrame</TextBlock>
+                    <TextBox   Grid.Row="3"  Grid.Column="1" Text="{Binding SelectedMove.InterruptFrame}"/>
+                    <TextBlock Grid.Row="4">TotalTicks</TextBlock>
+                    <TextBox   Grid.Row="4"  Grid.Column="1" Text="{Binding SelectedMove.TotalTicks}"/>
+                    <TextBlock Grid.Row="5">ReturnToOriginalPosition</TextBlock>
+                    <TextBox   Grid.Row="5"  Grid.Column="1" Text="{Binding SelectedMove.ReturnToOriginalPosition}"/>
+                    <TextBlock Grid.Row="6">Flag</TextBlock>
+                    <TextBox   Grid.Row="6"  Grid.Column="1" Text="{Binding SelectedMove.Flag}"/>
+                    <TextBlock Grid.Row="7">Slide</TextBlock>
+                    <TextBox   Grid.Row="7"  Grid.Column="1" Text="{Binding SelectedMove.Slide}"/>
+                    <TextBlock Grid.Row="8">HeaderSize</TextBlock>
+                    <TextBox   Grid.Row="8"  Grid.Column="1" Text="{Binding SelectedMove.HeaderSize}"/>
+                    <TextBlock Grid.Row="9">unk3</TextBlock>
+                    <TextBox   Grid.Row="9"  Grid.Column="1" Text="{Binding SelectedMove.unk3}"/>
+                    <TextBlock Grid.Row="10">unk4</TextBlock>
+                    <TextBox   Grid.Row="10" Grid.Column="1" Text="{Binding SelectedMove.unk4}"/>
+                    <TextBlock Grid.Row="11">unk5</TextBlock>
+                    <TextBox   Grid.Row="11" Grid.Column="1" Text="{Binding SelectedMove.unk5}"/>
+                    <TextBlock Grid.Row="12">unk6</TextBlock>
+                    <TextBox   Grid.Row="12" Grid.Column="1" Text="{Binding SelectedMove.unk6}"/>
+                    <TextBlock Grid.Row="13">unk7</TextBlock>
+                    <TextBox   Grid.Row="13" Grid.Column="1" Text="{Binding SelectedMove.unk7}"/>
+                    <TextBlock Grid.Row="14">unk9</TextBlock>
+                    <TextBox   Grid.Row="14" Grid.Column="1" Text="{Binding SelectedMove.unk9}"/>
+                    <TextBlock Grid.Row="15">unk13</TextBlock>
+                    <TextBox   Grid.Row="15" Grid.Column="1" Text="{Binding SelectedMove.unk13}"/>
+                    <TextBlock Grid.Row="16">Unknown12</TextBlock>
+                    <TextBox   Grid.Row="16" Grid.Column="1" Text="{Binding SelectedMove.Unknown12}"/>
+                    <TextBlock Grid.Row="17">Unknown13</TextBlock>
+                    <TextBox   Grid.Row="17" Grid.Column="1" Text="{Binding SelectedMove.Unknown13}"/>
+                    <TextBlock Grid.Row="18">Unknown14</TextBlock>
+                    <TextBox   Grid.Row="18" Grid.Column="1" Text="{Binding SelectedMove.Unknown14}"/>
+                    <TextBlock Grid.Row="19">Unknown15</TextBlock>
+                    <TextBox   Grid.Row="19" Grid.Column="1" Text="{Binding SelectedMove.Unknown15}"/>
+                    <TextBlock Grid.Row="20">Unknown16</TextBlock>
+                    <TextBox   Grid.Row="20" Grid.Column="1" Text="{Binding SelectedMove.Unknown16}"/>
+                    <TextBlock Grid.Row="21">Unknown17</TextBlock>
+                    <TextBox   Grid.Row="21" Grid.Column="1" Text="{Binding SelectedMove.Unknown17}"/>
+                    <TextBlock Grid.Row="22">Unknown18</TextBlock>
+                    <TextBox   Grid.Row="22" Grid.Column="1" Text="{Binding SelectedMove.Unknown18}"/>
+                    <TextBlock Grid.Row="23">Unknown19</TextBlock>
+                    <TextBox   Grid.Row="23" Grid.Column="1" Text="{Binding SelectedMove.Unknown19}"/>
+                    <TextBlock Grid.Row="24">Unknown20</TextBlock>
+                    <TextBox   Grid.Row="24" Grid.Column="1" Text="{Binding SelectedMove.Unknown20}"/>
+                    <TextBlock Grid.Row="25">Unknown21</TextBlock>
+                    <TextBox   Grid.Row="25" Grid.Column="1" Text="{Binding SelectedMove.Unknown21}"/>
+                    <TextBlock Grid.Row="26">Unknown22</TextBlock>
+                    <TextBox   Grid.Row="26" Grid.Column="1" Text="{Binding SelectedMove.Unknown22}"/>
 
                     <Grid.Style>
                         <Style TargetType="Grid">

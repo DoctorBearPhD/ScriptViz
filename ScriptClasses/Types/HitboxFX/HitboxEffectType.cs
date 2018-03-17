@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace ScriptLib
 {
     public class HitboxEffectType
     {
         [JsonIgnore]
-        public string Name { get; set; }
+        [ReadOnly(true)] public string Name { get; set; }
 
         public int Type { get; set; }
         public int Index { get; set; }
         public int DamageType { get; set; }
-        public int Unused1 { get; set; }
+        [Browsable(false)] public int Unused1 { get; set; }
         public int NumberOfType1 { get; set; }
         public int NumberOfType2 { get; set; }
-        public int Unused2 { get; set; }
+        [Browsable(false)] public int Unused2 { get; set; }
         public int Damage { get; set; }
         public int Stun { get; set; }
         public int Index9 { get; set; }

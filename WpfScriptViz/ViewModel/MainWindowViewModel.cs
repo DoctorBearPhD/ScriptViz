@@ -2,7 +2,6 @@
 using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
 using ScriptLib;
-using ScriptViz.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace ScriptViz.ViewModel
 {
@@ -236,7 +236,7 @@ namespace ScriptViz.ViewModel
 
             // Make tabs for each MoveList
             for (int i = 0; i < bacFile.MoveLists.Length; i++)
-                MoveListTabs.Add(new MoveListControlViewModel { Header = "MoveList " + (i + 1), Content = BacFile.MoveLists[i] } );
+                MoveListTabs.Add(new MoveListViewModel { Header = "MoveList " + (i + 1), Content = BacFile.MoveLists[i] } );
 
             // Make a tab for the list of HitboxEffects objects
             MoveListTabs.Add(new HitboxEffectsesViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses } );
