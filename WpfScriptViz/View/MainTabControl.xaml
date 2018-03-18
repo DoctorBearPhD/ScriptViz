@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="ScriptViz.View.MoveListTabControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ScriptViz.View"
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:u="clr-namespace:ScriptViz.Util"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <vm:ViewModelLocator x:Key="Locator"/>
+        <u:MoveToPropertiesConverter x:Key="moveToPropertiesConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="200" MaxWidth="250"/>
+            <ColumnDefinition Width="2*" MinWidth="400"/>
+        </Grid.ColumnDefinitions>
+
+        <local:MoveListControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
+
+        <local:ScriptVisualizer Grid.Row="0" Grid.Column="1"
+                                DataContext="{Binding Path=Visualizer_VM, Source={StaticResource Locator}}"/>
+
+        <Grid x:Name="MoveDetailContainer" Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MaxWidth="200"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="MoveDetailsListBox" Grid.Column="0"
+                     ItemsSource="{Binding SelectedMove, Converter={StaticResource moveToPropertiesConverter}, Mode=OneWay}"
+                     SelectedIndex="{Binding SelectedPropertyIndex, Mode=OneWayToSource, FallbackValue=0}"
+                     Style="{StaticResource DarkListBoxStyle}" />
+
+            <local:MoveDetailControl Grid.Column="1" />
+        </Grid>
+    </Grid>
+</UserControl>

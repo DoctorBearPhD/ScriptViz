@@ -28,8 +28,8 @@ namespace ScriptViz.ViewModel
 
         const bool DEBUG = true;
 
-        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 3;
-        const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script, or paste a script here...";
+        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 2;
+        const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script and it will be displayed here...";
 
         #endregion
 

@@ -26,10 +26,10 @@ namespace ScriptViz.ViewModel
 
         #region Colors
 
-        Color _hurtboxFillColor, _hurtboxStrokeColor,
-              _hitboxFillColor, _hitboxStrokeColor,
-              _physboxFillColor, _physboxStrokeColor,
-              _proxboxFillColor, _proxboxStrokeColor;
+        readonly Color _hurtboxFillColor, _hurtboxStrokeColor,
+                       _hitboxFillColor,  _hitboxStrokeColor,
+                       _physboxFillColor, _physboxStrokeColor,
+                       _proxboxFillColor, _proxboxStrokeColor;
         
         #endregion // Colors
 
@@ -61,7 +61,7 @@ namespace ScriptViz.ViewModel
         Point _canvasPosition;
         public Point CanvasPosition
         {
-            get { return _canvasPosition; }
+            get => _canvasPosition;
             set { _canvasPosition = value; RaisePropertyChanged(nameof(CanvasPosition)); }
         }
 
@@ -103,7 +103,7 @@ namespace ScriptViz.ViewModel
 
         #endregion // Commands
 
-        Move SelectedMove;
+        Move _selectedMove;
 
         #endregion // Vars
 
@@ -155,6 +155,7 @@ namespace ScriptViz.ViewModel
         {
             ResetCanvasPosition();
 
+            Rectangles = new ObservableCollection<Rect>();
             Boxes = new ObservableCollection<Box>();
             _positions = new List<Position>();
         }
@@ -327,7 +328,7 @@ namespace ScriptViz.ViewModel
 
         public void SelectedMoveChangedHandler(Move move)
         {
-            SelectedMove = move;
+            _selectedMove = move;
 
             ResetDisplay();
 
@@ -338,30 +339,30 @@ namespace ScriptViz.ViewModel
 
         void LoadMove()
         {
-            if (SelectedMove == null) return;
+            if (_selectedMove == null) return;
 
             CurrentFrame = 0;
-            MaxFrame = SelectedMove.TotalTicks - 1; // Gets length of move (amount of time)
+            MaxFrame = _selectedMove.TotalTicks - 1; // Gets length of move (amount of time)
 
             #region Check for Boxes
 
-            if (SelectedMove.Hurtboxes != null && SelectedMove.Hurtboxes.Length > 0)
-                foreach (var hurtbox in SelectedMove.Hurtboxes)
+            if (_selectedMove.Hurtboxes != null && _selectedMove.Hurtboxes.Length > 0)
+                foreach (var hurtbox in _selectedMove.Hurtboxes)
                     Boxes.Add(hurtbox);
 
-            if (SelectedMove.Hitboxes != null && SelectedMove.Hitboxes.Length > 0)
-                foreach (var hitbox in SelectedMove.Hitboxes)
+            if (_selectedMove.Hitboxes != null && _selectedMove.Hitboxes.Length > 0)
+                foreach (var hitbox in _selectedMove.Hitboxes)
                     Boxes.Add(hitbox);
 
-            if (SelectedMove.PhysicsBoxes != null && SelectedMove.PhysicsBoxes.Length > 0)
-                foreach (var physbox in SelectedMove.PhysicsBoxes)
+            if (_selectedMove.PhysicsBoxes != null && _selectedMove.PhysicsBoxes.Length > 0)
+                foreach (var physbox in _selectedMove.PhysicsBoxes)
                     Boxes.Add(physbox);
 
             #endregion
 
             #region Check for Positions
-            if (SelectedMove.Positions != null && SelectedMove.Positions.Length > 0)
-                foreach (var position in SelectedMove.Positions)
+            if (_selectedMove.Positions != null && _selectedMove.Positions.Length > 0)
+                foreach (var position in _selectedMove.Positions)
                     _positions.Add(position);
             #endregion
 

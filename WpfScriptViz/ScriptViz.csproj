@@ -141,6 +141,9 @@
     <Compile Include="Util\MoveToGeneralPropertiesConverter.cs" />
     <Compile Include="Util\MoveToPropertiesConverter.cs" />
     <Compile Include="Util\MovesToListConverter.cs" />
+    <Compile Include="View\MainTabControl.xaml.cs">
+      <DependentUpon>MainTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ScriptBox.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="ViewModel\MoveListViewModel.cs" />
@@ -174,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MoveDetailControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
