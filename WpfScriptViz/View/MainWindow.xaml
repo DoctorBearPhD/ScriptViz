@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ic="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:vm="clr-namespace:ScriptViz.ViewModel"
         xmlns:local="clr-namespace:ScriptViz.View"
         xmlns:u="clr-namespace:ScriptViz.Util"
@@ -15,7 +14,6 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <vm:MainWindowViewModel x:Key="viewModel" />
         <vm:ViewModelLocator x:Key="Locator"/>
     </Window.Resources>
     
@@ -30,7 +28,7 @@
 
     <DockPanel>
         <Menu x:Name="MainMenu" DockPanel.Dock="Top" Style="{StaticResource DarkMenuStyle}">
-
+            <!-- FILE -->
             <MenuItem Header="_File" Template="{DynamicResource DarkMenuItemControlTemplate}">
                 <MenuItem Header="_Open BAC" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
                           Command="{Binding OpenBacCommand, Mode=OneWay}"
@@ -47,14 +45,19 @@
                           Command="{Binding ExitCommand, Mode=OneWay}"/>
             </MenuItem>
 
+            <!-- VIEW -->
             <MenuItem Header="_View" Template="{DynamicResource DarkMenuItemControlTemplate}">
                 <MenuItem Header="_Show Script" 
                           Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
-                          IsCheckable="True" 
-                          Command="{Binding ShowScriptCommand, Mode=OneWay}"
+                          IsCheckable="True"
                           IsChecked="{Binding IsScriptBoxVisible}"/>
+                <MenuItem Header="Show _Unknowns"
+                          Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
+                          IsCheckable="True"
+                          IsChecked="{Binding IsUnknownsVisible}"/>
             </MenuItem>
 
+            <!-- TOOLS -->
             <MenuItem Header="_Tools" Template="{DynamicResource DarkMenuItemControlTemplate}" >
                 <MenuItem Header="_Clean Script" Template="{DynamicResource DarkSubMenuItemControlTemplate}" 
                           Command="{Binding CleanScriptCommand}"
@@ -132,8 +135,7 @@
 
             
 
-            <ToggleButton Name="toggleScriptButton"
-                          Command="{Binding ShowScriptCommand}" Margin="10,10,5,0"
+            <ToggleButton Name="toggleScriptButton" Margin="10,10,5,0"
                           Grid.Row="0" Grid.Column="1" 
                           VerticalAlignment="Top" 
                           Style="{StaticResource DarkToggleButtonStyle}"

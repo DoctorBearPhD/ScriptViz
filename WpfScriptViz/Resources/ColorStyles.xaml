@@ -74,6 +74,8 @@
     
     <SolidColorBrush x:Key="TabItemBorderBrush" Color="{DynamicResource AltMainTextColor}"/>
 
-    <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+    <SolidColorBrush x:Key="ListBorder" Color="{StaticResource LightBgColor}"/>
+
+    <SolidColorBrush x:Key="DataGridHeaderBGBrush" Color="#FF474751" />
 
 </ResourceDictionary>

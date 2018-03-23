@@ -44,7 +44,7 @@
 
     <Style x:Key="DarkListBoxStyle" TargetType="{x:Type ListBox}">
         <Setter Property="Background" Value="{StaticResource DarkBgBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource TabItemBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ListBorder}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{StaticResource MainTextBrush}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>

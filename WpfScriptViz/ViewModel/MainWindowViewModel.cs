@@ -3,15 +3,11 @@ using ICSharpCode.AvalonEdit.Document;
 using Newtonsoft.Json;
 using ScriptLib;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -26,32 +22,30 @@ namespace ScriptViz.ViewModel
 
         public const string LABEL_TEXT_COLOR = "#FFababad";
 
-        const bool DEBUG = true;
+        private const bool DEBUG = true;
 
-        const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 2;
-        const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script and it will be displayed here...";
+        private const double ORIGINAL_SCRIPT_BOX_COLUMN_SIZE = 2;
+        private const string DEFAULT_SCRIPT_BOX_TEXT = "Load a script and it will be displayed here...";
 
         #endregion
 
         #region Lists
 
-        ObservableCollection<VMBase> _viewModels = new ObservableCollection<VMBase>
+        private readonly ObservableCollection<VMBase> _viewModels = new ObservableCollection<VMBase>
         {
             new ScriptVisualizerViewModel()
         };
 
-        ObservableCollection<TabItemViewModel> _moveListTabs = new ObservableCollection<TabItemViewModel>();
-        public ObservableCollection<TabItemViewModel> MoveListTabs
-        {
-            get => _moveListTabs ?? new ObservableCollection<TabItemViewModel>();
-        }
+        private readonly ObservableCollection<TabItemViewModel> _moveListTabs = new ObservableCollection<TabItemViewModel>();
+        public ObservableCollection<TabItemViewModel> MoveListTabs => 
+            _moveListTabs ?? new ObservableCollection<TabItemViewModel>();
 
         #endregion
 
         #region Selected
 
         // MOVELIST
-        int _selectedTabIndex; // The selected Tab in the Script Info area (index)
+        private int _selectedTabIndex; // The selected Tab in the Script Info area (index)
         public int SelectedTabIndex
         {
             get => _selectedTabIndex;
@@ -68,7 +62,7 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        int _selectedMoveListIndex;
+        private int _selectedMoveListIndex;
         public int SelectedMoveListIndex
         {
             get => _selectedMoveListIndex;
@@ -80,10 +74,6 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        MoveList _selectedMoveList { get => this.BacFile?.MoveLists[SelectedMoveListIndex]; }
-
-        private MoveList BackupOfSelectedMoveList { get; set; }
-
         #endregion // Selected
 
         #region Script
@@ -91,19 +81,19 @@ namespace ScriptViz.ViewModel
         // Script text file as a data object
         //BaseFile _scriptFileObject;
 
-        BACFile bacFile;
+        private BACFile _bacFile;
         public BACFile BacFile
         {
-            get { return bacFile; }
-            set { bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
+            get => _bacFile;
+            set { _bacFile = value; RaisePropertyChanged(nameof(BacFile)); }
         }
 
         public string FileName { get; set; }
 
         // shortcut for accessing TextDocument's text
-        string ScriptText { get => ScriptTextFile.Text; set => ScriptTextFile.Text = value; }
+        private string ScriptText { get => ScriptTextFile.Text; set => ScriptTextFile.Text = value; }
 
-        TextDocument _scriptTextFile = new TextDocument();
+        private TextDocument _scriptTextFile = new TextDocument();
         public TextDocument ScriptTextFile
         {
             get => _scriptTextFile;
@@ -113,39 +103,57 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        bool _isScriptLoaded;
+        private bool _isScriptLoaded;
         public bool IsScriptLoaded
         {
-            get { return _isScriptLoaded; }
+            get => _isScriptLoaded;
             set
             {
                 _isScriptLoaded = value;
-                RaisePropertyChanged("IsScriptLoaded");
+                RaisePropertyChanged(nameof(IsScriptLoaded));
             }
         }
 
-        GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
+        private GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
         public GridLength ScriptBoxColumnSize {
             get => _scriptBoxColumnSize;
-            set  { _scriptBoxColumnSize = value; RaisePropertyChanged("ScriptBoxColumnSize"); }
+            set  { _scriptBoxColumnSize = value; RaisePropertyChanged(nameof(ScriptBoxColumnSize)); }
         }
 
         #endregion // Script
 
         #region Preferences
 
-        bool _isScriptBoxVisible = true;
+        private bool _isScriptBoxVisible = true;
         public bool IsScriptBoxVisible
         {
             get => _isScriptBoxVisible;
-            set { _isScriptBoxVisible = value; RaisePropertyChanged("IsScriptBoxVisible"); }
+            set
+            {
+                _isScriptBoxVisible = value;
+                RaisePropertyChanged(nameof(IsScriptBoxVisible));
+                Messenger.Default.Send(IsScriptBoxVisible, nameof(IsScriptBoxVisible));
+            }
         }
 
-        private bool mSaveWithBACVERint = true;
+        private bool _isUnknownsVisible = true;
+        public bool IsUnknownsVisible
+        {
+            get => _isUnknownsVisible;
+            set
+            {
+                _isUnknownsVisible = value;
+                RaisePropertyChanged(nameof(IsUnknownsVisible));
+                Messenger.Default.Send(IsUnknownsVisible, nameof(IsUnknownsVisible));
+            }
+        }
+
+
+        private bool _saveWithBACVERint = true;
         public bool SaveWithBACVERint
         {
-            get { return mSaveWithBACVERint; }
-            set { mSaveWithBACVERint = value; RaisePropertyChanged(nameof(SaveWithBACVERint)); }
+            get => _saveWithBACVERint;
+            set { _saveWithBACVERint = value; RaisePropertyChanged(nameof(SaveWithBACVERint)); }
         }
 
 
@@ -156,7 +164,6 @@ namespace ScriptViz.ViewModel
 
         #region Menu Commands
         public ICommand CleanScriptCommand => new RelayCommand(CleanScript);
-        public ICommand  ShowScriptCommand => new RelayCommand(ShowScript);
         public ICommand   RemoveBviCommand => new RelayCommand(RemoveBACVERint);
         public ICommand     OpenBacCommand => new RelayCommand(OpenBACFile);
         public ICommand        SaveCommand => new RelayCommand(SaveFile);
@@ -169,10 +176,10 @@ namespace ScriptViz.ViewModel
 
         #region Misc
 
-        string _numberOfTypes;
+        private string _numberOfTypes;
         public string NumberOfTypes
         {
-            get { return _numberOfTypes ?? "N/A"; }
+            get => _numberOfTypes ?? "N/A";
             set { _numberOfTypes = value; RaisePropertyChanged(nameof(NumberOfTypes)); }
         }
 
@@ -193,15 +200,17 @@ namespace ScriptViz.ViewModel
             ScriptTextFile.Text = DEFAULT_SCRIPT_BOX_TEXT;
 
             Messenger.Default.Register<Move>(this, move => NumberOfTypes = move?.numberOfTypes.ToString());
+            Messenger.Default.Register<bool>(this, nameof(IsScriptBoxVisible), ShowScript);
         }
 
         #region Load
-        void LoadBacFile()
+
+        private void LoadBacFile()
         {
             // Try to clean the JSON before doing anything with it.
             CleanScript();
 
-            (_viewModels[0] as ScriptVisualizerViewModel).ResetDisplay();
+            (_viewModels[0] as ScriptVisualizerViewModel)?.ResetDisplay();
 
             #region Show Loading
             // TODO
@@ -212,7 +221,7 @@ namespace ScriptViz.ViewModel
             // Try to parse as a BACFile
 
             // Convert the JSON String to a C# object.
-            bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
+            _bacFile = JsonConvert.DeserializeObject<BACFile>(ScriptTextFile.Text);
 
             //var bacFile = (BACFile)_scriptFileObject;
 
@@ -228,18 +237,18 @@ namespace ScriptViz.ViewModel
         /// Creates a tab for each MoveList in the BACFile and creates a HitboxEffectses tab. 
         /// TODO: Should rename it to something that has less to do with the UI.
         /// </summary>
-        void CreateTabs()
+        private void CreateTabs()
         {
-            if (bacFile == null) return;
+            if (_bacFile == null) return;
 
             MoveListTabs.Clear();
 
             // Make tabs for each MoveList
-            for (int i = 0; i < bacFile.MoveLists.Length; i++)
+            for (int i = 0; i < _bacFile.MoveLists.Length; i++)
                 MoveListTabs.Add(new MoveListViewModel { Header = "MoveList " + (i + 1), Content = BacFile.MoveLists[i] } );
 
             // Make a tab for the list of HitboxEffects objects
-            MoveListTabs.Add(new HitboxEffectsesViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses } );
+            MoveListTabs.Add(new HitboxEffectsesViewModel { Header = "HitboxEffectses", Content = BacFile.HitboxEffectses, IsUnknownsVisible = this.IsUnknownsVisible } );
 
         }
 
@@ -290,9 +299,6 @@ namespace ScriptViz.ViewModel
                 // reserialize movelists
                 ScriptText = JsonConvert.SerializeObject(BacFile, Formatting.Indented);
 
-                // reload?
-                CreateMoveListBackup();
-
                 if (!SaveWithBACVERint)
                     RemoveBACVERint(false);
 
@@ -324,8 +330,8 @@ namespace ScriptViz.ViewModel
         #region Script Operations
 
         #region Show Script
-        //TODO: Implement!
-        private void ShowScript()
+
+        private void ShowScript(bool visibility)
         {
             if (IsScriptBoxVisible)
             {
@@ -334,6 +340,7 @@ namespace ScriptViz.ViewModel
             else
                 ScriptBoxColumnSize = new GridLength(0);
         }
+
         #endregion // Show Script
 
         #region Try to Clean JSON
@@ -395,7 +402,7 @@ namespace ScriptViz.ViewModel
                     return m.Result(""); // replace the match with "" (delete the text)
                 });
 
-                MessageBox.Show(String.Format("Removed {0} lines!", count), "RemoveBACVERint Results");
+                MessageBox.Show($"Removed {count} lines!", "RemoveBACVERint Results");
             }
         }
         #endregion // Remove BACVERint
@@ -404,22 +411,13 @@ namespace ScriptViz.ViewModel
 
         #endregion // MenuItem Click Handlers
 
-        void SelectedMoveListChanged()
+        private void SelectedMoveListChanged()
         {
             if (SelectedMoveListIndex == -1) return;
 
             // TODO: Check if previous movelist changes - if any - were saved.
             Messenger.Default.Send<MoveList>( this.BacFile?.MoveLists[SelectedMoveListIndex] );
             //LoadMoveList();
-
-            // Make backup of MoveList
-            CreateMoveListBackup();
-        }
-
-        void CreateMoveListBackup()
-        {
-            // clone the MoveList
-            BackupOfSelectedMoveList = JsonConvert.DeserializeObject<MoveList>(JsonConvert.SerializeObject(_selectedMoveList));
         }
 
         #endregion // Event Handling
@@ -428,7 +426,7 @@ namespace ScriptViz.ViewModel
         /// <summary>
         /// Sets the Script Box text to a default value/script.
         /// </summary>
-        void LoadDefaultScript()
+        private void LoadDefaultScript()
         {
             // TODO: use scriptviz_sampledata.json
         }

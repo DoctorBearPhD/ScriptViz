@@ -1,17 +1,32 @@
 ﻿<UserControl x:Class="ScriptViz.View.HitboxEffectsesControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ScriptViz.View"
-             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:u="clr-namespace:ScriptViz.Util"
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:lib="clr-namespace:ScriptLib;assembly=ScriptLib"
+             xmlns:view="clr-namespace:ScriptViz.View"
              mc:Ignorable="d" 
              d:DesignWidth="746" d:DesignHeight="320" 
-             d:DataContext="{x:Type vm:HitboxEffectsesViewModel}">
+             d:DataContext="{x:Type vm:HitboxEffectsesViewModel}"
+             x:Name="HbfxControl">
     <UserControl.Resources>
         <u:HitboxEffectsesToListConverter x:Key="hitboxFxToListConv" />
         <u:HitboxEffectsToContentConverter x:Key="hitboxFxToContentConv" />
+        <u:IntToTypeConverter x:Key="intToTypeConv" />
+        <BooleanToVisibilityConverter x:Key="bool2VizConv" />
+        <u:HBFXTypesToStringConverter x:Key="HBFXTypesToStringConv" />
+        
+        <!-- Hideable DataGrid columns -->
+        <DataGridTextColumn x:Key="Index9"  Header="Index9"  Binding="{Binding Index9}"  Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index18" Header="Index18" Binding="{Binding Index18}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index19" Header="Index19" Binding="{Binding Index19}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index22" Header="Index22" Binding="{Binding Index22}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index23" Header="Index23" Binding="{Binding Index23}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index24" Header="Index24" Binding="{Binding Index24}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+        <DataGridTextColumn x:Key="Index25" Header="Index25" Binding="{Binding Index25}" Visibility="{Binding DataContext.IsUnknownsVisible, Source={x:Reference HbfxControl}, Converter={StaticResource bool2VizConv}}" />
+
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -19,15 +34,119 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <!-- A List of HitboxEffects objects. 
-             Each HitboxEffects object holds an index and twenty (20) HitType properties. -->
+             Each HitboxEffects object holds an index and twenty (20) HitboxEffectType properties. -->
         <ListBox x:Name="HitboxEffectsList" Grid.Column="0"
                  ItemsSource="{Binding Content, Converter={StaticResource hitboxFxToListConv}}"
                  SelectedIndex="{Binding SelectedHitboxEffectsIndex}"
                  Style="{StaticResource DarkListBoxStyle}">
         </ListBox>
+        <DockPanel Grid.Column="1">
 
-        <DataGrid x:Name="HitboxEffectsContent" Grid.Column="1"
-                  ItemsSource="{Binding SelectedHitboxEffects, Converter={StaticResource hitboxFxToContentConv}}"
-                  Style="{StaticResource DarkDataGridStyle}" />
+            <DataGrid x:Name="HitboxEffectsContent" AutoGenerateColumns="False"
+                      ItemsSource="{Binding SelectedHitboxEffects, Converter={StaticResource hitboxFxToContentConv}}"
+                      Style="{StaticResource DarkDataGridStyle}" 
+                      AlternatingRowBackground="{StaticResource ButtonBgBrush}"
+                      CanUserResizeRows="False" CanUserAddRows="False" 
+                      LoadingRow="HitboxEffectsContent_LoadingRow"
+                      d:DataContext="{x:Type lib:HitboxEffectType}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="MoveIndex" Binding="{Binding Index}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{StaticResource HBFX_Tooltip_Index}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <!--<DataGridTextColumn Header="Type" Binding="{Binding Type}" />-->
+                    <DataGridComboBoxColumn Header="Type" MinWidth="75"
+                                            SelectedItemBinding="{Binding Type, Converter={StaticResource intToTypeConv}}">
+                        <DataGridComboBoxColumn.ElementStyle>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="ItemsSource" Value="{Binding RelativeSource={
+                                    RelativeSource FindAncestor, 
+                                    AncestorType={x:Type UserControl}}, 
+                                    Path=DataContext.TypeList, 
+                                    Mode=OneTime}"/>
+                            </Style>
+                        </DataGridComboBoxColumn.ElementStyle>
+                        <DataGridComboBoxColumn.EditingElementStyle>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="ItemsSource" Value="{Binding RelativeSource={
+                                    RelativeSource FindAncestor, 
+                                    AncestorType={x:Type UserControl}}, 
+                                    Path=DataContext.TypeList, 
+                                    Mode=OneTime}"/>
+                            </Style>
+                        </DataGridComboBoxColumn.EditingElementStyle>
+                    </DataGridComboBoxColumn>
+                    <DataGridTextColumn Header="DamageType" Binding="{Binding DamageType}" />
+                    <DataGridTextColumn Header="Damage" Binding="{Binding Damage}" />
+                    <DataGridTextColumn Header="Stun" Binding="{Binding Stun}" />
+                    <DataGridTextColumn Header="KnockBack" Binding="{Binding KnockBack}" />
+                    <DataGridTextColumn Header="FallSpeed" Binding="{Binding FallSpeed}" />
+                    <DataGridTextColumn Header="EXBuildAttacker" Binding="{Binding EXBuildAttacker}" />
+                    <DataGridTextColumn Header="EXBuildDefender" Binding="{Binding EXBuildDefender}" />
+                    <DataGridTextColumn Header="VMeterGainAttacker" Binding="{Binding Index12}" />
+                    <DataGridTextColumn Header="RAFD" Binding="{Binding RecoveryAnimationFramesDefender}" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{StaticResource HBFX_Tooltip_RAFD}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="KnockdownTime" Binding="{Binding Index17}" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{StaticResource HBFX_Tooltip_Index17}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="FuzzyEffect" Binding="{Binding FuzzyEffect}" />
+                    <DataGridTemplateColumn Header="Type1s">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NumberOfType1, Converter={StaticResource HBFXTypesToStringConv}, Mode=OneWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding Type1s}" Style="{StaticResource DarkDataGridStyle}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{StaticResource HBFX_Tooltip_Type1s}" />
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Type2s">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NumberOfType2, Converter={StaticResource HBFXTypesToStringConv}, Mode=OneWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding Type2s}" Style="{StaticResource DarkDataGridStyle}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{StaticResource HBFX_Tooltip_Type2s}" />
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+                    </DataGridTemplateColumn>
+                    
+                    <StaticResource ResourceKey="Index9" />
+                    <StaticResource ResourceKey="Index18" />
+                    <StaticResource ResourceKey="Index19" />
+                    <StaticResource ResourceKey="Index22" />
+                    <StaticResource ResourceKey="Index23" />
+                    <StaticResource ResourceKey="Index24" />
+                    <StaticResource ResourceKey="Index25" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </DockPanel>
     </Grid>
 </UserControl>

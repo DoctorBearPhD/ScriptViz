@@ -1,20 +1,26 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
 
 namespace ScriptLib
 {
+    public enum HitboxEffectTypeEnum {
+        [Description("No Stun")]
+        NoStun,
+        Standard,
+        Guard,
+        Blow,
+        [Description("OTG")]
+        Otg
+    }
+
     public class HitboxEffectType
     {
-        [JsonIgnore]
-        [ReadOnly(true)] public string Name { get; set; }
-
         public int Type { get; set; }
         public int Index { get; set; }
         public int DamageType { get; set; }
-        [Browsable(false)] public int Unused1 { get; set; }
+        public int Unused1 { get; set; }
         public int NumberOfType1 { get; set; }
         public int NumberOfType2 { get; set; }
-        [Browsable(false)] public int Unused2 { get; set; }
+        public int Unused2 { get; set; }
         public int Damage { get; set; }
         public int Stun { get; set; }
         public int Index9 { get; set; }
@@ -38,5 +44,10 @@ namespace ScriptLib
         public int OffsetToStartOfType2 { get; set; }
         public HitboxFX.Type1[] Type1s { get; set; }
         public HitboxFX.Type2[] Type2s { get; set; }
+
+        public HitboxEffectType()
+        {
+            
+        }
     }
 }

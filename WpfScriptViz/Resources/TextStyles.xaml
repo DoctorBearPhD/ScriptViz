@@ -7,4 +7,13 @@
     <System:String x:Key="ScriptUpdateButtonText">Update</System:String>
     <System:String x:Key="SliderLabelText">0 / 0</System:String>
     
+    <!-- TOOLTIPS -->
+    
+    <!-- HBFX -->
+    <System:String x:Key="HBFX_Tooltip_Index" xml:space="preserve">(Index)&#x0a;The index of the Move script to call.</System:String>
+    <System:String x:Key="HBFX_Tooltip_RAFD" xml:space="preserve">(RecoveryAnimationFramesDefender)&#x0a;How long the recovery animation will take (in frames).</System:String>
+    <System:String x:Key="HBFX_Tooltip_Index17" xml:space="preserve">(Index17)&#x0a;How long the defender will be in a knockdown state (in frames).</System:String>
+    <System:String x:Key="HBFX_Tooltip_Type1s" xml:space="preserve">Involves the Sound Effects of the HitboxEffectType.</System:String>
+    <System:String x:Key="HBFX_Tooltip_Type2s" xml:space="preserve">Involves the Visual Effects of the HitboxEffectType.</System:String>
+    
 </ResourceDictionary>

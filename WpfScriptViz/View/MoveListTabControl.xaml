@@ -10,6 +10,7 @@
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <vm:ViewModelLocator x:Key="Locator"/>
+        <u:MovesToListConverter x:Key="movesToListConverter" />
         <u:MoveToPropertiesConverter x:Key="moveToPropertiesConverter" />
     </UserControl.Resources>
 
@@ -23,7 +24,10 @@
             <ColumnDefinition Width="2*" MinWidth="400"/>
         </Grid.ColumnDefinitions>
 
-        <local:MoveListControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
+        <ListBox x:Name="MovesListBox" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                 ItemsSource="{Binding SelectedMoveList, Converter={StaticResource movesToListConverter}, Mode=OneWay}"
+                 SelectedIndex="{Binding SelectedMoveIndex, Mode=OneWayToSource, FallbackValue=0}"
+                 Style="{StaticResource DarkListBoxStyle}" />
 
         <local:ScriptVisualizer Grid.Row="0" Grid.Column="1"
                                 DataContext="{Binding Path=Visualizer_VM, Source={StaticResource Locator}}"/>
