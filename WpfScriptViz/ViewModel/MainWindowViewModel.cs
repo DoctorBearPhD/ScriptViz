@@ -114,7 +114,7 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        private GridLength _scriptBoxColumnSize = new GridLength(ORIGINAL_SCRIPT_BOX_COLUMN_SIZE, GridUnitType.Star);
+        private GridLength _scriptBoxColumnSize = new GridLength(0);
         public GridLength ScriptBoxColumnSize {
             get => _scriptBoxColumnSize;
             set  { _scriptBoxColumnSize = value; RaisePropertyChanged(nameof(ScriptBoxColumnSize)); }
@@ -124,7 +124,7 @@ namespace ScriptViz.ViewModel
 
         #region Preferences
 
-        private bool _isScriptBoxVisible = true;
+        private bool _isScriptBoxVisible;
         public bool IsScriptBoxVisible
         {
             get => _isScriptBoxVisible;

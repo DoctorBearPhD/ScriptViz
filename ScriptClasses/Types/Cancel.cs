@@ -1,8 +1,10 @@
-﻿namespace ScriptLib.Types
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScriptLib.Types
 {
     public class Cancel : BaseType
     {
-        public int CancelList { get; set; }
-        public int Type { get; set; }
+        [Display(Order = 0)] public int CancelList { get; set; }
+        [Display(Order = 1)] public int Type { get; set; }
     }
 }

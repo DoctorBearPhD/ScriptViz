@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="ScriptViz.View.MoveDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:ScriptViz.ViewModel"
+             xmlns:moveEditor="clr-namespace:ScriptViz.View.MoveEditor"
+             mc:Ignorable="d" 
+             d:DesignWidth="380" d:DesignHeight="330"
+             d:DataContext="{x:Type vm:MoveListViewModel}">
+    <UserControl.Resources>
+        <!-- General properties of the Move -->
+        <DataTemplate x:Key="generalPropertiesEditor">
+            <moveEditor:GenPropEditor />
+        </DataTemplate>
+        
+        <!-- Content of Type property -->
+        <DataTemplate x:Key="typeEditor">
+            <moveEditor:TypeEditor />
+        </DataTemplate>
+
+        <!-- When selected Move has no data... -->
+        <DataTemplate x:Key="emptyTemplate">
+            <TextBlock Text="Empty" Foreground="{StaticResource MainTextBrush}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl Content="{Binding}" x:Name="MoveDetailsControl">
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}">
+                <Setter Property="ContentTemplate" Value="{StaticResource typeEditor}" />
+                <Style.Triggers>
+                    <!-- Set the DataTemplate based on the kind of property the user selected: General or Type. -->
+                    <DataTrigger Binding="{Binding SelectedPropertyIndex, Mode=OneWay}" Value="0">
+                        <Setter Property="ContentTemplate" Value="{StaticResource generalPropertiesEditor}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+
+</UserControl>

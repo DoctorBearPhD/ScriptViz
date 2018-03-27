@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace ScriptViz.Util
@@ -25,11 +22,11 @@ namespace ScriptViz.Util
             if (prop == null) return props;
             if (prop.GetValue(move) == null) return props;
 
-            var objects = (object[]) prop.GetValue(move);
+            var objects = (object[])prop.GetValue(move);
 
-            for (int i = 0; i < objects.Length; i++)
+            foreach (var t in objects)
             {
-                props.Add(objects[i]);
+                props.Add(t);
             }
 
             return props;

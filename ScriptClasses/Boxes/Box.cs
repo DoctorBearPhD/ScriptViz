@@ -20,11 +20,11 @@ namespace ScriptLib
         [Category("Common"), JsonProperty(Order = -2), Display(Order = -94)] public float Width { get; set; }
         [Category("Common"), JsonProperty(Order = -2), Display(Order = -93)] public float Height { get; set; }
 
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -49)] public int Unknown1 { get; set; }
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -48)] public int Unknown2 { get; set; }
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -47)] public int Unknown3 { get; set; }
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -46)] public int Unknown4 { get; set; }
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -45)] public int Unknown5 { get; set; }
-        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = -44)] public int Unknown6 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 51)] public int Unknown1 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 52)] public int Unknown2 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 53)] public int Unknown3 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 54)] public int Unknown4 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 55)] public int Unknown5 { get; set; }
+        [Category("Unknown"), JsonProperty(Order = -2), Display(Order = 56)] public int Unknown6 { get; set; }
     }
 }

@@ -8,10 +8,7 @@ namespace ScriptViz.ViewModel
     {
         #region Variables
 
-        public MoveList SelectedMoveList
-        {
-            get => Content as MoveList;
-        }
+        public MoveList SelectedMoveList => Content as MoveList;
 
         public Move SelectedMove => SelectedMoveList.Moves[SelectedMoveIndex];
 
@@ -40,10 +37,7 @@ namespace ScriptViz.ViewModel
         }
 
         // PROPERTY
-        public PropertyInfo SelectedProperty
-        {
-            get => (SelectedPropertyIndex <= 0) ? null : SelectedMove.GetAllProperties()[SelectedPropertyIndex];
-        }
+        public PropertyInfo SelectedProperty=> (SelectedPropertyIndex <= 0) ? null : SelectedMove.GetAllProperties()[SelectedPropertyIndex];
 
         int _selectedPropertyIndex;
         public int SelectedPropertyIndex
@@ -57,24 +51,9 @@ namespace ScriptViz.ViewModel
             }
         }
 
-        // TYPE'S PROPERTY
-        public object SelectedTypeProperty => SelectedProperty?.GetValue(SelectedMove);
-
-        int _selectedTypePropertyIndex;
-        public int SelectedTypePropertyIndex
-        {
-            get => _selectedTypePropertyIndex;
-            set { _selectedTypePropertyIndex = value; RaisePropertyChanged(nameof(SelectedTypePropertyIndex)); }
-        }
-
         #endregion // Variables
 
         #region Constructor
-
-        public MoveListViewModel()
-        {
-            
-        }
 
         #endregion
 

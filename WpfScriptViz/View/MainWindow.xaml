@@ -82,20 +82,20 @@
                 <ColumnDefinition Width="Auto" MinWidth="100"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+
             <TextBlock Grid.Column="0" Foreground="{StaticResource AltMainTextBrush}" Margin="5,2">
                 <TextBlock Text="numberOfTypes: "/>
                 <TextBlock Text="{Binding NumberOfTypes}"/>
             </TextBlock>
-                       
         </Grid>
         
-        <Grid x:Name="MainContentContainer" DockPanel.Dock="Bottom">
+        <Grid x:Name="MainContentContainer">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" MinWidth="500"/>
+                <ColumnDefinition Width="3*" MinWidth="500"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="{Binding ScriptBoxColumnSize}" MaxWidth="420"/>
             </Grid.ColumnDefinitions>
@@ -132,8 +132,6 @@
                     
                 </DockPanel>
             </Border>
-
-            
 
             <ToggleButton Name="toggleScriptButton" Margin="10,10,5,0"
                           Grid.Row="0" Grid.Column="1" 

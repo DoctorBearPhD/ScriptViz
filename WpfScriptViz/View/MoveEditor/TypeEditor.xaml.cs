@@ -13,12 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ScriptViz.View
+namespace ScriptViz.View.MoveEditor
 {
-    public partial class MoveDetailControl : UserControl
+    /// <summary>
+    /// Interaction logic for TypeEditor.xaml
+    /// </summary>
+    public partial class TypeEditor : UserControl
     {
-
-        public MoveDetailControl()
+        public TypeEditor()
         {
             InitializeComponent();
         }

@@ -90,6 +90,7 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -112,6 +113,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviours\DataGridBehaviour.cs" />
+    <Compile Include="DesignTime\ViewModel\MoveListDesignViewModel.cs" />
     <Compile Include="Util\HBFXTypesToStringConverter.cs" />
     <Compile Include="Util\HitboxEffectsesToListConverter.cs" />
     <Compile Include="Util\HitboxEffectsToContentConverter.cs" />
@@ -123,7 +125,13 @@
     <Compile Include="Util\MoveToGeneralPropertiesConverter.cs" />
     <Compile Include="Util\MoveToPropertiesConverter.cs" />
     <Compile Include="Util\MovesToListConverter.cs" />
-    <Compile Include="View\MoveListTabControl.xaml.cs">
+    <Compile Include="View\MoveEditor\GenPropEditor.xaml.cs">
+      <DependentUpon>GenPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MoveEditor\TypeEditor.xaml.cs">
+      <DependentUpon>TypeEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MoveEditor\MoveListTabControl.xaml.cs">
       <DependentUpon>MoveListTabControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ScriptBox.cs" />
@@ -134,7 +142,7 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\VMBase.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="View\MoveDetailControl.xaml.cs">
+    <Compile Include="View\MoveEditor\MoveDetailControl.xaml.cs">
       <DependentUpon>MoveDetailControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ScriptVisualizer.xaml.cs">
@@ -151,11 +159,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MoveDetailControl.xaml">
+    <Page Include="View\MoveEditor\MoveDetailControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MoveListTabControl.xaml">
+    <Page Include="View\MoveEditor\GenPropEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MoveEditor\TypeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MoveEditor\MoveListTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

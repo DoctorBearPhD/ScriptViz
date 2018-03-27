@@ -1,8 +1,10 @@
-﻿namespace ScriptLib.Types
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScriptLib.Types
 {
     public class Force : BaseType
     {
-        public float Amount { get; set; }
-        public object Flag { get; set; }
+        [Display(Order = 1)] public float Amount { get; set; }
+        [Display(Order = 2)] public object Flag { get; set; }
     }
 }
